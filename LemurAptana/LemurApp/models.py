@@ -10,20 +10,20 @@ import lib.isbn as isbn
 class BannerMessage(models.Model):
     """Special model for the banner message. There should only ever be 1 record here, but we put it in the
     database to allow it to be easily edited trough the admin interface
-    
+
     Therefore, access the banner message through the special "handle" field, set to 1 --
-    
+
     message = BannerMessage.get(handle__exact=1)
-    
+
     ... or better yet use the shortcut method BannerMessage.get_message() below.
-     
+
     """
     message = models.CharField(max_length=250, unique=True)
     handle = models.IntegerField(unique=True, verbose_name="Handle (leave this as 1!)")   # this should be set to 1 for the banner message entry row
-    
+
     def __unicode__(self):
         return self.message
-    
+
     @staticmethod
     def get_message():
         return BannerMessage.objects.get(handle__exact=1)
@@ -42,20 +42,20 @@ class FacilityManager(models.Manager):
 
 class Facility(models.Model):
     """Inmate facilities (locations)"""
-    
+
     name = models.CharField(max_length=250, unique=True)
     restrictsHardbacks = models.BooleanField(verbose_name="This facility restricts hardbacks", default=False)
-    
+
     def __unicode__(self):
         return self.name
-    
+
     class Meta:
         verbose_name_plural="Facilities"
         ordering = ['name']
-    
+
     # Usethe Facility manager to provide custom ordering
     objects = FacilityManager()
-    
+
     @staticmethod
     def get_non_facility():
         """We have a special facility record that means "facility not in list of normal facilities, enter an address manually
@@ -65,12 +65,12 @@ class Facility(models.Model):
 
 class InmateIDField(models.CharField):
     """Special CharField for a InmateIDs, which will accept them in a variety of formats but clean and validate them"""
-    
+
     NO_ID = None     # constant used to denote that this inmate doesn't have an ID and that's OK
-    
+
     def validate(self, value, model_instance):
         """Validates and formats an inmate ID"""
-        
+
         error_format_message = '''
             Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates) or 8 numbers (for Federal inmates) or 6 numbers (for Arizona inmates)
             '''
@@ -98,7 +98,7 @@ class InmateIDField(models.CharField):
 
     def clean(self, value, model_instance):
         """Cleans the Inmate ID by stripping out all spaces and dashes"""
-        
+
         if value is not None:
             # strip the spaces and dashes
             value = string.replace(value, ' ', '')
@@ -108,15 +108,15 @@ class InmateIDField(models.CharField):
         # so we can have multiple values with no ID (i.e. null ID field)
         if value == '':
             value = None
-        
-        return models.CharField.clean(self, value, model_instance) 
+
+        return models.CharField.clean(self, value, model_instance)
 
 
 class Inmate(models.Model):
     """
     Model for inmates themselves
     """
-    
+
     # actual fields
     inmate_id = InmateIDField(max_length=250, verbose_name="Inmate ID", unique=True, null=True)
     first_name = models.CharField(max_length=250, verbose_name="First name")
@@ -124,30 +124,30 @@ class Inmate(models.Model):
     address = models.CharField(max_length=250, verbose_name="Address", blank=True, null=True)
     facility = models.ForeignKey(Facility)
     creation_date = models.DateTimeField(default=datetime.datetime.now, editable=False)
-    # end fields 
-    
+    # end fields
+
     def __unicode__(self):
         if self.inmate_id is None:
             id = 'none'
         else:
             id = self.inmate_id
         return ' '.join((self.last_name + ',', self.first_name, '(ID#', id + ')'))
-    
+
     def save(self, *args, **kwargs):
         """Override the normal save method to make sure we validate before
            saving into the database"""
         self.full_clean()                         # validate the model
         super(Inmate, self).save(*args, **kwargs) # Call the "real" save() method.
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ('inmate-detail', [str(self.pk)])
-    
+
     class InmateType:
         FEDERAL = 1
         ILLINOIS = 2
         ARIZONA = 3
-    
+
     def inmate_type(self):
         if self.inmate_id is InmateIDField.NO_ID:
             return None
@@ -159,7 +159,7 @@ class Inmate(models.Model):
             return self.InmateType.federal
         elif self.inmate_id[0] in string.ascii_letters:
             return self.InmateType.ILLINOIS
-        
+
     def inmate_id_formatted(self):
         if self.inmate_type() is None:
             return ""
@@ -172,10 +172,10 @@ class Inmate(models.Model):
 
     def full_name(self):
         return self.first_name + ' ' + self.last_name
-    
+
     def full_name_last(self):
         return self.last_name + ', ' + self.first_name
-    
+
     def warnings(self):
         """Returns a list of warnings to be displayed on the inmate's record on the search page"""
         warnings = list()
@@ -188,7 +188,7 @@ class Inmate(models.Model):
             warnings += ["Patron received an order less than 3 months ago (on %s)" % recent_orders[0].date_closed.strftime('%b %d, %Y')]
         # return the full warning list
         return warnings
-    
+
     def dictionaries(self):
         """Returns a list of the dictionaries the inmate has already received"""
         # if the inmate has previously received a dictionary, note it
@@ -207,8 +207,8 @@ class Inmate(models.Model):
         else:
             # If the facility is a normal one then ignore the address field
             self.address = ''
-        
-  
+
+
 class Order(models.Model):
     """Orders, which are collections of books"""
 
@@ -237,7 +237,7 @@ class Order(models.Model):
            saving into the database"""
         self.full_clean()                        # validate the model
         super(Order, self).save(*args, **kwargs) # Call the "real" save() method.
-    
+
     def clean(self):
         """Ensures the order model is consistent by doing some basic sanity
            checks. Checks that open orders have no close date but closed orders
@@ -252,7 +252,7 @@ class Order(models.Model):
                 # order is sent and has a closed date, so make sure the closed date is after the open date
                 if self.date_closed < self.date_opened:
                     raise ValidationError('Closed date for this order is before its open date!')
-    
+
     def warnings(self):
         """Return a list of text warnings associated with this order (e.g. if
            this inmate's recently received another similar order, etc."""
@@ -282,7 +282,7 @@ class Order(models.Model):
                 if (not book1 == book2) and book1.title == book2.title:
                     duplicate_warning = True
         if duplicate_warning:
-            warnings += ["Two books in this order have the same title"]                    
+            warnings += ["Two books in this order have the same title"]
         return warnings
 
 
@@ -293,22 +293,22 @@ class Book(models.Model):
     author = models.CharField(max_length=250, verbose_name="Author", blank=True)
     order = models.ForeignKey(Order)
     creation_date = models.DateTimeField(default=datetime.datetime.now, editable=False, verbose_name="Creation date")
-    
+
     def __unicode__(self):
         if self.author:
             return self.author + ' - ' + self.title
         else:
             return self.title
-    
+
     def save(self, *args, **kwargs):
         """Override the normal save method to make sure we validate before
            saving into the database"""
         self.full_clean()                        # validate the model
         super(Book, self).save(*args, **kwargs) # Call the "real" save() method.
-    
+
     class Meta:
         """Order the books in reverse creation date, so that in a list of books
-           in the database the ones that were added most recently come first 
+           in the database the ones that were added most recently come first
            (particularly useful for listing books in an order with the most
            recently-added books first)"""
         ordering = ['-creation_date']
@@ -319,10 +319,10 @@ class Book(models.Model):
         populated Book object
         Raises InvalidParameterValue (from the item_lookup call) if the ISBN isn't found
         """
-        
+
         # Set up the Amazon API
         api = amazonproduct.API(settings.AWS_KEY, settings.AWS_SECRET_KEY, locale='us', associate_tag=settings.AWS_ASSOCIATE_TAG)
-        
+
         # Do the Amazon lookup. This throw an exception if the ASIN isn't found.
         try:
             node = api.item_lookup(ASIN, IdType='ISBN', SearchIndex='Books')
