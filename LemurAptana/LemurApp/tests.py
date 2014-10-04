@@ -170,7 +170,13 @@ class OrderTest(TestCase):
         
 
 class InmateTest(TestCase):
-    
+
+    def test_inmate_form_template(self):
+        """Ensure the add-an-inmate page loads"""
+        c = Client()
+        response = c.get('/lemur/inmate/add/')
+        self.assertEquals(response.status_code, 200)
+
     def test_inmate_validation(self):
         """Makes sure that inmate objects raise errors if they're missing fields"""
         inmate = models.Inmate()

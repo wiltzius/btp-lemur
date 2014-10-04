@@ -291,6 +291,8 @@ class OrderDetail(DetailView):
     model = Order
 
 class InmateCreate(CreateView):
+    form_class = forms.InmateForm
+    template_name = 'LemurApp/inmate_add.html'
     model = Inmate
 
 class InmateUpdate(UpdateView):

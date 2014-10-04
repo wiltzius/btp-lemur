@@ -3,7 +3,7 @@ from models import Inmate, Order
 import forms
 import views
 
-inmate_add = {'form_class': forms.InmateForm, 'template_name': 'LemurAptana/LemurApp/inmate_add.html'}
+#inmate_add = {'form_class': forms.InmateForm, 'template_name': 'LemurApp/inmate_add.html'}
 inmate_edit = {'form_class': forms.InmateForm, 'template_name': 'LemurAptana/LemurApp/inmate_edit.html'}
 order_detail = {'queryset': Order.objects.all(), 'template_object_name': 'order' }
 order_list = {'queryset': Order.objects.filter(status__exact='OPEN'), 'template_object_name': 'order'}  # generic view dictionary to show all open orders
@@ -28,8 +28,8 @@ urlpatterns = patterns('LemurAptana.LemurApp.views',
 )
 
 # Generic views
-urlpatterns += patterns('django.views.generic',
-    url(r'^inmate/add/$', views.InmateCreate.as_view(), inmate_add, name="inmate-add"),
+urlpatterns += patterns('',
+    url(r'^inmate/add/$', views.InmateCreate.as_view(), name="inmate-add"),
     url(r'^inmate/edit/(?P<object_id>\d+)/$', views.InmateUpdate.as_view(), inmate_edit, name="inmate-edit"),
     url(r'^order/list/$', views.OrderList.as_view(), order_list, name="order-list"),
     url(r'^order/detail/(?P<object_id>\d+)/$', views.OrderDetail.as_view(), order_detail, name="order-detail"),
