@@ -1,5 +1,5 @@
 from django.conf.urls import *
-from django.views.generic import RedirectView 
+from django.views.generic import RedirectView
 from django.conf import settings
 
 # enable the Django admin interface:

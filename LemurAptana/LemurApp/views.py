@@ -9,7 +9,9 @@ import json
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.exceptions import ValidationError
-from django.views.generic import ListView, DetailView
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
 from django.conf import settings
 from django.http import Http404, HttpResponseBadRequest
 from lib import isbn
@@ -279,9 +281,25 @@ def order_reopen(request, order_pk):
     order.save()
     return order_set(request, order_pk)
 
-#def order_cleanup(request):
+
+## Generic Views
+
+class OrderList(ListView):
+    model = Order
+
+class OrderDetail(DetailView):
+    model = Order
+
+class InmateCreate(CreateView):
+    model = Inmate
+
+class InmateUpdate(UpdateView):
+    model = Inmate
+
+'''
+def order_cleanup(request):
     """Marks all currently open orders as sent, unless they have no books in which case they're deleted."""
-"""    for order in Order.objects.filter(status__exact='OPEN'):
+    for order in Order.objects.filter(status__exact='OPEN'):
         # Mark orders with books as sent
         if order.book_set.count():
             order.status = 'SENT'
@@ -293,12 +311,5 @@ def order_reopen(request, order_pk):
     # Unset the current order
     order_unset(request)
     # Display the order list template again, with an extra note saying we cleaned up
-    return list_detail.object_list(request, queryset = Order.objects.filter(status__exact='OPEN'), template_object_name = 'order', extra_context = {'cleaned': True})
-"""
-
-# Generic ListView
-class OrderList(ListView):
-    model = Order
-
-class OrderDetail(DetailView):
-    model = Order
+    return OrderList(request, queryset = Order.objects.filter(status__exact='OPEN'), template_object_name = 'order', extra_context = {'cleaned': True})
+'''

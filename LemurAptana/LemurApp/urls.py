@@ -1,7 +1,7 @@
 from django.conf.urls import *
 from models import Inmate, Order
 import forms
-from views import OrderList, OrderDetail 
+import views
 
 inmate_add = {'form_class': forms.InmateForm, 'template_name': 'LemurAptana/LemurApp/inmate_add.html'}
 inmate_edit = {'form_class': forms.InmateForm, 'template_name': 'LemurAptana/LemurApp/inmate_edit.html'}
@@ -29,8 +29,8 @@ urlpatterns = patterns('LemurAptana.LemurApp.views',
 
 # Generic views
 urlpatterns += patterns('django.views.generic',
-    url(r'^inmate/add/$', 'create_update.create_object', inmate_add, name="inmate-add"),
-    url(r'^inmate/edit/(?P<object_id>\d+)/$', 'create_update.update_object', inmate_edit, name="inmate-edit"),
-    url(r'^order/list/$', OrderList.as_view(), order_list, name="order-list"),
-    url(r'^order/detail/(?P<object_id>\d+)/$', OrderDetail.as_view(), order_detail, name="order-detail"),
+    url(r'^inmate/add/$', views.InmateCreate.as_view(), inmate_add, name="inmate-add"),
+    url(r'^inmate/edit/(?P<object_id>\d+)/$', views.InmateUpdate.as_view(), inmate_edit, name="inmate-edit"),
+    url(r'^order/list/$', views.OrderList.as_view(), order_list, name="order-list"),
+    url(r'^order/detail/(?P<object_id>\d+)/$', views.OrderDetail.as_view(), order_detail, name="order-detail"),
 )
