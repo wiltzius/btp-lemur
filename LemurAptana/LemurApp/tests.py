@@ -200,6 +200,23 @@ class OrderTest(TestCase):
         response = c.get('/lemur/order/set/' + str(order.id), follow=True)
         self.assertEquals(response.status_code, 200)
 
+    def test_send_order(self):
+        order = OrderTest.create_order_1()
+        c = Client()
+        response = c.get('/lemur/order/set/' + str(order.id), follow=True)
+        self.assertEquals(response.status_code, 200)
+        response = c.get('/lemur/order/sendout/', follow=True)
+        print c.session
+        self.assertEquals(response.status_code, 200)
+        response = c.post('/lemur/order/sendout/', {'id_sender': 'tom'}, follow=True)
+        self.assertEquals(response.status_code, 200)
+
+    def test_book_search_pagination(self):
+        """Ensure that loading different pages yields different results."""
+        c = Client()
+        #TODO implement a test
+        pass
+
 class InmateTest(TestCase):
 
     def test_inmate_form_template(self):

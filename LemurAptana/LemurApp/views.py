@@ -299,6 +299,8 @@ class InmateCreate(CreateView):
     model = Inmate
 
 class InmateUpdate(UpdateView):
+    form_class = forms.InmateForm
+    template_name = 'LemurApp/inmate_edit.html'
     model = Inmate
 
 '''

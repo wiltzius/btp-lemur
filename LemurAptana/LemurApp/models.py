@@ -230,7 +230,7 @@ class Order(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('order-detail', (), {'object_id': self.pk})
+        return ('order-detail', (), {'pk': self.pk})
 
     def save(self, *args, **kwargs):
         """Override the normal save method to make sure we validate before
