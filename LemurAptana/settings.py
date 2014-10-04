@@ -97,6 +97,8 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 # Makes sessions expire when the browser is closed rather than persisting
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
