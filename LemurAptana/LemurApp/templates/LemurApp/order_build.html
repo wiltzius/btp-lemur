@@ -233,6 +233,8 @@
               <th>&nbsp;</th>
             </tr>
             {% for book in books %}
+              {% load cycle from future %}
+              {# load cycle from future to squash deprecation warning #}
               <tr class="{% cycle 'odd' 'even' %}">
                 <td>{{book.ItemAttributes.Title.text}}</td>
                 <td>{{book.ItemAttributes.Author.text}}</td>
