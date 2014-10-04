@@ -94,7 +94,7 @@
                 {% endfor %}
                 </ul>
               </li>
-              <li><a href="{% url 'inmate-edit' object_id=inmate.pk %}">Edit Information</a></li>
+              <li><a href="{% url 'inmate-edit' pk=inmate.pk %}">Edit Information</a></li>
               <li><a href="{% url 'order-create' inmate_pk=inmate.pk %}" class="bold">Start a new order for this inmate</a></li>
             </ul>
           </div>

@@ -206,7 +206,6 @@ class OrderTest(TestCase):
         response = c.get('/lemur/order/set/' + str(order.id), follow=True)
         self.assertEquals(response.status_code, 200)
         response = c.get('/lemur/order/sendout/', follow=True)
-        print c.session
         self.assertEquals(response.status_code, 200)
         response = c.post('/lemur/order/sendout/', {'id_sender': 'tom'}, follow=True)
         self.assertEquals(response.status_code, 200)
@@ -219,10 +218,12 @@ class OrderTest(TestCase):
 
 class InmateTest(TestCase):
 
-    def test_inmate_form_template(self):
-        """Ensure the add-an-inmate page loads"""
+    def test_inmate_edit_view(self):
+        """Ensures the inmate editing page loads."""
+        self.test_inmate_validation() # cheap way to get an inmate
+        inmate = models.Inmate.objects.all()[0]
         c = Client()
-        response = c.get('/lemur/inmate/add/')
+        response = c.get('/lemur/inmate/edit/' + str(inmate.pk), follow=True)
         self.assertEquals(response.status_code, 200)
 
     def test_inmate_validation(self):

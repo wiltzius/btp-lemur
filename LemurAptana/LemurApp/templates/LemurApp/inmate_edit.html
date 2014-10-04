@@ -8,7 +8,7 @@
 {% block inmate_tab_name %}Edit Inmate{% endblock %}
 
 {% block content %}
-   <form action="{% url 'inmate-edit' object_id=object.pk %}" method="post">
+   <form action="{% url 'inmate-edit' pk=object.pk %}" method="post">
       {% include "LemurApp/inmate_form_snippet.html" %}
       <div class="formfooter">
         <input type="submit" value="Save Changes" />

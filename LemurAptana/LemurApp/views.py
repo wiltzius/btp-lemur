@@ -17,7 +17,7 @@ from django.http import Http404, HttpResponseBadRequest
 from lib import isbn
 import amazonproduct
 
-def inmate_search(request, object_id=None):
+def inmate_search(request, pk=None):
     """Searches for the inmate whose information is passed in via GET parameters"""
 
     def paginate_results(queryset):
@@ -38,9 +38,9 @@ def inmate_search(request, object_id=None):
         return inmates
 
     context_dict = {}
-    if object_id is not None:
+    if pk is not None:
         #inmate = get_object_or_404(Inmate, pk=object_id)
-        query = Inmate.objects.filter(pk__exact=object_id)
+        query = Inmate.objects.filter(pk__exact=pk)
         if query.count() != 1:
             raise Http404
         context_dict['form'] = forms.InmateForm(instance=query[0]) # A form bound to this Inmate instance
