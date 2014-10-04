@@ -10,8 +10,32 @@ import datetime
 import amazonproduct
 import templatetags.lemur_extras as lemur_extras
 
+
+class BasicLoadTest(TestCase):
+    """Basic tests to ensure all top-level paths load correctly."""
+
+    def setUp(self):
+      self.c = Client()
+
+    def url_test(self, url):
+      response = self.c.get(url)
+      self.assertEquals(response.status_code, 200)
+
+    def test_inmate_search(self):
+      self.url_test('/lemur/inmate/search/')
+
+    def test_inmate_add(self):
+      self.url_test('/lemur/inmate/add/')
+
+    def test_order_list(self):
+      self.url_test('/lemur/order/list/')
+
+    def test_order_sendout(self):
+      self.url_test('/lemur/order/sendout/')
+
+
 class OrderTest(TestCase):
-    
+
     @staticmethod
     def create_inmate():
         # create dummy inmate
@@ -24,7 +48,7 @@ class OrderTest(TestCase):
         i.full_clean()
         i.save()
         return i
-    
+
     @staticmethod
     def create_order_1():
         """ Create an inmate, one order for that inmate, and one book for that order
@@ -44,7 +68,7 @@ class OrderTest(TestCase):
         b1.order = o1
         b1.save()
         return o1
-    
+
     @staticmethod
     def create_order_2(i):
         """Creates a dummy order for the given inmate with a single dictionary in it"""
@@ -62,40 +86,40 @@ class OrderTest(TestCase):
         b2.full_clean()
         b2.save()
         return o2
-    
+
     def test_order_warnings(self):
         """
         Tests that the proper warnings are returned for orders
         """
-        
+
         o1 = OrderTest.create_order_1()
-        
+
         # make sure there are no warnings now, one clean order
         self.assertEquals(len(o1.warnings()), 0)
-        
+
         o2 = OrderTest.create_order_2(o1.inmate)
-        
+
         # make sure there is a prior-order warning
         self.assertTrue("Patron received an order less than 3 months ago" in o2.warnings())
-        
+
         # make sure there's a prior-book warning
         self.assertTrue(True in ["Patron already received" in warning for warning in o2.warnings()])
         self.assertFalse(True in ["blah blah blah this isn't a warning" in warning for warning in o2.warnings()])
-        
+
         # make sure we haven't triggerd the same-book warning
         self.assertFalse(True in ["Two books in this" in warning for warning in o2.warnings()])
-        
+
         # Add another book
         b3 = models.Book()
         b3.order = o2
         b3.title = "dictionary"
         b3.full_clean()
         b3.save()
-        
+
         # ...and test if it triggers the same-book warning
         self.assertTrue(True in ["Two books in this" in warning for warning in o2.warnings()])
-                
-    
+
+
     def test_inmate_duplicate(self):
         #i = OrderTest.create_inmate()
         #self.assertRaises(ValidationError, OrderTest.create_inmate())
@@ -109,14 +133,14 @@ class OrderTest(TestCase):
         models.Order.objects.all().delete()
         models.Inmate.objects.all().delete()
         models.Book.objects.all().delete()
-                
+
         # create an open order
         i = OrderTest.create_inmate()
         o1 = models.Order()
         o1.inmate = i
         o1.save()
         pk1 = o1.pk
-        
+
         # create a second open order, this one with a book
         o2 = models.Order()
         o2.inmate = i
@@ -125,18 +149,18 @@ class OrderTest(TestCase):
         b1.title = "dictionary"
         b1.order = o2
         b1.save()
-        
+
         # ensure that the first two orders are open
         self.assertEquals(o1.status, 'OPEN')
         self.assertEquals(o2.status, 'OPEN')
-        
+
         # create a third, sent order, ensure its closed
         o3 = OrderTest.create_order_2(i)
         self.assertEquals(o3.status, 'SENT')
-        
+
         c = Client()
         response = c.get('/lemur/order/cleanup/')
-        
+
         # now the open order o1 should be gone
         self.assertRaises(models.Order.DoesNotExist, models.Order.objects.get, pk=pk1)
         # now the open order o2 should be sent
@@ -167,7 +191,7 @@ class OrderTest(TestCase):
         order.date_closed = None
         order.save()
         self.assertEquals(order.date_opened, date)
-        
+
 
 class InmateTest(TestCase):
 
@@ -211,7 +235,7 @@ class InmateTest(TestCase):
         inmate.facility = models.Facility.get_non_facility()
         inmate.address = "Nowhere"
         inmate.save()
-        
+
         # create a second inmate with the same ID but different case
         inmate2 = models.Inmate()
         inmate2.first_name = "Test1"
@@ -219,7 +243,7 @@ class InmateTest(TestCase):
         inmate2.inmate_id = "a12345"
         inmate2.facility = models.Facility.get_non_facility()
         inmate2.address = "Nowhere"
-        
+
         # should throw a uniqueness exception
         self.assertRaises(ValidationError, inmate2.save)
 
@@ -261,10 +285,4 @@ class InmateTest(TestCase):
         # assert 6 digits with a letter in the wrong spot doesn't work
         inmate.inmate_id = "12345A"
         self.assertRaises(ValidationError, inmate.save)
-
-
-
-    
-
-
 

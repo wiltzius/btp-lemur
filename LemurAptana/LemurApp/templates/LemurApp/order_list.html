@@ -35,7 +35,7 @@
   {% if order_list|length_is:0 %}
     <p>There are currently no open orders to resume.</p>
   {% else %}
-    <p><a id="cleanupLink" href="{% url 'order-cleanup' %}">Cleanup Open Orders</a>&nbsp;&nbsp;&nbsp;<em>Automatically cancels any empty orders and sends all orders currently in process (if nobody else is currently working on an order and this list is super long, it's probably time to click this link).</em></p>
+    <p><a id="cleanupLink" href="{# url 'order-cleanup' #}">Cleanup Open Orders</a>&nbsp;&nbsp;&nbsp;<em>Automatically cancels any empty orders and sends all orders currently in process (if nobody else is currently working on an order and this list is super long, it's probably time to click this link).</em></p>
     <p>Pick an order below</p> 
     <ul>
       {% for order in order_list %}
