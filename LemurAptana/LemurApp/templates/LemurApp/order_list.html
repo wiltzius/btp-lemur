@@ -31,16 +31,16 @@
   {% else %}
     <p>You don't currently have a working order. From here, you can resume a previously started order.</p> 
   {% endif %}
-  <p>To begin a new order, first <a href="{% url inmate-search %}">find the order's inmate</a>.</p>
+  <p>To begin a new order, first <a href="{% url 'inmate-search' %}">find the order's inmate</a>.</p>
   {% if order_list|length_is:0 %}
     <p>There are currently no open orders to resume.</p>
   {% else %}
-    <p><a id="cleanupLink" href="{% url order-cleanup %}">Cleanup Open Orders</a>&nbsp;&nbsp;&nbsp;<em>Automatically cancels any empty orders and sends all orders currently in process (if nobody else is currently working on an order and this list is super long, it's probably time to click this link).</em></p>
+    <p><a id="cleanupLink" href="{% url 'order-cleanup' %}">Cleanup Open Orders</a>&nbsp;&nbsp;&nbsp;<em>Automatically cancels any empty orders and sends all orders currently in process (if nobody else is currently working on an order and this list is super long, it's probably time to click this link).</em></p>
     <p>Pick an order below</p> 
     <ul>
       {% for order in order_list %}
         <li>
-          <a href="javascript:$('#order{{order.pk}}').toggle('fast')">{{order}}</a>, opened {{order.date_opened|date:"M j, Y"}} for {{order.inmate.first_name}} {{order.inmate.last_name}} [<a href="{% url order-set order.pk %}">select this order</a>]
+          <a href="javascript:$('#order{{order.pk}}').toggle('fast')">{{order}}</a>, opened {{order.date_opened|date:"M j, Y"}} for {{order.inmate.first_name}} {{order.inmate.last_name}} [<a href="{% url 'order-set' order.pk %}">select this order</a>]
           <ul id="order{{order.pk}}" style="display: none">
             {% for book in order.book_set.all %}
               <li>{{ book.title }}{% if book.author %}, by {{ book.author }}{% endif %}</li>

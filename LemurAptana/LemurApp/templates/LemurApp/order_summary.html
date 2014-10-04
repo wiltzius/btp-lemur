@@ -3,12 +3,12 @@
 
 {% with request.session.order as order %}
   {% if order %}
-    <a href="{% url order-build %}">Order #{{order.pk}}</a>, for <a href="{% url inmate-detail object_id=order.inmate.pk %}">{{order.inmate.full_name|truncchar:10}}</a>, {{order.book_set.all.count}} book{{order.book_set.all.count|pluralize}}
+    <a href="{% url 'order-build' %}">Order #{{order.pk}}</a>, for <a href="{% url 'inmate-detail' object_id=order.inmate.pk %}">{{order.inmate.full_name|truncchar:10}}</a>, {{order.book_set.all.count}} book{{order.book_set.all.count|pluralize}}
     {% if order.warnings|length > 0 %}
-    &nbsp;&nbsp;<span class="error">( <a href="{% url order-build %}">warnings</a> )</span>
+    &nbsp;&nbsp;<span class="error">( <a href="{% url 'order-build' %}">warnings</a> )</span>
     {% endif %}
   {% else %}
     <!-- there isn't a current order -->
-    Order: choose an <a href="{% url inmate-search %}">inmate</a> or <a href="{% url order-list %}">order</a> first
+    Order: choose an <a href="{% url 'inmate-search' %}">inmate</a> or <a href="{% url 'order-list' %}">order</a> first
   {% endif %}
 {% endwith %}

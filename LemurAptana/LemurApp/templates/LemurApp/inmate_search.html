@@ -9,7 +9,7 @@
 
 {% block content %}
   <div id="inmateSearch">
-    <form action="{% url inmate-search %}" method="get">
+    <form action="{% url 'inmate-search' %}" method="get">
       {% csrf_token %}
       <div id="searchBoxLeft">
         <div class="fieldWrapper">
@@ -83,7 +83,7 @@
                 {% for order in inmate.order_set.all %}
                   <li>
                     <a href="javascript:$('#orderList{{order.pk}}').toggle('fast')">Order #{{order.pk}}</a>,
-                    (<a href="{% url order-reopen order_pk=order.pk %}">reopen</a>)
+                    (<a href="{% url 'order-reopen' order_pk=order.pk %}">reopen</a>)
                     opened {{order.date_opened|date:"M jS, Y"}}{% if order.status == 'SENT' %}, closed {{order.date_closed|date:"M jS, Y"}}{% if order.sender %} by {{order.sender}}{% endif %}{% endif %}
                     <ul class="orderlist" id="orderList{{order.pk}}" style="display:none;">
                       {% for book in order.book_set.all %}
@@ -94,14 +94,14 @@
                 {% endfor %}
                 </ul>
               </li>
-              <li><a href="{% url inmate-edit object_id=inmate.pk %}">Edit Information</a></li>
-              <li><a href="{% url order-create inmate_pk=inmate.pk %}" class="bold">Start a new order for this inmate</a></li>
+              <li><a href="{% url 'inmate-edit' object_id=inmate.pk %}">Edit Information</a></li>
+              <li><a href="{% url 'order-create' inmate_pk=inmate.pk %}" class="bold">Start a new order for this inmate</a></li>
             </ul>
           </div>
         {% empty %}
           <p><strong>No results found.</strong></p> 
           <!-- link below is to the new inmate creation screen, but through an intermediary page (inmate-add-searched) that takes GET parameters with inmate information and pre-fills the form -->
-          <p>If you are trying to start a new order, you'll first need to <a href="{% url inmate-add-searched %}?{{query}}">add the recipient to our database.</a> This happens if we've never sent them a package before.</p>
+          <p>If you are trying to start a new order, you'll first need to <a href="{% url 'inmate-add-searched' %}?{{query}}">add the recipient to our database.</a> This happens if we've never sent them a package before.</p>
         {% endfor %}
         
         <div class="pagination">

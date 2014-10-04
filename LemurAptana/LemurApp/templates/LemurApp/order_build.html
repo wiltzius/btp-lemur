@@ -45,7 +45,7 @@
     function addToOrderCustom(bookData) {
       $.ajax({
          type: "POST",      
-         url: "{% url order-add-book-custom %}",     // use Django's template system to load URLs
+         url: "{% url 'order-add-book-custom' %}",     // use Django's template system to load URLs
          data: bookData,
          dataType: 'json',
          success: updateOrder,
@@ -57,7 +57,7 @@
     function addToOrderASIN(bookData) {
       $.ajax({
          type: "POST",
-         url: "{% url order-add-book-ASIN %}",   // use Django's template system to load URLs
+         url: "{% url 'order-add-book-ASIN' %}",   // use Django's template system to load URLs
          data: bookData,
          dataType: 'json',
          success: updateOrder,
@@ -69,7 +69,7 @@
     function addToOrderISBN(bookData) {
       $.ajax({
          type: "POST",
-         url: "{% url order-add-book-ISBN %}",   // use Django's template system to load URLs
+         url: "{% url 'order-add-book-ISBN' %}",   // use Django's template system to load URLs
          data: bookData,
          dataType: 'json',
          success: updateOrder,
@@ -177,7 +177,7 @@
        </div>
     </form>
     
-    <form action="{% url order-build %}" method="get">
+    <form action="{% url 'order-build' %}" method="get">
        {% csrf_token %}
        <div class="bookSearchBox">
          <input type="hidden" name="whichForm" value="search" />
