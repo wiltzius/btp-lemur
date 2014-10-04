@@ -1,0 +1,13 @@
+
+###
+###   Lemur v2.0
+###   Books to Prisoners Inventory System
+###
+###   Tom Wiltzius, wiltzius@cs.stanford.edu
+###   Oct 2010
+###
+
+Dependencies:
+-) Django version 1.2
+-) Python Amazon Product API, (originally used version 2.4.1), see: http://packages.python.org/python-amazon-product-api/index.html
+    Note that this itself requires lxml and libxslt, along with their Python bindings (and possibly their development versions)

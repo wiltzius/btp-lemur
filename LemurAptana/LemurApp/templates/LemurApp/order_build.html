@@ -1,0 +1,267 @@
+{% extends "LemurApp/base.html" %}
+
+{% load lemur_extras %} 
+
+{% block title %}Build Order{% endblock %}
+{% block header_title %}Build Order{% endblock %}
+
+{% block current_build_order %}current{% endblock %}  {% comment %}This is used to highlight the current page's tab in the nav bar by providing the current page's tab with the blocked-in CSS class{% endcomment %}
+
+{% block extra_head %}
+  
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.form.js"></script>
+  
+  <script type="text/javascript">
+    $(document).ready(function() {
+      // short and sweet script to focus on the ISBN input when the page loads
+      $("#id_identifier").focus();
+      
+      // make it so that we select the "searchNonUnique" or "searchISBN" hidden radio buttons based on whichever box wast last typed in
+      $("#id_identifier").keyup(function(event) {
+        $("#searchType").val("ISBN");
+      });      
+      $("#id_author").keyup(function(event) {
+        $("#searchType").val("nonUnique");
+      });
+      $("#id_title").keyup(function(event) {
+        $("#searchType").val("nonUnique");
+      });
+      
+      // set up the submission of the ASIN form
+      $("#ISBNForm").ajaxForm(function() {
+        addToOrderISBN({'ISBN': $("#isbn_id_asin").val().toString()})
+        $('form').clearForm();  // do this here rather than on order update so we don't lose the Amazon search box data when adding a book from there
+      });
+      
+      // set up the submission of the Title-only form
+      $("#TitleForm").ajaxForm(function() {
+        addToOrderCustom({'Title': $("#title_id_title").val().toString()})
+        $('form').clearForm();  // do this here rather than on order update so we don't lose the Amazon search box data when adding a book from there
+      })
+      
+    });
+    
+    // Function to handle adding custom books to orders, AJAX-style
+    function addToOrderCustom(bookData) {
+      $.ajax({
+         type: "POST",      
+         url: "{% url order-add-book-custom %}",     // use Django's template system to load URLs
+         data: bookData,
+         dataType: 'json',
+         success: updateOrder,
+         error: searchError
+       });
+    }
+    
+    // Function to handle adding books from Amazon to order, AJAX-style
+    function addToOrderASIN(bookData) {
+      $.ajax({
+         type: "POST",
+         url: "{% url order-add-book-ASIN %}",   // use Django's template system to load URLs
+         data: bookData,
+         dataType: 'json',
+         success: updateOrder,
+         error: searchError
+       });
+     }
+    
+    // Function to handle adding books from ISBN direct-entry to order, AJAX-style
+    function addToOrderISBN(bookData) {
+      $.ajax({
+         type: "POST",
+         url: "{% url order-add-book-ISBN %}",   // use Django's template system to load URLs
+         data: bookData,
+         dataType: 'json',
+         success: updateOrder,
+         error: searchError
+       });
+     }
+    
+    // Function to remove books from the cart, AJAX-style
+    function removeFromOrder(url) {
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {},
+        dataType: 'json',
+        success: updateOrder
+      });
+    }
+    
+    // Function to process an error that occurs during an AJAX form submission
+    // (e.g. a 404 error resulting when a book with the given ASIN isn't found)
+    function searchError(xhr, error) {
+      if(xhr.status == 404) {
+        $("#ASINerrors").hide(function() {
+          $("#ASINerrors").html("<li>No results found for the ISBN you entered, please verify that it was typed correctly, or try another method for adding the book to this order</li>");
+          $("#ASINerrors").show('fast');
+        });
+      } else if(xhr.status == 400) {
+        $("#ASINerrors").hide(function() {
+          $("#ASINerrors").html("<li>It looks like the ISBN you tried isn't a valid ISBN number (usually 10 or 13 digits, with a correct check digit), try re-typing it or try another method for adding the book to this order</li>");
+          $("#ASINerrors").show('fast');
+        });
+      }
+    }
+    
+    // Clears any form errors on successful form submission
+    function clearErrors() {
+      $("#ASINerrors").fadeOut('fast', function() {
+        $("#ASINerrors").html('');
+        $("ASINerrors").fadeIn('fast');
+      });
+    }
+    
+    // Function to update the open order once a book has been added to it
+    function updateOrder(updatedOrder) {
+      // clear any error messages
+      clearErrors();
+      // update the current order snippet  
+      $("div#currentOrder").fadeOut('fast', function() {
+        $("div#currentOrder").html(updatedOrder.snippet);
+        $("div#currentOrder").fadeIn('fast');
+      });
+      // update the order summary at the top of the page
+      $("div#topOrderSummary").fadeOut('fast', function() {
+        $("div#topOrderSummary").html(updatedOrder.summary);
+        $("div#topOrderSummary").fadeIn('fast');
+      });
+      // update the warning list at the top of the page
+      $("div#orderWarnings").fadeOut('fast', function() {
+        $("div#orderWarnings").html(updatedOrder.warnings);
+        $("div#orderWarnings").fadeIn('fast');
+      });
+    }
+    
+    
+  </script>
+{% endblock %}
+
+{% block content %}
+    <!-- warning list for current order -->
+    <div id="orderWarnings">
+      {{currentOrderWarningsHTML}}
+    </div>
+    <ul id="ASINerrors" class="errors"></ul>
+    
+    <!-- current order box -->
+    <div id="currentOrder"> 
+      {{currentOrderHTML}}
+    </div>
+    <!-- end of current order -->
+    <strong>Search By:</strong>
+    
+    <form action="" id="ISBNForm" method="post">
+       <div class="bookSearchBox">
+         <input type="hidden" name="whichForm" value="ASIN" />
+         <div class="bookSearchLeft">
+           <div>Add book by ISBN</div>
+         </div>
+         <div class="bookSearchRight"> 
+           <div>{{formISBN.asin.label_tag}} <input id="isbn_id_asin" type="text" name="ISBN" /></div>
+           <input type="submit" value="Add to Order" /> 
+         </div> 
+       </div>
+    </form>
+    
+    <form action="" id="TitleForm" method="post">
+       <div class="bookSearchBox">
+         <input type="hidden" name="whichForm" value="title" />
+         <div class="bookSearchLeft">
+           <div>Add by Title</div>
+         </div>
+         <div class="bookSearchRight"> 
+           <div>{{formTitle.title.label_tag}} {{formTitle.title}}</div>
+           <input type="submit" value="Add to Order" /> 
+         </div> 
+       </div>
+    </form>
+    
+    <form action="{% url order-build %}" method="get">
+       {% csrf_token %}
+       <div class="bookSearchBox">
+         <input type="hidden" name="whichForm" value="search" />
+         <div class="bookSearchLeft">
+           Search for books to add
+         </div>
+         <div class="bookSearchRight">
+           {{formSearch.title.label_tag}} {{formSearch.title}} 
+           {{formSearch.author.label_tag}} {{formSearch.author}}
+           <input type="submit" value="Search" />
+         </div>
+       </div>
+   </form>
+   <div class="clearboth"></div>
+{% endblock %}
+
+{% block searchResults %}
+  
+  {% for error in errors %}
+    <p class="error">{{error}}</p>
+  {% empty %}
+      <!-- only display the search results text if there aren't any errors and there are results (i.e. its a normal results list) -->
+      {% if books %}
+        <h2>Search Results</h2>
+        <div class="resultsPadding">
+        <p>If one of the below choices matches the book you want, select it and click "add to current order". If none match, try making your search more specific.</p>
+      {% endif %}
+  {% endfor %}
+  {% if books %}
+    <!-- display the table if we have some books to show -->
+    <div id="resultsGroup">
+      <div id="resultsListing">
+        <div class="pagination">
+        {% if pagination %}
+          Page {{currPage}} of {{totalPages}}: 
+          {% if prevPage > 0 %}
+          <a href="{% append_to_get page=prevPage %}">&lt; previous</a>
+          {% else %}
+            &lt; previous
+          {% endif %}
+          {% if nextPage <= totalPages %}
+            | <a href="{% append_to_get page=nextPage %}">next &gt;</a>
+          {% else %}
+            next &gt;
+          {% endif %}
+        {% endif %}  
+        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>&nbsp;</th>
+            </tr>
+            {% for book in books %}
+              <tr class="{% cycle 'odd' 'even' %}">
+                <td>{{book.ItemAttributes.Title.text}}</td>
+                <td>{{book.ItemAttributes.Author.text}}</td>
+                {% if book.customBook %}
+                  <td class="rightcolumn"><a href="javascript:addToOrderCustom({'Title': '{{book.ItemAttributes.Title.text}}', 'Author': '{{book.ItemAttributes.Author.text}}'})">add custom book to order</a></td>
+                {% else %}
+                  <td class="rightcolumn"><a href="javascript:addToOrderASIN({'ASIN': '{{book.ASIN.text|escapejs}}'});">add to order</td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% if pagination %}
+          <div class="pagination">
+            Page {{currPage}} of {{totalPages}}: 
+            {% if prevPage > 0 %}
+            <a href="{% append_to_get page=prevPage %}">&lt; previous</a>
+            {% else %}
+              &lt; previous
+            {% endif %}
+            {% if nextPage <= totalPages %}
+              | <a href="{% append_to_get page=nextPage %}">next &gt;</a>
+            {% else %}
+              next &gt;
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+    
+{% endblock %}

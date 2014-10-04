@@ -1,0 +1,15 @@
+{% extends "LemurApp/base.html" %}
+
+{% block title %}Add Inmate{% endblock %}
+{% block header_title %}Add Inmate{% endblock %}
+
+{% block current_inmates_add %}current{% endblock %}
+
+{% block content %}
+  <form action="{% url inmate-add %}" method="post">
+  {% include "LemurApp/inmate_form_snippet.html" %}
+      <div class="formfooter">
+        <input type="submit" value="Add New Record" />
+      </div>
+  </form>
+{% endblock %}

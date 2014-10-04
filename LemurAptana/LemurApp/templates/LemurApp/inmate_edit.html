@@ -1,0 +1,17 @@
+{% extends "LemurApp/base.html" %}
+
+{% block title %}Edit Inmate{% endblock %}
+{% block header_title %}Edit Inmate{% endblock %}
+
+{% block current_inmates_add %}current{% endblock %}
+
+{% block inmate_tab_name %}Edit Inmate{% endblock %}
+
+{% block content %}
+   <form action="{% url inmate-edit object_id=object.pk %}" method="post">
+      {% include "LemurApp/inmate_form_snippet.html" %}
+      <div class="formfooter">
+        <input type="submit" value="Save Changes" />
+      </div>
+  </form>
+{% endblock %}

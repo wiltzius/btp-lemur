@@ -1,0 +1,21 @@
+
+  <!-- Snippet to display the current order, or an error message if there isn't a current order -->
+  <h5>Current Order</h5> 
+  {% if not request.session.order %}
+    <p class="error">No current order, <a href="{% url 'inmate-search' %}">find an inmate</a> and add a new order for them or <a href="{% url 'order-list' %}">choose an open order</a>.</p>
+  {% else %}
+    {% with request.session.order as order %}
+      <p class="label">Order #{{order.pk}} for {{order.inmate.last_name}}, {{order.inmate.first_name}} (Inmate #{{order.inmate.inmate_id}})</p> 
+      <p><strong>{{order.book_set.all.count}} Book{{order.book_set.all.count|pluralize}}:</strong></p>
+      {% if order.book_set.all.count == 0 %}
+      <p>No books in order yet</p>
+      {% else %}
+      <ul id="orderBookList">
+        {% for book in order.book_set.all %}
+          <li>{{book.title}} <a href="javascript:removeFromOrder('{% url 'order-book-remove' book.pk %}')">remove</a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <a href="{% url 'order-send-out' %}">send this order</a> | <a href="{% url 'order-unset' %}">save it for later</a>
+    {% endwith %}
+  {% endif %}
