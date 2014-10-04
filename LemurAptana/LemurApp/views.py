@@ -258,7 +258,10 @@ def order_send_out(request):
             del request.session['order']
             return redirect(currentOrder)
     else:
-        form = forms.SendOutForm(instance=request.session['order']) # An unbound form
+        if 'order' in request.session:
+          form = forms.SendOutForm(instance=request.session['order']) # An unbound form
+        else:
+          form = None
     return render_to_response('LemurApp/order_sendout.html', {'form': form}, context_instance=RequestContext(request))
 
 def order_unset(request):
