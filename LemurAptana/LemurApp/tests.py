@@ -170,6 +170,7 @@ class OrderTest(TestCase):
         o3_again = models.Order.objects.get(pk=o3.pk)
         self.assertEquals(o3_again.status, 'SENT')
         """
+
     def test_unicode_errors(self):
         """Makes sure that funny characters don't mess up the template system"""
         c = Client()
@@ -192,6 +193,12 @@ class OrderTest(TestCase):
         order.save()
         self.assertEquals(order.date_opened, date)
 
+    def test_load_order(self):
+        """Create an order then load it to ensure successful template processing."""
+        order = OrderTest.create_order_1()
+        c = Client()
+        response = c.get('/lemur/order/set/' + str(order.id), follow=True)
+        self.assertEquals(response.status_code, 200)
 
 class InmateTest(TestCase):
 

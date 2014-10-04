@@ -19,10 +19,10 @@ import amazonproduct
 
 def inmate_search(request, object_id=None):
     """Searches for the inmate whose information is passed in via GET parameters"""
-    
+
     def paginate_results(queryset):
         paginator = Paginator(queryset, 10)
-        
+
         # Make sure page request is an int. If not, deliver first page.
         try:
             page = int(request.GET.get('page', '1'))
@@ -34,9 +34,9 @@ def inmate_search(request, object_id=None):
             inmates = paginator.page(page)
         except (EmptyPage, InvalidPage):
             inmates = paginator.page(paginator.num_pages)
-        
+
         return inmates
-    
+
     context_dict = {}
     if object_id is not None:
         #inmate = get_object_or_404(Inmate, pk=object_id)
@@ -46,7 +46,7 @@ def inmate_search(request, object_id=None):
         context_dict['form'] = forms.InmateForm(instance=query[0]) # A form bound to this Inmate instance
         context_dict['inmate_list'] = paginate_results(query)
     elif 'inmate_id' in request.GET or 'first_name' in request.GET or 'last_name' in request.GET:
-        context_dict['form'] = forms.InmateForm(request.GET) # A form bound to the GET data 
+        context_dict['form'] = forms.InmateForm(request.GET) # A form bound to the GET data
         context_dict['query'] = request.META['QUERY_STRING']
         # Try to find the inmate
         inmate_id = request.GET.get('inmate_id', '')
@@ -88,11 +88,11 @@ def order_create(request, inmate_pk):
     except Inmate.DoesNotExist:
         print "There is no inmate with primary key " + request.session['inmate']
         raise
-    
+
 
 def order_add_book_custom(request):
     """Add book to the current order with a custom title & author. Used for the
-       AJAX book adds of books with custom titles and/or authors."""    
+       AJAX book adds of books with custom titles and/or authors."""
     # If this is a non-unique book, fill in what attributes we can and continue
     if request.POST.get('Title', False):
         book = Book()
@@ -154,7 +154,7 @@ def order_remove_book(request, book_pk):
     except KeyError:
         print "Tried to remove a book from the current order, but there isn't a current order"
         raise KeyError
-    
+
     return order_render_as_response(request)
 
 def order_render_as_response(request):
@@ -184,16 +184,16 @@ def order_build(request):
        the ISBN form are both handled by client-side AJAX functions that make
        requests to other views (order_add_book_custom and order_add_book_asin,
        respectively).
-       
+
        So for the true Amazon search, this view does an Amazon API search
        and returns the results."""
-       
+
     context_dict = {}
     context_dict['errors'] = []
     context_dict['formISBN'] = forms.BookForm(auto_id='isbn_id_%s')
     context_dict['formTitle'] = forms.BookForm(auto_id='title_id_%s')
     context_dict['formSearch'] = forms.BookForm(auto_id='search_id_%s')
-                
+
     # If it's a real search, do an Amazon search and display the results
     if request.GET.get('whichForm', False) == 'search':
         context_dict['formSearch'] = forms.BookForm(request.GET, auto_id='search_id_%s')
@@ -204,15 +204,15 @@ def order_build(request):
             power += ['title:'+request.GET['title']]
         if not power:
             # If we wanted to do something special for searching with all fields empty we could here,
-            # but for now just let Amazon do it's thing (which is return Stieg Larrson books, apparently) 
-            pass    
-        
+            # but for now just let Amazon do it's thing (which is return Stieg Larrson books, apparently)
+            pass
+
         try:
             # Do the power search
             try:
                 page = int(request.GET.get('page', '1'))
             except ValueError:
-                # if for some reason 'page' is a GET parameter but not a valid number, just default to 1 
+                # if for some reason 'page' is a GET parameter but not a valid number, just default to 1
                 page = 1
             api = amazonproduct.API(settings.AWS_KEY, settings.AWS_SECRET_KEY, locale='us', associate_tag=settings.AWS_ASSOCIATE_TAG)
             results = api.item_search('Books', Power=' and '.join(power), ItemPage=str(page))
@@ -226,7 +226,7 @@ def order_build(request):
             context_dict['currPage'] = page
             context_dict['nextPage'] = page+1
             context_dict['prevPage'] = page-1
-            
+
         except amazonproduct.NoExactMatchesFound:
             # There weren't any results from our Amazon query
             context_dict['errors'] += ["No books matching the title/author you entered were found, try double-checking your spelling."]
@@ -236,9 +236,9 @@ def order_build(request):
                 book = {'customBook': True, 'ItemAttributes': {'Title': request.GET['title'], 'Author': request.GET['author']}}
                 context_dict['books'] = [book]
             else:
-                # If we're missing the author or title prompt the user to enter both before we try making a dummy book 
+                # If we're missing the author or title prompt the user to enter both before we try making a dummy book
                 context_dict['errors'] += ["If you enter both a title and an author in the search form you can manually enter the book."]
-    
+
     context_dict['currentOrderHTML'] = order_get_snippet_html(request)
     context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
     return render_to_response('LemurApp/order_build.html', context_dict, context_instance=RequestContext(request))
