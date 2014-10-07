@@ -289,6 +289,8 @@ def order_reopen(request, order_pk):
 
 class OrderList(ListView):
     model = Order
+    context_object_name = 'order_list'
+    queryset = Order.objects.filter(status__exact='OPEN')
 
 class OrderDetail(DetailView):
     model = Order
