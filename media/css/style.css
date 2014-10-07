@@ -427,7 +427,10 @@ div.pagination {
 }
 .bookSearchRight label {
   width: 80px;
-  float: left;
+  float:left;
+}
+.bookSearchRight p {
+  margin: 0.5em;
 }
 
 
