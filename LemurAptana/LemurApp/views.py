@@ -38,6 +38,7 @@ def inmate_search(request, pk=None):
         return inmates
 
     context_dict = {}
+    context_dict['has_results'] = False
     if pk is not None:
         #inmate = get_object_or_404(Inmate, pk=object_id)
         query = Inmate.objects.filter(pk__exact=pk)
@@ -45,6 +46,7 @@ def inmate_search(request, pk=None):
             raise Http404
         context_dict['form'] = forms.InmateForm(instance=query[0]) # A form bound to this Inmate instance
         context_dict['inmate_list'] = paginate_results(query)
+        context_dict['has_results'] = True
     elif 'inmate_id' in request.GET or 'first_name' in request.GET or 'last_name' in request.GET:
         context_dict['form'] = forms.InmateForm(request.GET) # A form bound to the GET data
         context_dict['query'] = request.META['QUERY_STRING']
@@ -55,8 +57,10 @@ def inmate_search(request, pk=None):
         query = Inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(last_name__icontains=last_name)
         # grab the paginated result list
         context_dict['inmate_list'] = paginate_results(query)
+        context_dict['has_results'] = True
     else:
         context_dict['form'] = forms.InmateForm() # An unbound form
+    print context_dict
     return render_to_response('LemurApp/inmate_search.html', context_dict, context_instance=RequestContext(request))
 
 
