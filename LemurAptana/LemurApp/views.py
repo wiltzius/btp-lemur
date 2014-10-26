@@ -60,7 +60,6 @@ def inmate_search(request, pk=None):
         context_dict['has_results'] = True
     else:
         context_dict['form'] = forms.InmateForm() # An unbound form
-    print context_dict
     return render_to_response('LemurApp/inmate_search.html', context_dict, context_instance=RequestContext(request))
 
 
@@ -288,7 +287,6 @@ def order_reopen(request, order_pk):
     order.save()
     return order_set(request, order_pk)
 
-
 ## Generic Views
 
 class OrderList(ListView):
@@ -309,20 +307,27 @@ class InmateUpdate(UpdateView):
     template_name = 'LemurApp/inmate_edit.html'
     model = Inmate
 
-'''
-def order_cleanup(request):
-    """Marks all currently open orders as sent, unless they have no books in which case they're deleted."""
-    for order in Order.objects.filter(status__exact='OPEN'):
-        # Mark orders with books as sent
-        if order.book_set.count():
-            order.status = 'SENT'
-            order.date_closed = datetime.now()
-            order.save()
-        # Delete orders without books
-        else:
-            order.delete()
-    # Unset the current order
-    order_unset(request)
-    # Display the order list template again, with an extra note saying we cleaned up
-    return OrderList(request, queryset = Order.objects.filter(status__exact='OPEN'), template_object_name = 'order', extra_context = {'cleaned': True})
-'''
+class OrderCleanupList(OrderList):
+
+    def get(self, request):
+      """Marks all currently open orders as sent, unless they have no books in which case they're deleted."""
+      for order in Order.objects.filter(status__exact='OPEN'):
+          # Mark orders with books as sent
+          if order.book_set.count():
+              order.status = 'SENT'
+              order.date_closed = datetime.now()
+              order.save()
+          # Delete orders without books
+          else:
+              order.delete()
+      # Unset the current order
+      order_unset(request)
+      return super(OrderCleanupList, self).get(request)
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(OrderCleanupList, self).get_context_data(**kwargs)
+        context['cleaned'] = True
+        return context
+
+

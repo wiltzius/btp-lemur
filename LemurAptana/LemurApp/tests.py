@@ -126,9 +126,8 @@ class OrderTest(TestCase):
         pass
 
 # Disabled for now as order cleanup is not expected to work
-#    def test_order_cleanup(self):
+    def test_order_cleanup(self):
         """Tests that the order cleanup happens correctly"""
-        """
         # clean slate
         models.Order.objects.all().delete()
         models.Inmate.objects.all().delete()
@@ -169,7 +168,6 @@ class OrderTest(TestCase):
         # now the sent order o3 should be the same
         o3_again = models.Order.objects.get(pk=o3.pk)
         self.assertEquals(o3_again.status, 'SENT')
-        """
 
     def test_unicode_errors(self):
         """Makes sure that funny characters don't mess up the template system"""

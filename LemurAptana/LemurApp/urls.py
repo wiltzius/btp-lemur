@@ -3,11 +3,6 @@ from models import Inmate, Order
 import forms
 import views
 
-#inmate_add = {'form_class': forms.InmateForm, 'template_name': 'LemurApp/inmate_add.html'}
-#inmate_edit = {'form_class': forms.InmateForm, 'template_name': 'LemurAptana/LemurApp/inmate_edit.html'}
-#order_detail = {'queryset': Order.objects.all(), 'template_object_name': 'order' }
-#order_list = {'queryset': Order.objects.filter(status__exact='OPEN'), 'template_object_name': 'order'}  # generic view dictionary to show all open orders
-
 # Lemur-specific views
 urlpatterns = patterns('LemurAptana.LemurApp.views',
     url(r'^$', 'inmate_search', name='index'),
@@ -24,7 +19,6 @@ urlpatterns = patterns('LemurAptana.LemurApp.views',
     url(r'^order/unset/$', 'order_unset', name='order-unset'),
     url(r'^order/set/(?P<order_pk>\d+)/$', 'order_set', name='order-set'),
     url(r'^order/reopen/(?P<order_pk>\d+)/$', 'order_reopen', name='order-reopen'),
-    #url(r'^order/cleanup/$', 'order_cleanup', name='order-cleanup')
 )
 
 # Generic views
@@ -32,5 +26,6 @@ urlpatterns += patterns('',
     url(r'^inmate/add/$', views.InmateCreate.as_view(), name="inmate-add"),
     url(r'^inmate/edit/(?P<pk>\d+)/$', views.InmateUpdate.as_view(), name="inmate-edit"),
     url(r'^order/list/$', views.OrderList.as_view(), name="order-list"),
+    url(r'^order/cleanup/$', views.OrderCleanupList.as_view(), name='order-cleanup'),
     url(r'^order/detail/(?P<pk>\d+)/$', views.OrderDetail.as_view(), name="order-detail"),
 )
