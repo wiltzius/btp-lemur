@@ -51,9 +51,6 @@ USE_L10N = True
 STATIC_ROOT = base_project_directory + 'static/'
 STATIC_URL = '/static/'
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '***REMOVED***'
-
 # Initial data loading directory
 FIXTURE_DIRS = (
    base_project_directory + 'fixtures/',
@@ -115,10 +112,3 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
 )
-
-
-## Extra settings for the Lemur project
-AWS_KEY = '***REMOVED***'
-AWS_SECRET_KEY = '***REMOVED***'
-
-AWS_ASSOCIATE_TAG = '***REMOVED***'
