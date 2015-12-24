@@ -2,3 +2,4 @@ LemurAptana/settings_local.py
 *.pyc
 venv
 .idea
+books2pr_dev
