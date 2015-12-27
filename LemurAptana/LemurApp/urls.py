@@ -1,7 +1,5 @@
-from django.conf.urls import *
-from models import Inmate, Order
-import forms
 import views
+from django.conf.urls import *
 
 # Lemur-specific views
 urlpatterns = patterns('LemurAptana.LemurApp.views',
@@ -9,6 +7,7 @@ urlpatterns = patterns('LemurAptana.LemurApp.views',
     url(r'^inmate/search/$', 'inmate_search', name='inmate-search'),
     url(r'^inmate/search/(?P<pk>\d+)/$', 'inmate_search', name='inmate-detail'),
     url(r'^inmate/add/searched/$', 'inmate_add_searched', name='inmate-add-searched'),
+    url(r'^inmate_search_proxy/(?P<pk>\d+)/$', 'inmate_search_proxy', name='inmate-search-proxy'),
     url(r'^order/build/$', 'order_build', name='order-build'),
     url(r'^order/create/(?P<inmate_pk>\d+)/$', 'order_create', name='order-create'),
     url(r'^order/addbook/ASIN/$', 'order_add_book_asin', name='order-add-book-ASIN'),

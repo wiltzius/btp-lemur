@@ -11,3 +11,10 @@ Dependencies:
 -) Django version 1.7
 -) Python Amazon Product API, (originally used version 2.4.1), see: http://packages.python.org/python-amazon-product-api/index.html
     Note that this itself requires lxml and libxslt, along with their Python bindings (and possibly their development versions)
+
+To run tests:
+`./manage.py test`
+
+To run the server locally:
+-) pip install -r requirements.txt
+-) set up settings_secret.py; use SqlLite database

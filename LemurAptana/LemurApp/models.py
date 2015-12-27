@@ -156,7 +156,7 @@ class Inmate(models.Model):
                 return self.InmateType.FEDERAL
             elif len(self.inmate_id) == 6:
                 return self.InmateType.ARIZONA
-            return self.InmateType.federal
+            return self.InmateType.FEDERAL
         elif self.inmate_id[0] in string.ascii_letters:
             return self.InmateType.ILLINOIS
 
@@ -190,11 +190,13 @@ class Inmate(models.Model):
         return warnings
 
     def dictionaries(self):
-        """Returns a list of the dictionaries the inmate has already received"""
+        """Returns a list of the dictionaries the inmate has already received within the last 5 years"""
         # if the inmate has previously received a dictionary, note it
-        dictionaries = Book.objects.filter(order__inmate=self) \
-                                   .filter(order__status='SENT') \
-                                   .filter(title__icontains='dictionary')
+        five_years_ago = datetime.date.today() - datetime.timedelta(days=365*5)
+        dictionaries = (Book.objects.filter(order__inmate=self)
+                                    .filter(order__status='SENT')
+                                    .filter(title__icontains='dictionary')
+                                    .filter(order__date_closed__gt=five_years_ago))
         return dictionaries
 
 

@@ -106,7 +106,7 @@ class OrderTest(TestCase):
         self.assertTrue(True in ["Patron already received" in warning for warning in o2.warnings()])
         self.assertFalse(True in ["blah blah blah this isn't a warning" in warning for warning in o2.warnings()])
 
-        # make sure we haven't triggerd the same-book warning
+        # make sure we haven't triggered the same-book warning
         self.assertFalse(True in ["Two books in this" in warning for warning in o2.warnings()])
 
         # Add another book
@@ -119,13 +119,17 @@ class OrderTest(TestCase):
         # ...and test if it triggers the same-book warning
         self.assertTrue(True in ["Two books in this" in warning for warning in o2.warnings()])
 
+    def test_dictionary_count(self):
+        o1 = OrderTest.create_order_1()
+        self.assertEqual(len(o1.inmate.dictionaries()), 1)
 
-    def test_inmate_duplicate(self):
-        #i = OrderTest.create_inmate()
-        #self.assertRaises(ValidationError, OrderTest.create_inmate())
-        pass
+    def test_dictionary_count_old(self):
+        o1 = OrderTest.create_order_1()
+        o1.date_opened = datetime.datetime.now() - datetime.timedelta(days=(365*6)+1)       # 6 years 1 day ago
+        o1.date_closed = datetime.datetime.now() - datetime.timedelta(days=365*6)       # 6 years ago
+        o1.save()
+        self.assertEqual(len(o1.inmate.dictionaries()), 0)
 
-# Disabled for now as order cleanup is not expected to work
     def test_order_cleanup(self):
         """Tests that the order cleanup happens correctly"""
         # clean slate

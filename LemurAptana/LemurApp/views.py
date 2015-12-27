@@ -1,21 +1,24 @@
-import forms
+import json
 from datetime import datetime
-from models import Book, Inmate, Order
+
+import amazonproduct
+import BeautifulSoup
+import forms
+from django.conf import settings
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponseBadRequest
+from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from django.http import HttpResponse
-import json
-from django.core.urlresolvers import reverse
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.core.exceptions import ValidationError
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
-from django.conf import settings
-from django.http import Http404, HttpResponseBadRequest
+from django.views.generic.list import ListView
 from lib import isbn
-import amazonproduct
+from models import Book, Inmate, Order
+import requests
+
 
 def inmate_search(request, pk=None):
     """Searches for the inmate whose information is passed in via GET parameters"""
@@ -73,6 +76,12 @@ def inmate_add_searched(request):
     context_dict = {'form': forms.InmateForm(request.GET)}
     return render_to_response('LemurApp/inmate_add.html', context_dict, context_instance=RequestContext(request))
 
+
+def inmate_search_proxy(request, pk):
+    """ Searches the Illinois DOC website for this inmate's ID and parses out some information from the result page. """
+    IL_DOC_SEARCH_URL = "http://www.idoc.state.il.us/subsections/search/ISinms2.asp"
+
+    requests.post()
 
 def order_create(request, inmate_pk):
     """Create a new order for the given inmate"""
