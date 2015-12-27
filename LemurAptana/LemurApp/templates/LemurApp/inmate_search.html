@@ -1,5 +1,9 @@
 {% extends "LemurApp/base.html" %}
 
+{% block extra_head %}
+  <script type="text/javascript" src="/static/js/inmate_search_proxy.js"></script>
+{% endblock %}
+
 {% load lemur_extras %}
 
 {% block title %}Inmate Search{% endblock %}
@@ -19,108 +23,129 @@
       </div>
       <div id="searchBoxRight">
         <div class="fieldWrapper">
-          {{ form.first_name.label_tag }} {{ form.first_name }} 
+          {{ form.first_name.label_tag }} {{ form.first_name }}
         </div>
         <div class="fieldWrapper">
-          {{ form.last_name.label_tag }} {{ form.last_name }} 
+          {{ form.last_name.label_tag }} {{ form.last_name }}
         </div>
       </div>
       <div class="formfooter">
-        <input type="submit" name="submit" value="Search for Inmate" />
+        <input type="submit" name="submit" value="Search for Inmate"/>
       </div>
     </form>
   </div>
-  
+
   <div id="searchResults">
     {% if has_results %}
       <h2>Search Results</h2>
       <div class="resultsPadding">
-        
+
         <div class="pagination">
           <span class="current">
               Page {{ inmate_list.number }} of {{ inmate_list.paginator.num_pages }}:
           </span>
           {% if inmate_list.has_previous %}
-              <a href="{% append_to_get page=inmate_list.previous_page_number %}">&lt; previous</a>
+            <a href="{% append_to_get page=inmate_list.previous_page_number %}">&lt; previous</a>
           {% else %}
-              &lt; previous
+            &lt; previous
           {% endif %}
           |
           {% if inmate_list.has_next %}
-              <a href="{% append_to_get page=inmate_list.next_page_number %}">next &gt;</a>
+            <a href="{% append_to_get page=inmate_list.next_page_number %}">next &gt;</a>
           {% else %}
-              next &gt;
+            next &gt;
           {% endif %}
         </div>
-        
+
+        <script>
+          window.inmates = [];
+        </script>
         {% for inmate in inmate_list.object_list %}
-          <div class="inmateResult" id="inmateResult{{inmate.pk}}">
+          <div class="inmateResult" id="inmateResult{{ inmate.pk }}">
+            <div>
+              <script>
+                window.inmates.push({{ inmate.pk  }});
+              </script>
+              <ul class="inmateDOC">
+                <li><span class="resultLabel">Paroled date:</span><span class="resultvalue" id="paroledDate{{ inmate.pk }}">loading...</span></li>
+                <li><span class="resultLabel">Parole date:</span><span class="resultvalue" id="projectedParole{{ inmate.pk }}">loading...</span></li>
+                <li><span class="resultLabel">Parent institution:</span><span class="resultvalue" id="parentInstitution{{ inmate.pk }}">loading...</span></li>
+              </ul>
+            </div>
             <ul class="inmateDetails">
               <li>
-                <span class="resultLabel">Name:</span><span class="resultValue bold">{{inmate.full_name}}</span>
+                <span class="resultLabel">Name:</span><span class="resultValue bold">{{ inmate.full_name }}</span>
                 <ul class="inmateErrors error">
-                  {{inmate.warnings|unordered_list}}
+                  {{ inmate.warnings|unordered_list }}
                   {% if inmate.dictionaries|length == 1 %}
-                    <li>Patron already received dictionary ({{inmate.dictionaries.0}})</li>
+                    <li>Patron already received dictionary ({{ inmate.dictionaries.0 }})</li>
                   {% endif %}
                   {% if inmate.dictionaries|length > 1 %}
-                    <li>Patron has already received multiple dictionaries. <a href="javascript:$('#inmateResult{{inmate.pk}} .dictionaries').toggle('fast');">Click to expand</a>
+                    <li>Patron has already received multiple dictionaries. <a
+                        href="javascript:$('#inmateResult{{ inmate.pk }} .dictionaries').toggle('fast');">Click to
+                      expand</a>
                       <ul class="dictionaries" style="display:none;">
-                        {{inmate.dictionaries|unordered_list}}
+                        {{ inmate.dictionaries|unordered_list }}
                       </ul>
                     </li>
                   {% endif %}
                 </ul>
               </li>
-              <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{inmate.inmate_id}}</span></li>
-              <li><span class="resultLabel">Facility:</span><span class="resultValue">{{inmate.facility}}</span></li>
-              <li><span class="resultLabel">Address:</span><span class="resultValue">{{inmate.address}}</span></li>
+              <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{ inmate.inmate_id }}</span>
+              </li>
+              <li><span class="resultLabel">Facility:</span><span class="resultValue">{{ inmate.facility }}</span></li>
+              <li><span class="resultLabel">Address:</span><span class="resultValue">{{ inmate.address }}</span></li>
             </ul>
             <ul>
               <li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>
-              <li><a href="javascript:$('#inmateResult{{inmate.pk}} .historyList').toggle('fast')">History</a>
+              <li><a href="javascript:$('#inmateResult{{ inmate.pk }} .historyList').toggle('fast')">History</a>
                 <ul class="historyList" style="display:none;">
-                {% for order in inmate.order_set.all %}
-                  <li>
-                    <a href="javascript:$('#orderList{{order.pk}}').toggle('fast')">Order #{{order.pk}}</a>,
-                    (<a href="{% url 'order-reopen' order_pk=order.pk %}">reopen</a>)
-                    opened {{order.date_opened|date:"M jS, Y"}}{% if order.status == 'SENT' %}, closed {{order.date_closed|date:"M jS, Y"}}{% if order.sender %} by {{order.sender}}{% endif %}{% endif %}
-                    <ul class="orderlist" id="orderList{{order.pk}}" style="display:none;">
-                      {% for book in order.book_set.all %}
-                      <li>{{book.title}}</li>
-                      {% endfor %}
-                    </ul>
-                  </li>
-                {% endfor %}
+                  {% for order in inmate.order_set.all %}
+                    <li>
+                      <a href="javascript:$('#orderList{{ order.pk }}').toggle('fast')">Order #{{ order.pk }}</a>,
+                      (<a href="{% url 'order-reopen' order_pk=order.pk %}">reopen</a>)
+                      opened {{ order.date_opened|date:"M jS, Y" }}{% if order.status == 'SENT' %}, closed
+                      {{ order.date_closed|date:"M jS, Y" }}{% if order.sender %} by {{ order.sender }}
+                      {% endif %}{% endif %}
+                      <ul class="orderlist" id="orderList{{ order.pk }}" style="display:none;">
+                        {% for book in order.book_set.all %}
+                          <li>{{ book.title }}</li>
+                        {% endfor %}
+                      </ul>
+                    </li>
+                  {% endfor %}
                 </ul>
               </li>
               <li><a href="{% url 'inmate-edit' pk=inmate.pk %}">Edit Information</a></li>
-              <li><a href="{% url 'order-create' inmate_pk=inmate.pk %}" class="bold">Start a new order for this inmate</a></li>
+              <li><a href="{% url 'order-create' inmate_pk=inmate.pk %}" class="bold">Start a new order for this
+                inmate</a></li>
             </ul>
           </div>
         {% empty %}
-          <p><strong>No results found.</strong></p> 
+          <p><strong>No results found.</strong></p>
           <!-- link below is to the new inmate creation screen, but through an intermediary page (inmate-add-searched) that takes GET parameters with inmate information and pre-fills the form -->
-          <p>If you are trying to start a new order, you'll first need to <a href="{% url 'inmate-add-searched' %}?{{query}}">add the recipient to our database.</a> This happens if we've never sent them a package before.</p>
+          <p>If you are trying to start a new order, you'll first need to <a
+              href="{% url 'inmate-add-searched' %}?{{ query }}">add the recipient to our database.</a> This happens if
+            we've never sent them a package before.</p>
         {% endfor %}
-        
+
         <div class="pagination">
           <span class="current">
               Page {{ inmate_list.number }} of {{ inmate_list.paginator.num_pages }}:
           </span>
           {% if inmate_list.has_previous %}
-              <a href="{% append_to_get page=inmate_list.previous_page_number %}">&lt; previous</a>
+            <a href="{% append_to_get page=inmate_list.previous_page_number %}">&lt; previous</a>
           {% else %}
-              &lt; previous
+            &lt; previous
           {% endif %}
           |
           {% if inmate_list.has_next %}
-              <a href="{% append_to_get page=inmate_list.next_page_number %}">next &gt;</a>
+            <a href="{% append_to_get page=inmate_list.next_page_number %}">next &gt;</a>
           {% else %}
-              next &gt;
+            next &gt;
           {% endif %}
         </div>
-        
+
       </div>
     {% endif %}
   </div>

@@ -4,4 +4,4 @@ ipython
 python-amazon-product-api==0.2.8
 requests==2.9.1
 lxml==3.5.0
-beautifulsoup==3.2.1
+beautifulsoup4==4.4.1
