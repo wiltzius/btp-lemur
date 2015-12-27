@@ -1,4 +1,4 @@
-LemurAptana/settings_local.py
+LemurAptana/settings_secret.py
 *.pyc
 venv
 .idea

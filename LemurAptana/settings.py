@@ -1,12 +1,12 @@
 # Django settings for LemurAptana project.
 
-from settings_local import *
+from settings_secret import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Tom Wiltzius', 'tom@cowville.net'),
+    ('Tom Wiltzius', 'tom.wiltzius@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -83,13 +83,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'LemurAptana.urls'
-
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    '/home/books2pr/lemur/LemurAptana/LemurApp/templates',
-    )
 
 # Use the new test runner from Django 1.6
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
