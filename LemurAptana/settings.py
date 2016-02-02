@@ -48,7 +48,7 @@ USE_L10N = True
 # Examples: "http://foo.com/media/", "/media/".
 #ADMIN_MEDIA_PREFIX = '/media/'
 
-STATIC_ROOT = base_project_directory + 'static/'
+STATIC_ROOT = base_project_directory + '/static/'
 STATIC_URL = '/static/'
 
 # Initial data loading directory
