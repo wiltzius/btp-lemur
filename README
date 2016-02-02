@@ -15,6 +15,9 @@ Dependencies:
 To run tests:
 `./manage.py test`
 
+To run server:
+`./manage.py runserver`
+
 To run the server locally:
 -) pip install -r requirements.txt
 -) set up settings_secret.py; use SqlLite database

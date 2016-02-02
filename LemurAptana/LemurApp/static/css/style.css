@@ -468,14 +468,30 @@ div.inmateResult ul.inmateDetails {
 div.inmateResult ul.inmateDOC {
   float: right;
   list-style: none;
+  background-color: #bbb;
+  border: 1px solid #aaa;
+  padding: 0.8em;
+  margin: 0;
 }
 
-div.inmateResult ul.historyList {
+div.inmateResult ul.inmateDOC h4 {
+  margin-top: 0;
+  margin-bottom: 0.4em;
+  font-size: larger;
+}
 
+div.inmateResult ul.inmateDOC span.docLabel {
+  width: 200px;
+  float: left;
+}
+
+div.inmateResult ul.inmateDOC span.docValue {
+  background-color: #eee;
+  padding: 3px;
 }
 
 div.inmateResult span.resultLabel {
-  width: 200px;
+  width: 100px;
   float: left;
   font-weight: bold;
 }
@@ -484,15 +500,22 @@ div.inmateResult span.resultLabel {
   font-weight: bold;
 }
 
+div.inmateResult h3 {
+  font-size: large;
+  background-color: #eee;
+  margin-top: 0.2em;
+  padding: 0.3em;
+}
+
 div.inmateResult span.resultValue {
   background-color: white;
-  padding: 2px;
+  padding: 3px;
 }
 
 div.inmateResult ul.inmateErrors {
-  margin-left: 100px;
+  /*margin-left: 100px;*/
   list-style: none;
-  padding-left: 0px;
+  padding-left: 0.3em;
   font-weight: bold;
 }
 
@@ -503,6 +526,11 @@ div.inmateResult ul.inmateErrors li {
 div.inmateResult ul.orderlist {
   list-style: disc;
 }
+
+div.inmateResult ul.inmateHistory {
+  clear: both;
+}
+
 
 /*
  * For highlighting book titles

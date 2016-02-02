@@ -62,41 +62,45 @@
         </script>
         {% for inmate in inmate_list.object_list %}
           <div class="inmateResult" id="inmateResult{{ inmate.pk }}">
-            <div>
-              <script>
-                window.inmates.push({{ inmate.pk  }});
-              </script>
-              <ul class="inmateDOC">
-                <li><span class="resultLabel">Parole/release date:</span><span class="resultvalue" id="paroledDate{{ inmate.pk }}">loading...</span></li>
-                <li><span class="resultLabel">Proj. parole/release date:</span><span class="resultvalue" id="projectedParole{{ inmate.pk }}">loading...</span></li>
-                <li><span class="resultLabel">Parent institution:</span><span class="resultvalue" id="parentInstitution{{ inmate.pk }}">loading...</span></li>
-              </ul>
-            </div>
+            <h3>{{ inmate.full_name }}</h3>
+
+            <!-- populate global inmates list for later AJAX queries -->
+            <script>
+              window.inmates.push({{ inmate.pk  }});
+            </script>
+
+            <!-- dictionary and other warnings -->
+            <ul class="inmateErrors error">
+              {{ inmate.warnings|unordered_list }}
+              {% if inmate.dictionaries|length == 1 %}
+                <li>Patron already received dictionary ({{ inmate.dictionaries.0 }})</li>
+              {% endif %}
+              {% if inmate.dictionaries|length > 1 %}
+                <li>Patron has already received multiple dictionaries. <a
+                    href="javascript:$('#inmateResult{{ inmate.pk }} .dictionaries').toggle('fast');">Click to
+                  expand</a>
+                  <ul class="dictionaries" style="display:none;">
+                    {{ inmate.dictionaries|unordered_list }}
+                  </ul>
+                </li>
+              {% endif %}
+            </ul>
+
+            <!-- Inmate DOC details box -->
+            <ul class="inmateDOC">
+              <h4>Current DOC/FBOP Records</h4>
+              <li><span class="docLabel">Parole/release date:</span><span class="docValue" id="paroledDate{{ inmate.pk }}">loading...</span></li>
+              <li><span class="docLabel">Proj. parole/release date:</span><span class="docValue" id="projectedParole{{ inmate.pk }}">loading...</span></li>
+              <li><span class="docLabel">Parent institution:</span><span class="docValue" id="parentInstitution{{ inmate.pk }}">loading...</span></li>
+            </ul>
+
+            <!-- Inmate data from Lemur -->
             <ul class="inmateDetails">
-              <li>
-                <span class="resultLabel">Name:</span><span class="resultValue bold">{{ inmate.full_name }}</span>
-                <ul class="inmateErrors error">
-                  {{ inmate.warnings|unordered_list }}
-                  {% if inmate.dictionaries|length == 1 %}
-                    <li>Patron already received dictionary ({{ inmate.dictionaries.0 }})</li>
-                  {% endif %}
-                  {% if inmate.dictionaries|length > 1 %}
-                    <li>Patron has already received multiple dictionaries. <a
-                        href="javascript:$('#inmateResult{{ inmate.pk }} .dictionaries').toggle('fast');">Click to
-                      expand</a>
-                      <ul class="dictionaries" style="display:none;">
-                        {{ inmate.dictionaries|unordered_list }}
-                      </ul>
-                    </li>
-                  {% endif %}
-                </ul>
-              </li>
-              <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{ inmate.inmate_id }}</span>
-              </li>
+              <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{ inmate.inmate_id }}</span></li>
               <li><span class="resultLabel">Facility:</span><span class="resultValue">{{ inmate.facility }}</span></li>
               <li><span class="resultLabel">Address:</span><span class="resultValue">{{ inmate.address }}</span></li>
             </ul>
-            <ul>
+            <ul class="inmateHistory">
               <li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>
               <li><a href="javascript:$('#inmateResult{{ inmate.pk }} .historyList').toggle('fast')">History</a>
                 <ul class="historyList" style="display:none;">
