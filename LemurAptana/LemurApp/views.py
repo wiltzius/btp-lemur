@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 import json
 from datetime import datetime
 
@@ -9,7 +11,7 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
-from django.http import Http404, HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest, JsonResponse
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.template import RequestContext
@@ -44,26 +46,27 @@ def inmate_search(request, pk=None):
     context_dict = {}
     context_dict['has_results'] = False
     if pk is not None:
-        #inmate = get_object_or_404(Inmate, pk=object_id)
+        # inmate = get_object_or_404(Inmate, pk=object_id)
         query = Inmate.objects.filter(pk__exact=pk)
         if query.count() != 1:
             raise Http404
-        context_dict['form'] = forms.InmateForm(instance=query[0]) # A form bound to this Inmate instance
+        context_dict['form'] = forms.InmateForm(instance=query[0])  # A form bound to this Inmate instance
         context_dict['inmate_list'] = paginate_results(query)
         context_dict['has_results'] = True
     elif 'inmate_id' in request.GET or 'first_name' in request.GET or 'last_name' in request.GET:
-        context_dict['form'] = forms.InmateForm(request.GET) # A form bound to the GET data
+        context_dict['form'] = forms.InmateForm(request.GET)  # A form bound to the GET data
         context_dict['query'] = request.META['QUERY_STRING']
         # Try to find the inmate
         inmate_id = request.GET.get('inmate_id', '')
         first_name = request.GET.get('first_name', '')
         last_name = request.GET.get('last_name', '')
-        query = Inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(last_name__icontains=last_name)
+        query = Inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(
+                last_name__icontains=last_name)
         # grab the paginated result list
         context_dict['inmate_list'] = paginate_results(query)
         context_dict['has_results'] = True
     else:
-        context_dict['form'] = forms.InmateForm() # An unbound form
+        context_dict['form'] = forms.InmateForm()  # An unbound form
     return render_to_response('LemurApp/inmate_search.html', context_dict, context_instance=RequestContext(request))
 
 
@@ -78,14 +81,25 @@ def inmate_add_searched(request):
     return render_to_response('LemurApp/inmate_add.html', context_dict, context_instance=RequestContext(request))
 
 
+# inmate_proxy_record = namedtuple('inmate_proxy_record', ['projected_parole', 'parent_institution', 'paroled_date'])
+
+
 def inmate_search_proxy(request, pk):
+    i = Inmate.objects.get(pk=pk)
+    if i.inmate_type() == Inmate.InmateType.FEDERAL:
+        return JsonResponse(federal_search_proxy(i.inmate_id))
+    elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
+        return JsonResponse(illinois_search_proxy(i.inmate_id))
+
+
+def illinois_search_proxy(inmate_id):
     """ Searches the Illinois DOC website for this inmate's ID and parses out some information from the result page. """
 
     il_doc_search_url = "http://www.idoc.state.il.us/subsections/search/ISinms2.asp"
 
     r = requests.post(il_doc_search_url, {
         "selectlist1": "IDOC",
-        "idoc": "B83935"
+        "idoc": inmate_id
     })
 
     results = {}
@@ -125,7 +139,24 @@ def inmate_search_proxy(request, pk):
     except AttributeError:
         results["parent_institution"] = None
 
-    return HttpResponse(json.dumps(results))
+    return results
+
+
+def federal_search_proxy(inmate_id):
+    res = requests.post('http://www.bop.gov/PublicInfo/execute/inmateloc',
+                        data={
+                            'todo': 'query',
+                            'output': 'json',
+                            'inmateNumType': 'IRN',
+                            'inmateNum': inmate_id
+                        }).json()
+    inmate_data = res['InmateLocator'][0]
+    return {
+        'projected_parole': inmate_data['projRelDate'],
+        'parent_institution': inmate_data['faclName'],
+        'paroled_date': inmate_data['actRelDate']
+    }
+    # return HttpResponse(res.json())
 
 
 def order_create(request, inmate_pk):
@@ -162,9 +193,10 @@ def order_add_book_custom(request):
         print 'Tried to add a custom book with no title to the current order, failing silently'
     return order_render_as_response(request)
 
+
 def order_add_book_isbn(request):
     """Same as order_add_book_asin except it does additional ISBN format checking"""
-    if(isbn.isValid(isbn.isbn_strip(request.POST['ISBN']))):
+    if (isbn.isValid(isbn.isbn_strip(request.POST['ISBN']))):
         try:
             book = Book.get_book(isbn.isbn_strip(request.POST['ISBN']))
             order_add_book(request, book)
@@ -175,6 +207,7 @@ def order_add_book_isbn(request):
     else:
         # this ASIN isn't well-formatted, so return 400-bad-request error message
         return HttpResponseBadRequest()
+
 
 def order_add_book_asin(request):
     """Adds a book with the ASIN passed via POST. Used for AJAX book adds of
@@ -188,6 +221,7 @@ def order_add_book_asin(request):
         # this ASIN isn't found, so return 404-not-found error message
         raise Http404('No book with that ASIN found on Amazon')
 
+
 def order_add_book(request, book):
     """Add the book to the current session order
        Saves the book to do so"""
@@ -199,6 +233,7 @@ def order_add_book(request, book):
         # there is no current order
         print "Tried to add a book to current order, but there isn't a current order"
         raise KeyError
+
 
 def order_remove_book(request, book_pk):
     """Remove the given book from the current order and delete it"""
@@ -214,25 +249,30 @@ def order_remove_book(request, book_pk):
 
     return order_render_as_response(request)
 
+
 def order_render_as_response(request):
     """Wraps the current order snippet in an HTTP Response for return by view
        functions (the AJAX ones; its a reponse for the client-side AJAX call)"""
     return HttpResponse(json.dumps(
-                            {'summary': order_get_summary_html(request),
-                             'snippet': order_get_snippet_html(request),
-                             'warnings': order_get_warnings_html(request),}))
+            {'summary': order_get_summary_html(request),
+             'snippet': order_get_snippet_html(request),
+             'warnings': order_get_warnings_html(request),}))
+
 
 def order_get_snippet_html(request):
     """Renders the current order as a snippet of HTML"""
     return render_to_string('LemurApp/order_snippet.html', context_instance=RequestContext(request))
 
+
 def order_get_summary_html(request):
     """Renders the current order summary as a snippet of HTML"""
     return render_to_string('LemurApp/order_summary.html', context_instance=RequestContext(request))
 
+
 def order_get_warnings_html(request):
     """Renders the current order's warnings in a list as a snippet of HMTL"""
     return render_to_string('LemurApp/order_warnings.html', context_instance=RequestContext(request))
+
 
 def order_build(request):
     """Initial view for the order build page. Initializes all the forms for
@@ -256,9 +296,9 @@ def order_build(request):
         context_dict['formSearch'] = forms.BookForm(request.GET, auto_id='search_id_%s')
         power = []
         if request.GET.get('author', False):
-            power += ['author:'+request.GET['author']]
+            power += ['author:' + request.GET['author']]
         if request.GET.get('title', False):
-            power += ['title:'+request.GET['title']]
+            power += ['title:' + request.GET['title']]
         if not power:
             # If we wanted to do something special for searching with all fields empty we could here,
             # but for now just let Amazon do it's thing (which is return Stieg Larrson books, apparently)
@@ -271,41 +311,47 @@ def order_build(request):
             except ValueError:
                 # if for some reason 'page' is a GET parameter but not a valid number, just default to 1
                 page = 1
-            api = amazonproduct.API(settings.AWS_KEY, settings.AWS_SECRET_KEY, locale='us', associate_tag=settings.AWS_ASSOCIATE_TAG)
+            api = amazonproduct.API(settings.AWS_KEY, settings.AWS_SECRET_KEY, locale='us',
+                                    associate_tag=settings.AWS_ASSOCIATE_TAG)
             results = api.item_search('Books', Power=' and '.join(power), ItemPage=str(page))
             context_dict['books'] = []
             for book in results:
                 context_dict['books'].append(book)
-                if(len(context_dict['books']) >= 10):
+                if (len(context_dict['books']) >= 10):
                     break
             context_dict['totalPages'] = results.pages
             if results.pages > 1: context_dict['pagination'] = True
             context_dict['currPage'] = page
-            context_dict['nextPage'] = page+1
-            context_dict['prevPage'] = page-1
+            context_dict['nextPage'] = page + 1
+            context_dict['prevPage'] = page - 1
 
         except amazonproduct.NoExactMatchesFound:
             # There weren't any results from our Amazon query
-            context_dict['errors'] += ["No books matching the title/author you entered were found, try double-checking your spelling."]
+            context_dict['errors'] += [
+                "No books matching the title/author you entered were found, try double-checking your spelling."]
             if request.GET.get('author', False) and request.GET.get('title', False):
                 # If the user entered both an author and a title, create a new dummy book result to use instead of real results with the entered form data
-                context_dict['errors'] += ["If you're certain the title and author you entered are correct, you can manually add the book below."]
-                book = {'customBook': True, 'ItemAttributes': {'Title': request.GET['title'], 'Author': request.GET['author']}}
+                context_dict['errors'] += [
+                    "If you're certain the title and author you entered are correct, you can manually add the book below."]
+                book = {'customBook': True,
+                        'ItemAttributes': {'Title': request.GET['title'], 'Author': request.GET['author']}}
                 context_dict['books'] = [book]
             else:
                 # If we're missing the author or title prompt the user to enter both before we try making a dummy book
-                context_dict['errors'] += ["If you enter both a title and an author in the search form you can manually enter the book."]
+                context_dict['errors'] += [
+                    "If you enter both a title and an author in the search form you can manually enter the book."]
 
     context_dict['currentOrderHTML'] = order_get_snippet_html(request)
     context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
     return render_to_response('LemurApp/order_build.html', context_dict, context_instance=RequestContext(request))
 
+
 def order_send_out(request):
     """Display a page allowing the user to mark an order as sent out. Mark the
        current order as sent if the form is submitted."""
-    if request.method == 'POST': # If the form has been submitted...
-        form = forms.SendOutForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
+    if request.method == 'POST':  # If the form has been submitted...
+        form = forms.SendOutForm(request.POST)  # A form bound to the POST data
+        if form.is_valid():  # All validation rules pass
             currentOrder = request.session['order']
             currentOrder.sender = form.cleaned_data['sender']
             currentOrder.date_closed = datetime.now()
@@ -316,10 +362,11 @@ def order_send_out(request):
             return redirect(currentOrder)
     else:
         if 'order' in request.session:
-          form = forms.SendOutForm(instance=request.session['order']) # An unbound form
+            form = forms.SendOutForm(instance=request.session['order'])  # An unbound form
         else:
-          form = None
+            form = None
     return render_to_response('LemurApp/order_sendout.html', {'form': form}, context_instance=RequestContext(request))
+
 
 def order_unset(request):
     """Unset the current order in session and redirect to the list of open
@@ -327,11 +374,13 @@ def order_unset(request):
     request.session['order'] = None
     return redirect(reverse('order-list'))
 
+
 def order_set(request, order_pk):
     """Select the given order and set it as the current order in session, then
        redirect to the order_build page."""
     request.session['order'] = get_object_or_404(Order, pk=order_pk)
     return redirect(reverse('order-build'))
+
 
 def order_reopen(request, order_pk):
     """Resets the status of the given order to open and sets this order to current."""
@@ -341,6 +390,7 @@ def order_reopen(request, order_pk):
     order.save()
     return order_set(request, order_pk)
 
+
 ## Generic Views
 
 class OrderList(ListView):
@@ -348,40 +398,41 @@ class OrderList(ListView):
     context_object_name = 'order_list'
     queryset = Order.objects.filter(status__exact='OPEN')
 
+
 class OrderDetail(DetailView):
     model = Order
+
 
 class InmateCreate(CreateView):
     form_class = forms.InmateForm
     template_name = 'LemurApp/inmate_add.html'
     model = Inmate
 
+
 class InmateUpdate(UpdateView):
     form_class = forms.InmateForm
     template_name = 'LemurApp/inmate_edit.html'
     model = Inmate
 
-class OrderCleanupList(OrderList):
 
+class OrderCleanupList(OrderList):
     def get(self, request):
-      """Marks all currently open orders as sent, unless they have no books in which case they're deleted."""
-      for order in Order.objects.filter(status__exact='OPEN'):
-          # Mark orders with books as sent
-          if order.book_set.count():
-              order.status = 'SENT'
-              order.date_closed = datetime.now()
-              order.save()
-          # Delete orders without books
-          else:
-              order.delete()
-      # Unset the current order
-      order_unset(request)
-      return super(OrderCleanupList, self).get(request)
+        """Marks all currently open orders as sent, unless they have no books in which case they're deleted."""
+        for order in Order.objects.filter(status__exact='OPEN'):
+            # Mark orders with books as sent
+            if order.book_set.count():
+                order.status = 'SENT'
+                order.date_closed = datetime.now()
+                order.save()
+            # Delete orders without books
+            else:
+                order.delete()
+        # Unset the current order
+        order_unset(request)
+        return super(OrderCleanupList, self).get(request)
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(OrderCleanupList, self).get_context_data(**kwargs)
         context['cleaned'] = True
         return context
-
-

@@ -148,17 +148,21 @@ class Inmate(models.Model):
         ILLINOIS = 2
         ARIZONA = 3
 
-    def inmate_type(self):
-        if self.inmate_id is InmateIDField.NO_ID:
+    @staticmethod
+    def compute_inmate_type(inmate_id):
+        if inmate_id is InmateIDField.NO_ID:
             return None
-        if self.inmate_id[0] in string.digits:
-            if len(self.inmate_id) == 8:
-                return self.InmateType.FEDERAL
-            elif len(self.inmate_id) == 6:
-                return self.InmateType.ARIZONA
-            return self.InmateType.FEDERAL
-        elif self.inmate_id[0] in string.ascii_letters:
-            return self.InmateType.ILLINOIS
+        if inmate_id[0] in string.digits:
+            if len(inmate_id) == 8:
+                return Inmate.InmateType.FEDERAL
+            elif len(inmate_id) == 6:
+                return Inmate.InmateType.ARIZONA
+            return Inmate.InmateType.FEDERAL
+        elif inmate_id[0] in string.ascii_letters:
+            return Inmate.InmateType.ILLINOIS
+
+    def inmate_type(self):
+        return self.compute_inmate_type(self.inmate_id)
 
     def inmate_id_formatted(self):
         if self.inmate_type() is None:

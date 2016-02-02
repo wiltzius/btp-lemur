@@ -475,7 +475,7 @@ div.inmateResult ul.historyList {
 }
 
 div.inmateResult span.resultLabel {
-  width: 100px;
+  width: 200px;
   float: left;
   font-weight: bold;
 }
@@ -486,7 +486,6 @@ div.inmateResult span.resultLabel {
 
 div.inmateResult span.resultValue {
   background-color: white;
-  width: 200px;
   padding: 2px;
 }
 
