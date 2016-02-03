@@ -3,8 +3,14 @@ $(function() {
     console.log('loading', inmate_id);
     $.get('/lemur/inmate_search_proxy/' + inmate_id, function(results) {
       console.log(results);
-      $('#paroledDate' + inmate_id).text(results.paroled_date || "--");
-      $('#projectedParole' + inmate_id).text(results.projected_parole || "--");
+      if(results.parole_single) {
+        $('#paroledDate' + inmate_id).text(results.parole_single || "--");
+        var parole_date = new Date(Date.parse(results.parole_single));
+        var today = new Date();
+        if (parole_date.getTime() < today.getTime()) {
+          $('#paroledDate' + inmate_id).addClass('error');
+        }
+      }
       $('#parentInstitution' + inmate_id).text(results.parent_institution || "unknown");
     }, "json");
   };
@@ -16,19 +22,4 @@ $(function() {
     });
   }
 
-  //var load_federal_inmate = function(federal_id) {
-  //  console.log('loading', federal_id);
-  //  $.get('/lemur/federal_inmate_proxy/' + inmate_id, function(results) {
-  //    console.log(results);
-  //    $('#paroledDate' + inmate_id).text(results.paroled_date || "unknown");
-  //    $('#projectedParole' + inmate_id).text(results.projected_parole || "unknown");
-  //    $('#parentInstitution' + inmate_id).text(results.parent_institution || "unknown");
-  //  }, "json");
-  //};
-  //
-  //if(window.federal_inmates) {
-  //  window.federal_inmates.map(function(el) {
-  //    load_federal_inmate(el);
-  //  });
-  //}
 });

@@ -86,10 +86,17 @@ def inmate_add_searched(request):
 
 def inmate_search_proxy(request, pk):
     i = Inmate.objects.get(pk=pk)
+    res = {}
     if i.inmate_type() == Inmate.InmateType.FEDERAL:
-        return JsonResponse(federal_search_proxy(i.inmate_id))
+        res = federal_search_proxy(i.inmate_id)
     elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
-        return JsonResponse(illinois_search_proxy(i.inmate_id))
+        res = illinois_search_proxy(i.inmate_id)
+    # collapse paroled date / projected parole date into one field
+    if res['paroled_date'] and not res['projected_parole']:
+        res['parole_single'] = res['paroled_date']
+    elif not res['paroled_date'] and res['projected_parole']:
+        res['parole_single'] = res['projected_parole']
+    return JsonResponse(res)
 
 
 def illinois_search_proxy(inmate_id):
@@ -102,7 +109,11 @@ def illinois_search_proxy(inmate_id):
         "idoc": inmate_id
     })
 
-    results = {}
+    results = {
+        "projected_parole": None,
+        "paroled_date": None,
+        "parent_institution": None
+    }
     bs = BeautifulSoup(r.content, "html.parser")
 
     try:

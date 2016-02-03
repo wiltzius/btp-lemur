@@ -90,15 +90,13 @@
             <ul class="inmateDOC">
               <h4>Current DOC/FBOP Records</h4>
               <li><span class="docLabel">Parole/release date:</span><span class="docValue" id="paroledDate{{ inmate.pk }}">loading...</span></li>
-              <li><span class="docLabel">Proj. parole/release date:</span><span class="docValue" id="projectedParole{{ inmate.pk }}">loading...</span></li>
-              <li><span class="docLabel">Parent institution:</span><span class="docValue" id="parentInstitution{{ inmate.pk }}">loading...</span></li>
+              <li><span class="docLabel">Facility:</span><span class="docValue" id="parentInstitution{{ inmate.pk }}">loading...</span></li>
             </ul>
 
             <!-- Inmate data from Lemur -->
             <ul class="inmateDetails">
               <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{ inmate.inmate_id }}</span></li>
               <li><span class="resultLabel">Facility:</span><span class="resultValue">{{ inmate.facility }}</span></li>
-              <li><span class="resultLabel">Address:</span><span class="resultValue">{{ inmate.address }}</span></li>
             </ul>
             <ul class="inmateHistory">
               <li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>
