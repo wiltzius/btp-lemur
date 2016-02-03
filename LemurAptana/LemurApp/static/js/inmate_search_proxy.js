@@ -1,10 +1,8 @@
 $(function() {
   var load_inmate_id = function(inmate_id) {
-    console.log('loading', inmate_id);
     $.get('/lemur/inmate_search_proxy/' + inmate_id, function(results) {
-      console.log(results);
+      $('#paroledDate' + inmate_id).text(results.parole_single || "--");
       if(results.parole_single) {
-        $('#paroledDate' + inmate_id).text(results.parole_single || "--");
         var parole_date = new Date(Date.parse(results.parole_single));
         var today = new Date();
         if (parole_date.getTime() < today.getTime()) {
