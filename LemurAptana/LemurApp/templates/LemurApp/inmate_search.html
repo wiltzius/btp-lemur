@@ -58,9 +58,6 @@
           {% endif %}
         </div>
 
-        <script>
-          window.inmates = [];
-        </script>
         {% for inmate in inmate_list.object_list %}
           <div class="inmateResult" id="inmateResult{{ inmate.pk }}">
             <h3>{{ inmate.full_name }}</h3>

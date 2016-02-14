@@ -10,6 +10,6 @@ console.log('whatever');
 var containers = document.querySelectorAll('.inmateSearchProxyContainer');
 for(var i=0; i < containers.length; i++) {
   var el = containers[i];
-  console.log(el);
-  ReactDOM.render(<InmateSearchProxy/>, el);
+  var inmate_pk = el.attributes["data-inmate-id"].value;
+  ReactDOM.render(<InmateSearchProxy inmatePk={inmate_pk}/>, el);
 }
