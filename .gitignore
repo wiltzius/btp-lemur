@@ -4,5 +4,5 @@ venv
 .idea
 books2pr_dev
 webpack-stats.json
-node_modules
-assets
+node_modules/
+assets/bundles/

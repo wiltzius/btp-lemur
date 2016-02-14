@@ -1,4 +1,5 @@
 # Django settings for LemurAptana project.
+import os
 
 from settings_secret import *
 
@@ -48,7 +49,7 @@ USE_L10N = True
 # Examples: "http://foo.com/media/", "/media/".
 #ADMIN_MEDIA_PREFIX = '/media/'
 
-STATIC_ROOT = base_project_directory + '/static/'
+# STATIC_ROOT = base_project_directory + 'static/'
 STATIC_URL = '/static/'
 
 # Initial data loading directory
@@ -92,6 +93,20 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'assets'),   # We do this so that django's collectstatic copies or our bundles to the STATIC_ROOT or syncs them to whatever storage we use.
+)
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(base_project_directory, 'webpack-stats.json'),
+    }
+
+}
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -104,4 +119,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+    'webpack_loader'
 )
