@@ -1,23 +1,54 @@
 import React from 'react';
 import classNames from 'classnames';
+import Modal from 'react-modal';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translate(-50%, -50%)'
+  }
+};
 
 export default class OrderReopenLink extends React.Component {
 
   constructor() {
     super();
-    this.triggerAlert = this.triggerAlert.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.navigate = this.navigate.bind(this);
+    this.state = {
+      modalIsOpen: false
+    };
   }
 
-  triggerAlert() {
-    console.log(this.props.orderHref);
-    if(window.confirm('Do you want to reopen the order?')) {
-      window.location = this.props.orderHref;
-    }
-  };
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
+
+  navigate() {
+    window.location = this.props.orderHref;
+  }
 
   render() {
-    //console.log(this.props.orderHref);
+    return <span>
+      <a onClick={this.openModal}>reopen</a>
+      <Modal
+          isOpen={this.state.modalIsOpen}
+          onRequestClose={this.closeModal}
+          style={customStyles}>
 
-    return <a onClick={this.triggerAlert}>reopen</a>
+        <h3>Are you sure?</h3>
+        <p>We don't typically reopen orders.</p>
+        <button onClick={this.navigate} style={{marginRight: '1em'}}>Reopen</button>
+        <button onClick={this.closeModal}>Cancel</button>
+      </Modal>
+      </span>
   }
 }
