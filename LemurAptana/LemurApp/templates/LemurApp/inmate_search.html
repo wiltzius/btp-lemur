@@ -1,10 +1,5 @@
 {% extends "LemurApp/base.html" %}
 
-{% block extra_head %}
-{#  <script type="text/javascript" src="/static/js/inmate_search_proxy.js"></script>#}
-{#  <script type="text/javascript" src="/static/js/InmateSearchProxy.js"></script>#}
-{% endblock %}
-
 {% load lemur_extras %}
 
 {% block title %}Inmate Search{% endblock %}
@@ -80,11 +75,6 @@
             </ul>
 
             <!-- Inmate DOC details box -->
-{#            <ul class="inmateDOC">#}
-{#              <h4>Current DOC/FBOP Records</h4>#}
-{#              <li><span class="docLabel">Parole/release date:</span><span class="docValue" id="paroledDate{{ inmate.pk }}">loading...</span></li>#}
-{#              <li><span class="docLabel">Facility:</span><span class="docValue" id="parentInstitution{{ inmate.pk }}">loading...</span></li>#}
-{#            </ul>#}
             <div class="inmateSearchProxyContainer" data-inmate-id="{{ inmate.pk }}"></div>
 
             <!-- Inmate data from Lemur -->
@@ -99,7 +89,7 @@
                   {% for order in inmate.order_set.all %}
                     <li>
                       <a href="javascript:$('#orderList{{ order.pk }}').toggle('fast')">Order #{{ order.pk }}</a>,
-                      (<a href="{% url 'order-reopen' order_pk=order.pk %}">reopen</a>)
+                      (<span class="orderReopenLink" data-order-href="{% url 'order-reopen' order_pk=order.pk %}"></span>)
                       opened {{ order.date_opened|date:"M jS, Y" }}{% if order.status == 'SENT' %}, closed
                       {{ order.date_closed|date:"M jS, Y" }}{% if order.sender %} by {{ order.sender }}
                       {% endif %}{% endif %}
