@@ -50,6 +50,26 @@ ul.errors, ul.errorlist {
 }
 
 /**
+ *   Common controls
+ */
+
+input, select {
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+input[type="text"] {
+  padding: 0.4em;
+}
+
+input[type="submit"], input[type="button"], button {
+  padding: 0.4em;
+  margin: 0.2em;
+  background-color: rgba(124, 160, 199, 0.25);
+  font-size: 13px;
+}
+
+/**
  *   Header bar with restricted list and current order summary
  */
 
