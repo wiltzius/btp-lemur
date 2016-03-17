@@ -15,13 +15,15 @@ Dependencies:
 To run tests:
 `./manage.py test`
 
-To run development server:
-`./manage.py runserver`
 
 To run the server locally:
 -) pip install -r requirements.txt
 -) set up settings_secret.py; use SqlLite database
+-) Run development server with `./manage.py runserver`
+-) Build/watch webpack assets with `webpack -w` in base project directory
 
 To manage the server in production:
 -) Use lemur-fcgi.conf in /etc/init/
 -) Query service status, restart, etc with `sudo initctl status lemur-fcgi`
+-) Rebuild client asset bundle by running `webpack` in base project directory, then `./manage.py collectstatic`, then restarting
+    the server.
