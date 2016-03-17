@@ -154,7 +154,7 @@ def illinois_search_proxy(inmate_id):
 
 
 def federal_search_proxy(inmate_id):
-    res = requests.post('http://www.bop.gov/PublicInfo/execute/inmateloc',
+    res = requests.post('https://www.bop.gov/PublicInfo/execute/inmateloc',
                         data={
                             'todo': 'query',
                             'output': 'json',

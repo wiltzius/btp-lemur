@@ -7,3 +7,4 @@ webpack-stats.json
 node_modules/
 assets/bundles/
 webpack-stats.json
+LemurAptana/static/
