@@ -6,11 +6,11 @@
 {% block current_inmates_add %}current{% endblock %}
 
 {% block content %}
-{#  <div id="inmateAddFormComponent"></div>#}
-  <form action="{% url 'inmate-add' %}" method="post">
-  {% include "LemurApp/inmate_form_snippet.html" %}
-      <div class="formfooter">
-        <input type="submit" value="Add New Record" />
-      </div>
-  </form>
+  <div id="inmateAddFormComponent"></div>
+{#  <form action="{% url 'inmate-add' %}" method="post">#}
+{#  {% include "LemurApp/inmate_form_snippet.html" %}#}
+{#      <div class="formfooter">#}
+{#        <input type="submit" value="Add New Record" />#}
+{#      </div>#}
+{#  </form>#}
 {% endblock %}
