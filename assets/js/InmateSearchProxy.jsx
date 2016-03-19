@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 export default class InmateSearchProxy extends React.Component {
@@ -24,7 +25,6 @@ export default class InmateSearchProxy extends React.Component {
 
   componentDidMount() {
     $.get('/lemur/inmate_search_proxy/' + this.props.inmatePk, (results) => {
-      console.log(results);
       this.setState({
         parole_single: results.parole_single || '--',
         parent_institution: results.parent_institution || "unknown"
@@ -33,7 +33,6 @@ export default class InmateSearchProxy extends React.Component {
   }
 
   render() {
-    console.log(this.props.inmatePk);
     const paroleClasses = classNames({
       'docLabel': true,
       'error': this.oldParoledDate()
@@ -52,3 +51,10 @@ export default class InmateSearchProxy extends React.Component {
     </ul>
   }
 }
+
+// bootstrapping / mount the component
+const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
+Array.from(inmate_search_proxy_containers).forEach(el => {
+  const inmate_pk = el.attributes["data-inmate-id"].value;
+  ReactDOM.render(<InmateSearchProxy inmatePk={inmate_pk}/>, el);
+});
