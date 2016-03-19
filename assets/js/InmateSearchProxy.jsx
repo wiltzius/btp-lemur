@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 export default class InmateSearchProxy extends React.Component {
@@ -50,3 +51,10 @@ export default class InmateSearchProxy extends React.Component {
     </ul>
   }
 }
+
+// bootstrapping / mount the component
+const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
+Array.from(inmate_search_proxy_containers).forEach(el => {
+  const inmate_pk = el.attributes["data-inmate-id"].value;
+  ReactDOM.render(<InmateSearchProxy inmatePk={inmate_pk}/>, el);
+});
