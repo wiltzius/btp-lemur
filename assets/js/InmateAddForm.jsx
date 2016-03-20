@@ -14,9 +14,14 @@ export default class InmateAddForm extends React.Component {
   }
 
   handleChange(event) {
+    //console.log('setting state to', event.target.value);
     this.setState({
       firstName: event.target.value
     });
+  }
+
+  submitHandler(event) {
+    
   }
 
   render() {
@@ -28,7 +33,7 @@ export default class InmateAddForm extends React.Component {
 
       <div id="searchBoxLeft">
         <div className="fieldWrapper">
-          First name: <input type="text" value={this.state.firstName}/>
+          First name: <input type="text" value={this.state.firstName} onChange={this.handleChange.bind(this)} />
           <p className="note">Do not use - or ' characters</p>
         </div>
         <div className="fieldWrapper">
@@ -47,7 +52,7 @@ export default class InmateAddForm extends React.Component {
         </div>
       </div>
       <div className="formfooter">
-        <input type="submit" value="Add New Record"/>
+        <input type="submit" value="Add New Record" onClick={this.submitHandler.bind(this)} />
       </div>
     </div>
   }
