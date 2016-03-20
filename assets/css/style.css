@@ -65,7 +65,7 @@ input[type="text"] {
 input[type="submit"], input[type="button"], button {
   padding: 0.4em;
   margin: 0.2em;
-  background-color: rgba(124, 160, 199, 0.25);
+  background-color: rgb(210, 234, 253);
   font-size: 13px;
 }
 

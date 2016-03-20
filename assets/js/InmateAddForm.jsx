@@ -49,11 +49,15 @@ export default class InmateAddForm extends React.Component {
 
     if (this.state.attemptingInmateId) {
       return <form onSubmit={this.submitInmateIdHandler.bind(this)}>
-        <div className="fieldWrapper">
-          Inmate ID: <input type="text" value={this.state.inmate_id}
-                            onChange={this.handleChange.bind(this, 'inmate_id')}/>
+        <div id="searchBoxLeft">
+          <div className="fieldWrapper">
+            Inmate ID: <input type="text" value={this.state.inmate_id}
+                              onChange={this.handleChange.bind(this, 'inmate_id')}/>
+          </div>
         </div>
-        <input type="submit" />
+        <div className="formfooter">
+          <input type="submit" value="Find Inmate" onClick={this.submitInmateIdHandler.bind(this)}/>
+        </div>
       </form>
     }
     else {
@@ -77,9 +81,9 @@ export default class InmateAddForm extends React.Component {
                               onChange={this.handleChange.bind(this, 'inmate_id')}/>
           </div>
           <div className="fieldWrapper">
-            Facility:
+            <span>Facility: </span>
             <select type="text" value={this.state.facility_pk}
-                             onChange={this.handleChange.bind(this, 'facility_pk')}>
+                    onChange={this.handleChange.bind(this, 'facility_pk')}>
               {
                 globalFacilityList.map(fac => {
                   return <option key={fac.pk} value={fac.pk}>{fac.fields.name}</option>
@@ -93,12 +97,12 @@ export default class InmateAddForm extends React.Component {
           {
             // only show the address field if the facility pk is 1 (which is "no facility")
             this.state.facility_pk != 1 ?
-              undefined
-              :
-              <div className="fieldWrapper" id="addressWrapper">
-                Address: <input type="text" value={this.state.address}
-                                onChange={this.handleChange.bind(this, 'address')}/>
-              </div>
+                undefined
+                :
+                <div className="fieldWrapper" id="addressWrapper">
+                  Address: <input type="text" value={this.state.address}
+                                  onChange={this.handleChange.bind(this, 'address')}/>
+                </div>
           }
         </div>
         <div className="formfooter">
@@ -110,6 +114,6 @@ export default class InmateAddForm extends React.Component {
 }
 
 const container = document.getElementById('inmateAddFormComponent');
-if(container) {
+if (container) {
   ReactDOM.render(<InmateAddForm />, container);
 }

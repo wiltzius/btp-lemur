@@ -8,7 +8,7 @@ export default class InmateSearchProxy extends React.Component {
     super(props);
     this.state = {
       parole_single: 'loading...',
-      parent_institution: 'loading...'
+      facility_name: 'loading...'
     }
   }
 
@@ -27,7 +27,7 @@ export default class InmateSearchProxy extends React.Component {
     $.get('/lemur/inmate_search_proxy_pk/' + this.props.inmatePk, (results) => {
       this.setState({
         parole_single: results.parole_single || '--',
-        parent_institution: results.parent_institution || "unknown"
+        facility_name: results.facility_name || "unknown"
       });
     }, "json");
   }
@@ -46,7 +46,7 @@ export default class InmateSearchProxy extends React.Component {
       </li>
       <li>
         <span className="docLabel">Parent institution:</span>
-        <span className="docValue">{this.state.parent_institution}</span>
+        <span className="docValue">{this.state.facility_name}</span>
       </li>
     </ul>
   }
