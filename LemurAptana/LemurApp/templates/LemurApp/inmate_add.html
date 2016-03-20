@@ -1,5 +1,13 @@
 {% extends "LemurApp/base.html" %}
 
+{% load lemur_extras %}
+
+{% block extra_head %}
+  <script>
+    var globalFacilityList = JSON.parse('{{ facility_list | jsonify }}')
+  </script>
+{% endblock %}
+
 {% block title %}Add Inmate{% endblock %}
 {% block header_title %}Add Inmate{% endblock %}
 

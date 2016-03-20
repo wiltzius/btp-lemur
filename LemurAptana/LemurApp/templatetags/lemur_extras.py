@@ -3,6 +3,8 @@ from django.db.models.query import QuerySet
 import json
 from django import template
 from LemurAptana.LemurApp.models import Inmate
+from django.utils.html import escapejs
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -11,11 +13,8 @@ register = template.Library()
 def jsonify(object):
     """template tag to return a JSON representation of a given object"""
     if isinstance(object, QuerySet):
-        return serialize('json', object)
-    return json.dumps(object)
-
-
-jsonify.is_safe = True
+        return mark_safe(escapejs(serialize('json', object)))
+    return mark_safe(escapejs(json.dumps(object)))
 
 
 @register.simple_tag
