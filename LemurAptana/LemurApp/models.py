@@ -50,10 +50,10 @@ class Facility(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural="Facilities"
+        verbose_name_plural = "Facilities"
         ordering = ['name']
 
-    # Usethe Facility manager to provide custom ordering
+    # Use the Facility manager to provide custom ordering
     objects = FacilityManager()
 
     @staticmethod
