@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import Modal from 'react-modal';
+import fetch from 'whatwg-fetch';
 
 export default class InmateAddForm extends React.Component {
 
@@ -9,52 +10,79 @@ export default class InmateAddForm extends React.Component {
     super();
 
     this.state = {
-      modalIsOpen: false
+      attemptingInmateId: true
     };
   }
 
-  handleChange(event) {
-    //console.log('setting state to', event.target.value);
-    this.setState({
-      firstName: event.target.value
-    });
+  handleChange(propName, event) {
+    console.log('setting state', propName, 'to', event.target.value);
+    const new_state = {};
+    new_state[propName] = event.target.value;
+    this.setState(new_state);
   }
 
   submitHandler(event) {
-    
+
+  }
+
+  submitInmateIdHandler(event) {
+    event.preventDefault();   // we don't want the form to actually be submitted
+
   }
 
   render() {
-    return <div>
-      <ul className="errorlist">
+    console.log('rendering with state', this.state);
+
+    let error_list = null;
+    if (false) {
+      error_list = <ul className="errorlist">
         <li>{}</li>
         <li>{}</li>
       </ul>
+    }
 
-      <div id="searchBoxLeft">
+    if (this.state.attemptingInmateId) {
+      return <form onSubmit={this.submitInmateIdHandler.bind(this)}>
         <div className="fieldWrapper">
-          First name: <input type="text" value={this.state.firstName} onChange={this.handleChange.bind(this)} />
-          <p className="note">Do not use - or ' characters</p>
+          Inmate ID: <input type="text" value={this.state.inmateId}
+                            onChange={this.handleChange.bind(this, 'inmateId')}/>
         </div>
-        <div className="fieldWrapper">
-          Last name: <input type="text"/>
+        <input type="submit" />
+      </form>
+    }
+    else {
+      return <div>
+        {error_list}
+
+        <div id="searchBoxLeft">
+          <div className="fieldWrapper">
+            First name: <input type="text" value={this.state.firstName}
+                               onChange={this.handleChange.bind(this, 'firstName')}/>
+            <p className="note">Do not use - or ' characters</p>
+          </div>
+          <div className="fieldWrapper">
+            Last name: <input type="text" value={this.state.lastName}
+                              onChange={this.handleChange.bind(this, 'lastName')}/>
+          </div>
         </div>
-      </div>
-      <div id="searchBoxRight">
-        <div className="fieldWrapper">
-          Inmate ID: <input type="text"/>
+        <div id="searchBoxRight">
+          <div className="fieldWrapper">
+            Inmate ID: <input type="text" value={this.state.inmateId}
+                              onChange={this.handleChange.bind(this, 'inmateId')}/>
+          </div>
+          <div className="fieldWrapper">
+            Facility: <input type="text" value={this.state.facility}
+                             onChange={this.handleChange.bind(this, 'facility')}/>
+          </div>
+          <div className="fieldWrapper" id="addressWrapper">
+            Address: <input type="text" value={this.state.address} onChange={this.handleChange.bind(this, 'address')}/>
+          </div>
         </div>
-        <div className="fieldWrapper">
-          Facility: <input type="text"/>
+        <div className="formfooter">
+          <input type="submit" value="Add New Record" onClick={this.submitHandler.bind(this)}/>
         </div>
-        <div className="fieldWrapper" id="addressWrapper">
-          Address: <input type="text"/>
-        </div>
-      </div>
-      <div className="formfooter">
-        <input type="submit" value="Add New Record" onClick={this.submitHandler.bind(this)} />
-      </div>
-    </div>
+      </div>;
+    }
   }
 }
 
