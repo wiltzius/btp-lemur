@@ -24,7 +24,7 @@ export default class InmateSearchProxy extends React.Component {
   }
 
   componentDidMount() {
-    $.get('/lemur/inmate_search_proxy/' + this.props.inmatePk, (results) => {
+    $.get('/lemur/inmate_search_proxy_pk/' + this.props.inmatePk, (results) => {
       this.setState({
         parole_single: results.parole_single || '--',
         parent_institution: results.parent_institution || "unknown"

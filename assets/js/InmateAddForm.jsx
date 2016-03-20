@@ -28,10 +28,12 @@ export default class InmateAddForm extends React.Component {
   submitInmateIdHandler(event) {
     event.preventDefault();   // we don't want the form to actually be submitted
     console.log('running with event');
-    axios.get('/lemur/inmate_search_proxy_id/' + this.state.inmateId).then((resp) => {
+    axios.get('/lemur/inmate_search_proxy_id/' + this.state.inmate_id).then((resp) => {
       console.log(resp.data);
+      this.setState(resp.data);
+      this.setState({attemptingInmateId: false});
     }).catch(err => {
-
+      // TODO
     })
   }
 
@@ -49,8 +51,8 @@ export default class InmateAddForm extends React.Component {
     if (this.state.attemptingInmateId) {
       return <form onSubmit={this.submitInmateIdHandler.bind(this)}>
         <div className="fieldWrapper">
-          Inmate ID: <input type="text" value={this.state.inmateId}
-                            onChange={this.handleChange.bind(this, 'inmateId')}/>
+          Inmate ID: <input type="text" value={this.state.inmate_id}
+                            onChange={this.handleChange.bind(this, 'inmate_id')}/>
         </div>
         <input type="submit" />
       </form>
@@ -61,26 +63,23 @@ export default class InmateAddForm extends React.Component {
 
         <div id="searchBoxLeft">
           <div className="fieldWrapper">
-            First name: <input type="text" value={this.state.firstName}
-                               onChange={this.handleChange.bind(this, 'firstName')}/>
+            First name: <input type="text" value={this.state.first_name}
+                               onChange={this.handleChange.bind(this, 'first_name')}/>
             <p className="note">Do not use - or ' characters</p>
           </div>
           <div className="fieldWrapper">
-            Last name: <input type="text" value={this.state.lastName}
-                              onChange={this.handleChange.bind(this, 'lastName')}/>
+            Last name: <input type="text" value={this.state.last_name}
+                              onChange={this.handleChange.bind(this, 'last_name')}/>
           </div>
         </div>
         <div id="searchBoxRight">
           <div className="fieldWrapper">
-            Inmate ID: <input type="text" value={this.state.inmateId}
-                              onChange={this.handleChange.bind(this, 'inmateId')}/>
+            Inmate ID: <input type="text" value={this.state.inmate_id}
+                              onChange={this.handleChange.bind(this, 'inmate_id')}/>
           </div>
           <div className="fieldWrapper">
             Facility: <input type="text" value={this.state.facility}
                              onChange={this.handleChange.bind(this, 'facility')}/>
-          </div>
-          <div className="fieldWrapper" id="addressWrapper">
-            Address: <input type="text" value={this.state.address} onChange={this.handleChange.bind(this, 'address')}/>
           </div>
         </div>
         <div className="formfooter">
