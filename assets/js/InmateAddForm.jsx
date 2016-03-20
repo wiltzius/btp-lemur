@@ -27,7 +27,6 @@ export default class InmateAddForm extends React.Component {
 
   submitInmateIdHandler(event) {
     event.preventDefault();   // we don't want the form to actually be submitted
-    console.log('running with event');
     axios.get('/lemur/inmate_search_proxy_id/' + this.state.inmate_id).then((resp) => {
       console.log(resp.data);
       this.setState(resp.data);
@@ -78,11 +77,29 @@ export default class InmateAddForm extends React.Component {
                               onChange={this.handleChange.bind(this, 'inmate_id')}/>
           </div>
           <div className="fieldWrapper">
-            Facility: <select type="text" value={this.state.facility}
-                             onChange={this.handleChange.bind(this, 'facility')}>
-            {/* TODO make the list of options <option value=facilityPk>facility name</option> */}
-          </select>
+            Facility:
+            <select type="text" value={this.state.facility_pk}
+                             onChange={this.handleChange.bind(this, 'facility_pk')}>
+              {
+                globalFacilityList.map(fac => {
+                  return <option key={fac.pk} value={fac.pk}>{fac.fields.name}</option>
+                })
+              }
+            </select>
+            <div style={{fontSize: 'smaller'}}>
+              (DOC/FBOP facility: {this.state.facility_name})
+            </div>
           </div>
+          {
+            // only show the address field if the facility pk is 1 (which is "no facility")
+            this.state.facility_pk != 1 ?
+              undefined
+              :
+              <div className="fieldWrapper" id="addressWrapper">
+                Address: <input type="text" value={this.state.address}
+                                onChange={this.handleChange.bind(this, 'address')}/>
+              </div>
+          }
         </div>
         <div className="formfooter">
           <input type="submit" value="Add New Record" onClick={this.submitHandler.bind(this)}/>

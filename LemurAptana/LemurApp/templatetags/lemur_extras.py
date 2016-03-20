@@ -3,6 +3,8 @@ from django.db.models.query import QuerySet
 import json
 from django import template
 from LemurAptana.LemurApp.models import Inmate
+from django.utils.html import escapejs
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -10,20 +12,19 @@ register = template.Library()
 def jsonify(object):
     """template tag to return a JSON representation of a given object"""
     if isinstance(object, QuerySet):
-        return serialize('json', object)
-    return json.dumps(object)
-
-jsonify.is_safe = True
+        return mark_safe(escapejs(serialize('json', object)))
+    return mark_safe(escapejs(json.dumps(object)))
 
 
 @register.simple_tag
 def inmate_doc_link(inmate_pk, link_text):
     """template tag to make DOC links for inmates"""
-    inmate = Inmate.objects.get(pk=inmate_pk)   #TODO catch a not-found exception and return blank
+    inmate = Inmate.objects.get(pk=inmate_pk)   # TODO catch a not-found exception and return blank
     if inmate.inmate_type() is None:
         return 'No inmate ID'
     elif inmate.inmate_type() == Inmate.InmateType.FEDERAL:
-        return '<a target="blank" href="http://www.bop.gov/iloc2/InmateFinderServlet?Transaction=IDSearch&IDType=IRN&IDNumber=%s">%s</a>' % (inmate.inmate_id_formatted(), link_text) 
+        # return '<a target="blank" href="http://www.bop.gov/iloc2/InmateFinderServlet?Transaction=IDSearch&IDType=IRN&IDNumber=%s">%s</a>' % (inmate.inmate_id_formatted(), link_text)
+        return 'Federal inmates do not have DOC links'
     elif inmate.inmate_type() == Inmate.InmateType.ILLINOIS:
         return '''
                 <form action="http://www.idoc.state.il.us/subsections/search/ISinms2.asp" style="display:none;" method="post" onsubmit="return validate()" target="blank" id="inmateform%(inmate_pk)s">
