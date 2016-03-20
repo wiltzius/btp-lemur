@@ -64,7 +64,7 @@ export default class InmateAddForm extends React.Component {
       return <div>
         {error_list}
         <form action="/lemur/inmate/add/" method="post">
-
+          {/* TODO need to redirect to the inmate search/detail page after submitting */}
           <div id="searchBoxLeft">
             <div className="fieldWrapper">
               First name: <input type="text" value={this.state.first_name}

@@ -460,8 +460,8 @@ def order_reopen(request, order_pk):
     order.save()
     return order_set(request, order_pk)
 
+# Generic Views
 
-## Generic Views
 
 class OrderList(ListView):
     model = Order
