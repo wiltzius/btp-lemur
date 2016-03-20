@@ -78,8 +78,10 @@ export default class InmateAddForm extends React.Component {
                               onChange={this.handleChange.bind(this, 'inmate_id')}/>
           </div>
           <div className="fieldWrapper">
-            Facility: <input type="text" value={this.state.facility}
-                             onChange={this.handleChange.bind(this, 'facility')}/>
+            Facility: <select type="text" value={this.state.facility}
+                             onChange={this.handleChange.bind(this, 'facility')}>
+            {/* TODO make the list of options <option value=facilityPk>facility name</option> */}
+          </select>
           </div>
         </div>
         <div className="formfooter">

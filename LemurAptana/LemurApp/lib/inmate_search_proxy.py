@@ -16,7 +16,7 @@ def illinois_search_proxy(inmate_id):
     results = {
         "projected_parole": None,
         "paroled_date": None,
-        "parent_institution": None,
+        "facility_name": None,
         "first_name": None,
         "last_name": None
     }
@@ -47,14 +47,14 @@ def illinois_search_proxy(inmate_id):
 
     try:
         # try to parse the parent institution
-        results["parent_institution"] = next(
+        results["facility_name"] = next(
                 bs.find(string=re.compile('Parent Institution'))
                     .find_parent('td')
                     .find_next_sibling('td')
                     .stripped_strings
         )
     except AttributeError:
-        results["facility"] = None
+        results["facility_name"] = None
 
     try:
         title_string = bs.find(string=re.compile(inmate_id))

@@ -15,8 +15,9 @@ from django.template.loader import render_to_string
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from fuzzywuzzy import process
 from lib import isbn
-from models import Book, Inmate, Order
+from models import Book, Inmate, Order, Facility
 
 
 def inmate_search(request, pk=None):
@@ -96,6 +97,8 @@ def inmate_search_proxy_id(request, inmate_id):
         res['parole_single'] = res['paroled_date']
     elif not res['paroled_date'] and res['projected_parole']:
         res['parole_single'] = res['projected_parole']
+    # attempt to guess the facility based on the FBOP/DOC site's facility information
+    res['facility'] = process.extractOne(res['facility_name'], [f.name for f in Facility.objects.all()])[0]
     return JsonResponse(res)
 
 
