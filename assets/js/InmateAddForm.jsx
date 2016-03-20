@@ -22,7 +22,7 @@ export default class InmateAddForm extends React.Component {
   }
 
   submitHandler(event) {
-
+    //event.preventDefault()
   }
 
   submitInmateIdHandler(event) {
@@ -63,51 +63,53 @@ export default class InmateAddForm extends React.Component {
     else {
       return <div>
         {error_list}
+        <form action="/lemur/inmate/add/" method="post">
 
-        <div id="searchBoxLeft">
-          <div className="fieldWrapper">
-            First name: <input type="text" value={this.state.first_name}
-                               onChange={this.handleChange.bind(this, 'first_name')}/>
-            <p className="note">Do not use - or ' characters</p>
-          </div>
-          <div className="fieldWrapper">
-            Last name: <input type="text" value={this.state.last_name}
-                              onChange={this.handleChange.bind(this, 'last_name')}/>
-          </div>
-        </div>
-        <div id="searchBoxRight">
-          <div className="fieldWrapper">
-            Inmate ID: <input type="text" value={this.state.inmate_id}
-                              onChange={this.handleChange.bind(this, 'inmate_id')}/>
-          </div>
-          <div className="fieldWrapper">
-            <span>Facility: </span>
-            <select type="text" value={this.state.facility_pk}
-                    onChange={this.handleChange.bind(this, 'facility_pk')}>
-              {
-                globalFacilityList.map(fac => {
-                  return <option key={fac.pk} value={fac.pk}>{fac.fields.name}</option>
-                })
-              }
-            </select>
-            <div style={{fontSize: 'smaller'}}>
-              (DOC/FBOP facility: {this.state.facility_name})
+          <div id="searchBoxLeft">
+            <div className="fieldWrapper">
+              First name: <input type="text" value={this.state.first_name}
+                                 onChange={this.handleChange.bind(this, 'first_name')}/>
+              <p className="note">Do not use - or ' characters</p>
+            </div>
+            <div className="fieldWrapper">
+              Last name: <input type="text" value={this.state.last_name}
+                                onChange={this.handleChange.bind(this, 'last_name')}/>
             </div>
           </div>
-          {
-            // only show the address field if the facility pk is 1 (which is "no facility")
-            this.state.facility_pk != 1 ?
-                undefined
-                :
-                <div className="fieldWrapper" id="addressWrapper">
-                  Address: <input type="text" value={this.state.address}
-                                  onChange={this.handleChange.bind(this, 'address')}/>
-                </div>
-          }
-        </div>
-        <div className="formfooter">
-          <input type="submit" value="Add New Record" onClick={this.submitHandler.bind(this)}/>
-        </div>
+          <div id="searchBoxRight">
+            <div className="fieldWrapper">
+              Inmate ID: <input type="text" value={this.state.inmate_id}
+                                onChange={this.handleChange.bind(this, 'inmate_id')}/>
+            </div>
+            <div className="fieldWrapper">
+              <span>Facility: </span>
+              <select type="text" value={this.state.facility_pk}
+                      onChange={this.handleChange.bind(this, 'facility_pk')}>
+                {
+                  globalFacilityList.map(fac => {
+                    return <option key={fac.pk} value={fac.pk}>{fac.fields.name}</option>
+                  })
+                }
+              </select>
+              <div style={{fontSize: 'smaller'}}>
+                (DOC/FBOP facility: {this.state.facility_name})
+              </div>
+            </div>
+            {
+              // only show the address field if the facility pk is 1 (which is "no facility")
+              this.state.facility_pk != 1 ?
+                  undefined
+                  :
+                  <div className="fieldWrapper" id="addressWrapper">
+                    Address: <input type="text" value={this.state.address}
+                                    onChange={this.handleChange.bind(this, 'address')}/>
+                  </div>
+            }
+          </div>
+          <div className="formfooter">
+            <input type="submit" value="Add New Record" onClick={this.submitHandler.bind(this)}/>
+          </div>
+        </form>
       </div>;
     }
   }
