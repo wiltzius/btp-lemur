@@ -1,13 +1,9 @@
-from collections import namedtuple
-
 import json
 from datetime import datetime
 
 import amazonproduct
 import forms
-import re
-import requests
-from bs4 import BeautifulSoup
+from LemurAptana.LemurApp.lib.inmate_search_proxy import illinois_search_proxy, federal_search_proxy
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
@@ -81,8 +77,13 @@ def inmate_add_searched(request):
     return render_to_response('LemurApp/inmate_add.html', context_dict, context_instance=RequestContext(request))
 
 
-def inmate_search_proxy(request, pk):
+def inmate_search_proxy_pk(request, pk):
     i = Inmate.objects.get(pk=pk)
+    return inmate_search_proxy_id(request, i.id)
+
+
+def inmate_search_proxy_id(request, inmate_id):
+    inmate_type = Inmate.compute_inmate_type(inmate_id)
     res = {}
     if i.inmate_type() == Inmate.InmateType.FEDERAL:
         res = federal_search_proxy(i.inmate_id)

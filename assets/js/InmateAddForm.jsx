@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import Modal from 'react-modal';
-import fetch from 'whatwg-fetch';
+import axios from 'axios';
 
 export default class InmateAddForm extends React.Component {
 
@@ -27,7 +27,12 @@ export default class InmateAddForm extends React.Component {
 
   submitInmateIdHandler(event) {
     event.preventDefault();   // we don't want the form to actually be submitted
+    console.log('running with event');
+    axios.get('/lemur/inmate_search_proxy_id/' + this.state.inmateId).then((resp) => {
+      console.log(resp.data);
+    }).catch(err => {
 
+    })
   }
 
   render() {
@@ -86,4 +91,7 @@ export default class InmateAddForm extends React.Component {
   }
 }
 
-ReactDOM.render(<InmateAddForm />, document.getElementById('inmateAddFormComponent'));
+const container = document.getElementById('inmateAddFormComponent');
+if(container) {
+  ReactDOM.render(<InmateAddForm />, container);
+}
