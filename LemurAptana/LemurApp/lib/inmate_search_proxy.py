@@ -1,10 +1,6 @@
-from collections import namedtuple
-
 import re
 import requests
 from bs4 import BeautifulSoup
-
-inmate_proxy_record = namedtuple('inmate_proxy_record', ['projected_parole', 'parent_institution', 'paroled_date'])
 
 
 def illinois_search_proxy(inmate_id):
@@ -58,7 +54,7 @@ def illinois_search_proxy(inmate_id):
                     .stripped_strings
         )
     except AttributeError:
-        results["parent_institution"] = None
+        results["facility"] = None
 
     try:
         title_string = bs.find(string=re.compile(inmate_id))

@@ -79,7 +79,7 @@ def inmate_add_searched(request):
 
 def inmate_search_proxy_pk(request, pk):
     i = Inmate.objects.get(pk=pk)
-    return inmate_search_proxy_id(request, i.id)
+    return inmate_search_proxy_id(request, i.inmate_id)
 
 
 def inmate_search_proxy_id(request, inmate_id):
