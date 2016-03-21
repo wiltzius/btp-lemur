@@ -18,6 +18,23 @@ from django.views.generic.list import ListView
 from fuzzywuzzy import process
 from lib import isbn
 from models import Book, Inmate, Order, Facility
+from rest_framework import routers, generics, serializers
+from rest_framework.generics import RetrieveUpdateAPIView
+
+router = routers.SimpleRouter()
+
+class InmateSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Inmate
+        fields = ('url', 'username', 'email', 'groups')
+
+class InmateViewSet(RetrieveUpdateAPIView):
+    queryset = Inmate.objects.all()
+    serializer_class = InmateSerializer
+
+router.register(r'inmateadd', InmateViewSet)
+
+
 
 
 def inmate_search(request, pk=None):
@@ -474,16 +491,26 @@ class OrderDetail(DetailView):
 
 
 class InmateCreate(CreateView):
-    form_class = forms.InmateForm
-    template_name = 'LemurApp/inmate_add.html'
+    # form_class = forms.InmateForm
+    # template_name = 'LemurApp/inmate_add.html'
     model = Inmate
+
+    # def post(self, request, *args, **kwargs):
+    #     print 'posting'
+    #     resp = super(InmateCreate, self).post(request, *args, **kwargs)
+    #     return JsonResponse()
+        # return resp
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(InmateCreate, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the facilities
-        context['facility_list'] = Facility.objects.all()
+        # context['facility_list'] = Facility.objects.all()
         return context
+
+    def render_to_response(self, context, **response_kwargs):
+        print 'rendering to response', context
+        return JsonResponse(context, **response_kwargs)
 
 
 class InmateUpdate(UpdateView):
