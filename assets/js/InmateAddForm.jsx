@@ -22,7 +22,15 @@ export default class InmateAddForm extends React.Component {
   }
 
   submitHandler(event) {
-    //event.preventDefault()
+    event.preventDefault();
+    axios.post('/lemur/inmateadder/', {
+      facility: this.state.facility_pk,
+      first_name: this.state.first_name,
+      last_name: this.state.last_name,
+      inmate_id: this.state.inmate_id
+    }).then(resp => {
+      console.log(resp);
+    });
   }
 
   submitInmateIdHandler(event) {
@@ -63,27 +71,31 @@ export default class InmateAddForm extends React.Component {
     else {
       return <div>
         {error_list}
-        <form action="/lemur/inmate/add/" method="post">
+        <form onSubmit={this.submitHandler.bind(this)}>
           {/* TODO need to redirect to the inmate search/detail page after submitting */}
           <div id="searchBoxLeft">
             <div className="fieldWrapper">
               First name: <input type="text" value={this.state.first_name}
+                                 name="first_name"
                                  onChange={this.handleChange.bind(this, 'first_name')}/>
               <p className="note">Do not use - or ' characters</p>
             </div>
             <div className="fieldWrapper">
               Last name: <input type="text" value={this.state.last_name}
+                                name="last_name"
                                 onChange={this.handleChange.bind(this, 'last_name')}/>
             </div>
           </div>
           <div id="searchBoxRight">
             <div className="fieldWrapper">
               Inmate ID: <input type="text" value={this.state.inmate_id}
+                                name="inmate_id"
                                 onChange={this.handleChange.bind(this, 'inmate_id')}/>
             </div>
             <div className="fieldWrapper">
               <span>Facility: </span>
               <select type="text" value={this.state.facility_pk}
+                      name="facility"
                       onChange={this.handleChange.bind(this, 'facility_pk')}>
                 {
                   globalFacilityList.map(fac => {
@@ -102,6 +114,7 @@ export default class InmateAddForm extends React.Component {
                   :
                   <div className="fieldWrapper" id="addressWrapper">
                     Address: <input type="text" value={this.state.address}
+                                    name="address"
                                     onChange={this.handleChange.bind(this, 'address')}/>
                   </div>
             }

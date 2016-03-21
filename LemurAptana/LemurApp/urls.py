@@ -28,4 +28,7 @@ urlpatterns += patterns('',
     url(r'^order/list/$', views.OrderList.as_view(), name="order-list"),
     url(r'^order/cleanup/$', views.OrderCleanupList.as_view(), name='order-cleanup'),
     url(r'^order/detail/(?P<pk>\d+)/$', views.OrderDetail.as_view(), name="order-detail"),
+
 )
+
+urlpatterns += views.router.urls
