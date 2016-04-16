@@ -45,15 +45,16 @@ class Facility(models.Model):
 
     name = models.CharField(max_length=250, unique=True)
     restrictsHardbacks = models.BooleanField(verbose_name="This facility restricts hardbacks", default=False)
+    otherRestrictions = models.CharField(max_length=250, default="", blank=True)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural="Facilities"
+        verbose_name_plural = "Facilities"
         ordering = ['name']
 
-    # Usethe Facility manager to provide custom ordering
+    # Use the Facility manager to provide custom ordering
     objects = FacilityManager()
 
     @staticmethod
