@@ -246,7 +246,7 @@ div.fieldWrapper label {
   float: left;
 }
 
-div.fieldWrapper input {
+div.fieldWrapper input, div.fieldWrapper select {
   width: 230px;
 }
 

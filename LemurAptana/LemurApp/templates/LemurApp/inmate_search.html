@@ -80,7 +80,12 @@
             <!-- Inmate data from Lemur -->
             <ul class="inmateDetails">
               <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{ inmate.inmate_id }}</span></li>
-              <li><span class="resultLabel">Facility:</span><span class="resultValue">{{ inmate.facility }}</span> <span>({{ inmate.facility.otherRestrictions }})</span></li>
+              <li>
+                <span class="resultLabel">Facility:</span><span class="resultValue">{{ inmate.facility }}</span>
+                {% if inmate.facility.otherRestrictions %}
+                  <span>({{ inmate.facility.otherRestrictions }})</span>
+                {% endif %}
+              </li>
             </ul>
             <ul class="inmateHistory">
               <li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>
