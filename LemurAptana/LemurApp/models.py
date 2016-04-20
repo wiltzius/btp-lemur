@@ -45,15 +45,16 @@ class Facility(models.Model):
 
     name = models.CharField(max_length=250, unique=True)
     restrictsHardbacks = models.BooleanField(verbose_name="This facility restricts hardbacks", default=False)
+    otherRestrictions = models.CharField(max_length=250, default="", blank=True, verbose_name="Other Restrictions")
 
     def __unicode__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural="Facilities"
+        verbose_name_plural = "Facilities"
         ordering = ['name']
 
-    # Usethe Facility manager to provide custom ordering
+    # Use the Facility manager to provide custom ordering
     objects = FacilityManager()
 
     @staticmethod
@@ -282,6 +283,10 @@ class Order(models.Model):
         # if the inmate's facility restricts hardbacks, add a warning
         if self.inmate.facility.restrictsHardbacks:
             warnings += ["Shipping to %s, which does not allow hardbacks!" % self.inmate.facility]
+        # if the facility has any other restrictions, add those too
+        if self.inmate.facility.otherRestrictions:
+            warnings += ["%s restriction: %s" % (self.inmate.facility, self.inmate.facility.otherRestrictions)]
+        # if there are two books of the same name in an order, warn
         duplicate_warning = False
         for book1 in self.book_set.all():
             for book2 in self.book_set.all():

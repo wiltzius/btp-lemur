@@ -1,8 +1,13 @@
 #!/usr/bin/env python
+import os
 
 import settings
-from django.core.management import setup_environ
-setup_environ(settings)     # This needs to be done before the model import below (we need a Django environment in order to import Django models)
+# from django.core.management import setup_environ
+#
+# setup_environ(settings)     # This needs to be done before the model import below (we need a Django environment in order to import Django models)
+os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+import django
+django.setup()
 from LemurApp import models
 
 faclist = ["Big Muddy River",
