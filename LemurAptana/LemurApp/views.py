@@ -1,13 +1,9 @@
-from collections import namedtuple
-
 import json
 from datetime import datetime
 
 import amazonproduct
 import forms
-import re
-import requests
-from bs4 import BeautifulSoup
+from LemurAptana.LemurApp.lib.inmate_search_proxy import illinois_search_proxy, federal_search_proxy
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
@@ -19,8 +15,26 @@ from django.template.loader import render_to_string
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from fuzzywuzzy import process
 from lib import isbn
-from models import Book, Inmate, Order
+from models import Book, Inmate, Order, Facility
+from rest_framework import routers, generics, serializers
+from rest_framework.generics import RetrieveUpdateAPIView
+
+router = routers.SimpleRouter()
+
+class InmateSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Inmate
+        fields = ('url', 'username', 'email', 'groups')
+
+class InmateViewSet(RetrieveUpdateAPIView):
+    queryset = Inmate.objects.all()
+    serializer_class = InmateSerializer
+
+router.register(r'inmateadd', InmateViewSet)
+
+
 
 
 def inmate_search(request, pk=None):
@@ -81,93 +95,26 @@ def inmate_add_searched(request):
     return render_to_response('LemurApp/inmate_add.html', context_dict, context_instance=RequestContext(request))
 
 
-# inmate_proxy_record = namedtuple('inmate_proxy_record', ['projected_parole', 'parent_institution', 'paroled_date'])
-
-
-def inmate_search_proxy(request, pk):
+def inmate_search_proxy_pk(request, pk):
     i = Inmate.objects.get(pk=pk)
+    return inmate_search_proxy_id(request, i.inmate_id)
+
+
+def inmate_search_proxy_id(request, inmate_id):
+    inmate_type = Inmate.compute_inmate_type(inmate_id)
     res = {}
-    if i.inmate_type() == Inmate.InmateType.FEDERAL:
-        res = federal_search_proxy(i.inmate_id)
-    elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
-        res = illinois_search_proxy(i.inmate_id)
+    if inmate_type == Inmate.InmateType.FEDERAL:
+        res = federal_search_proxy(inmate_id)
+    elif inmate_type == Inmate.InmateType.ILLINOIS:
+        res = illinois_search_proxy(inmate_id)
     # collapse paroled date / projected parole date into one field
     if res['paroled_date'] and not res['projected_parole']:
         res['parole_single'] = res['paroled_date']
     elif not res['paroled_date'] and res['projected_parole']:
         res['parole_single'] = res['projected_parole']
+    # attempt to guess the facility based on the FBOP/DOC site's facility information
+    res['facility_pk'] = process.extractOne(res['facility_name'], {f.pk: f.name for f in Facility.objects.all()})[2]
     return JsonResponse(res)
-
-
-def illinois_search_proxy(inmate_id):
-    """ Searches the Illinois DOC website for this inmate's ID and parses out some information from the result page. """
-
-    il_doc_search_url = "http://www.idoc.state.il.us/subsections/search/ISinms2.asp"
-
-    r = requests.post(il_doc_search_url, {
-        "selectlist1": "IDOC",
-        "idoc": inmate_id
-    })
-
-    results = {
-        "projected_parole": None,
-        "paroled_date": None,
-        "parent_institution": None
-    }
-    bs = BeautifulSoup(r.content, "html.parser")
-
-    try:
-        # try to parse out the projected parole date
-        results["projected_parole"] = next(
-                bs.find(string=re.compile('Projected Parole Date'))
-                    .find_parent('td')
-                    .find_next_sibling('td')
-                    .stripped_strings
-        )
-    except AttributeError:
-        results["projected_parole"] = None
-
-    if results["projected_parole"] is None:
-        # if that didn't work, see if they've been paroled already
-        try:
-            results["paroled_date"] = next(
-                    bs.find(string=re.compile('Parole Date'))
-                        .find_parent('td')
-                        .find_next_sibling('td')
-                        .stripped_strings
-            )
-        except AttributeError:
-            results["paroled_date"] = None
-
-    try:
-        # try to parse the parent institution
-        results["parent_institution"] = next(
-                bs.find(string=re.compile('Parent Institution'))
-                    .find_parent('td')
-                    .find_next_sibling('td')
-                    .stripped_strings
-        )
-    except AttributeError:
-        results["parent_institution"] = None
-
-    return results
-
-
-def federal_search_proxy(inmate_id):
-    res = requests.post('https://www.bop.gov/PublicInfo/execute/inmateloc',
-                        data={
-                            'todo': 'query',
-                            'output': 'json',
-                            'inmateNumType': 'IRN',
-                            'inmateNum': inmate_id
-                        }).json()
-    inmate_data = res['InmateLocator'][0]
-    return {
-        'projected_parole': inmate_data['projRelDate'],
-        'parent_institution': inmate_data['faclName'],
-        'paroled_date': inmate_data['actRelDate']
-    }
-    # return HttpResponse(res.json())
 
 
 def order_create(request, inmate_pk):
@@ -401,8 +348,8 @@ def order_reopen(request, order_pk):
     order.save()
     return order_set(request, order_pk)
 
+# Generic Views
 
-## Generic Views
 
 class OrderList(ListView):
     model = Order
@@ -415,9 +362,26 @@ class OrderDetail(DetailView):
 
 
 class InmateCreate(CreateView):
-    form_class = forms.InmateForm
-    template_name = 'LemurApp/inmate_add.html'
+    # form_class = forms.InmateForm
+    # template_name = 'LemurApp/inmate_add.html'
     model = Inmate
+
+    # def post(self, request, *args, **kwargs):
+    #     print 'posting'
+    #     resp = super(InmateCreate, self).post(request, *args, **kwargs)
+    #     return JsonResponse()
+        # return resp
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(InmateCreate, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the facilities
+        # context['facility_list'] = Facility.objects.all()
+        return context
+
+    def render_to_response(self, context, **response_kwargs):
+        print 'rendering to response', context
+        return JsonResponse(context, **response_kwargs)
 
 
 class InmateUpdate(UpdateView):

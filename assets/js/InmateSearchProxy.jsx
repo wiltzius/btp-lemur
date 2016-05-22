@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 
 export default class InmateSearchProxy extends React.Component {
@@ -7,7 +8,7 @@ export default class InmateSearchProxy extends React.Component {
     super(props);
     this.state = {
       parole_single: 'loading...',
-      parent_institution: 'loading...'
+      facility_name: 'loading...'
     }
   }
 
@@ -23,17 +24,15 @@ export default class InmateSearchProxy extends React.Component {
   }
 
   componentDidMount() {
-    $.get('/lemur/inmate_search_proxy/' + this.props.inmatePk, (results) => {
-      console.log(results);
+    $.get('/lemur/inmate_search_proxy_pk/' + this.props.inmatePk, (results) => {
       this.setState({
         parole_single: results.parole_single || '--',
-        parent_institution: results.parent_institution || "unknown"
+        facility_name: results.facility_name || "unknown"
       });
     }, "json");
   }
 
   render() {
-    console.log(this.props.inmatePk);
     const paroleClasses = classNames({
       'docLabel': true,
       'error': this.oldParoledDate()
@@ -47,8 +46,15 @@ export default class InmateSearchProxy extends React.Component {
       </li>
       <li>
         <span className="docLabel">Parent institution:</span>
-        <span className="docValue">{this.state.parent_institution}</span>
+        <span className="docValue">{this.state.facility_name}</span>
       </li>
     </ul>
   }
 }
+
+// bootstrapping / mount the component
+const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
+Array.from(inmate_search_proxy_containers).forEach(el => {
+  const inmate_pk = el.attributes["data-inmate-id"].value;
+  ReactDOM.render(<InmateSearchProxy inmatePk={inmate_pk}/>, el);
+});

@@ -7,7 +7,8 @@ urlpatterns = patterns('LemurAptana.LemurApp.views',
     url(r'^inmate/search/$', 'inmate_search', name='inmate-search'),
     url(r'^inmate/search/(?P<pk>\d+)/$', 'inmate_search', name='inmate-detail'),
     url(r'^inmate/add/searched/$', 'inmate_add_searched', name='inmate-add-searched'),
-    url(r'^inmate_search_proxy/(?P<pk>\d+)/$', 'inmate_search_proxy', name='inmate-search-proxy'),
+    url(r'^inmate_search_proxy_pk/(?P<pk>\d+)/$', 'inmate_search_proxy_pk', name='inmate-search-proxy'),
+    url(r'^inmate_search_proxy_id/(?P<inmate_id>\w+)/$', 'inmate_search_proxy_id', name='inmate-search-proxy'),
     url(r'^order/build/$', 'order_build', name='order-build'),
     url(r'^order/create/(?P<inmate_pk>\d+)/$', 'order_create', name='order-create'),
     url(r'^order/addbook/ASIN/$', 'order_add_book_asin', name='order-add-book-ASIN'),
@@ -27,4 +28,7 @@ urlpatterns += patterns('',
     url(r'^order/list/$', views.OrderList.as_view(), name="order-list"),
     url(r'^order/cleanup/$', views.OrderCleanupList.as_view(), name='order-cleanup'),
     url(r'^order/detail/(?P<pk>\d+)/$', views.OrderDetail.as_view(), name="order-detail"),
+
 )
+
+urlpatterns += views.router.urls
