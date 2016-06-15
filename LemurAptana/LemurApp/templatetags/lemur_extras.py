@@ -34,7 +34,7 @@ def inmate_doc_link(inmate_pk, link_text):
                 </form>
                 <a href="javascript:$('#inmateform%(inmate_pk)s').submit()">%(link_text)s</a>
                 ''' % { 'inmate_id': inmate.inmate_id_formatted(), 'link_text': link_text, 'inmate_pk': inmate.pk }
-    elif inmate.inmate_type() == Inmate.InmateType.ARIZONA:
+    elif inmate.inmate_type() == Inmate.InmateType.KENTUCKY:
         return '<a target="blank" href="http://www.azcorrections.gov/inmate_datasearch/results_Minh.aspx?InmateNumber=%s">%s</a>' % (inmate.inmate_id_formatted(), link_text) 
 
 

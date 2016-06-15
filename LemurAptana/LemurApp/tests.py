@@ -295,7 +295,7 @@ class InmateTest(TestCase):
         # Assert 6 digits is Arizona
         inmate.inmate_id = "123456"
         inmate.save()
-        self.assertEqual(inmate.inmate_type(), models.Inmate.InmateType.ARIZONA)
+        self.assertEqual(inmate.inmate_type(), models.Inmate.InmateType.KENTUCKY)
         # Assert 8 digits is Federal
         inmate.inmate_id = '12345678'
         inmate.save()

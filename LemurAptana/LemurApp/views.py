@@ -81,9 +81,6 @@ def inmate_add_searched(request):
     return render_to_response('LemurApp/inmate_add.html', context_dict, context_instance=RequestContext(request))
 
 
-# inmate_proxy_record = namedtuple('inmate_proxy_record', ['projected_parole', 'parent_institution', 'paroled_date'])
-
-
 def inmate_search_proxy(request, pk):
     i = Inmate.objects.get(pk=pk)
     res = {}
@@ -91,12 +88,57 @@ def inmate_search_proxy(request, pk):
         res = federal_search_proxy(i.inmate_id)
     elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
         res = illinois_search_proxy(i.inmate_id)
+    elif i.inmate_type() == Inmate.InmateType.KENTUCKY:
+        res = kentucky_search_proxy(i.inmate_id)
     # collapse paroled date / projected parole date into one field
+    print i.inmate_type()
     if res['paroled_date'] and not res['projected_parole']:
         res['parole_single'] = res['paroled_date']
     elif not res['paroled_date'] and res['projected_parole']:
         res['parole_single'] = res['projected_parole']
     return JsonResponse(res)
+
+
+def kentucky_search_proxy(inmate_id):
+    """ Searches the Kentucky DOC site (KOOL) and parses some information for the result page """
+    kool_url = "http://kool.corrections.ky.gov/"
+    r1 = requests.get(kool_url, {
+        "returnResults": True,
+        "DOC": inmate_id
+    })
+    print r1.content
+    bs = BeautifulSoup(r1.content, "html.parser")
+
+    # there's a string embedded in the page of the format "(1) / (2)" where 2 is the inmate DOC number and 1 is the
+    # "PID", which the site uses as their identifier
+    pid_number = unicode(bs.find(string=re.compile(inmate_id))).split('/')[0].strip()
+
+    kool_detail_url = "http://kool.corrections.ky.gov/KOOL/Details/%s" % pid_number
+    r2 = requests.get(kool_detail_url)
+
+    b2 = BeautifulSoup(r2.content, "html.parser")
+
+    results = {
+        "projected_parole": None,
+        "paroled_date": None,
+        "parent_institution": None
+    }
+
+    try:
+        # try to parse the parent institution
+        # import ipdb; ipdb.set_trace()
+        results["parent_institution"] = ' '.join(
+            b2.find(string=re.compile('Location:'))
+                .find_parent('td')
+                .find_next_sibling('td')
+                .stripped_strings
+        )
+    except AttributeError:
+        results["parent_institution"] = None
+
+    print results
+
+    return results
 
 
 def illinois_search_proxy(inmate_id):
