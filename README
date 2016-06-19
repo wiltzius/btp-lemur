@@ -26,5 +26,4 @@ To manage the server in production:
 -) Various packages need be installed, including: `apt-get install libffi-dev`
 -) Use lemur-fcgi.conf in /etc/init/
 -) Query service status, restart, etc with `sudo initctl status lemur-fcgi`
--) Rebuild client asset bundle by running `webpack` in base project directory, then `./manage.py collectstatic`, then restarting
-    the server.
+-) Rebuild client, run migrations, and restart service with `./production_restart.sh`
