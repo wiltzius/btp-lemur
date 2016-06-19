@@ -23,7 +23,7 @@ def inmate_doc_link(inmate_pk, link_text):
     if inmate.inmate_type() is None:
         return 'No inmate ID'
     elif inmate.inmate_type() == Inmate.InmateType.FEDERAL:
-        return '<a target="blank" href="http://www.bop.gov/iloc2/InmateFinderServlet?Transaction=IDSearch&IDType=IRN&IDNumber=%s">%s</a>' % (inmate.inmate_id_formatted(), link_text) 
+        return 'No DOC link for Federal inmates; manually search <a target="_blank" href="https://www.bop.gov/inmateloc/">here</a>'
     elif inmate.inmate_type() == Inmate.InmateType.ILLINOIS:
         return '''
                 <form action="http://www.idoc.state.il.us/subsections/search/ISinms2.asp" style="display:none;" method="post" onsubmit="return validate()" target="blank" id="inmateform%(inmate_pk)s">
@@ -34,7 +34,7 @@ def inmate_doc_link(inmate_pk, link_text):
                 </form>
                 <a href="javascript:$('#inmateform%(inmate_pk)s').submit()">%(link_text)s</a>
                 ''' % { 'inmate_id': inmate.inmate_id_formatted(), 'link_text': link_text, 'inmate_pk': inmate.pk }
-    elif inmate.inmate_type() == Inmate.InmateType.ARIZONA:
+    elif inmate.inmate_type() == Inmate.InmateType.KENTUCKY:
         return '<a target="blank" href="http://www.azcorrections.gov/inmate_datasearch/results_Minh.aspx?InmateNumber=%s">%s</a>' % (inmate.inmate_id_formatted(), link_text) 
 
 

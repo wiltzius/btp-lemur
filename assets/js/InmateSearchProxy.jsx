@@ -24,7 +24,6 @@ export default class InmateSearchProxy extends React.Component {
 
   componentDidMount() {
     $.get('/lemur/inmate_search_proxy/' + this.props.inmatePk, (results) => {
-      console.log(results);
       this.setState({
         parole_single: results.parole_single || '--',
         parent_institution: results.parent_institution || "unknown"
@@ -33,7 +32,6 @@ export default class InmateSearchProxy extends React.Component {
   }
 
   render() {
-    console.log(this.props.inmatePk);
     const paroleClasses = classNames({
       'docLabel': true,
       'error': this.oldParoledDate()

@@ -73,7 +73,7 @@ class InmateIDField(models.CharField):
         """Validates and formats an inmate ID"""
 
         error_format_message = '''
-            Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates) or 8 numbers (for Federal inmates) or 6 numbers (for Arizona inmates)
+            Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates) or 8 numbers (for Federal inmates) or 6 numbers (for Kentucky inmates)
             '''
 
         if (value == '' or value is None):
@@ -83,7 +83,7 @@ class InmateIDField(models.CharField):
             # federal ID
             if unicode(value).isnumeric() and len(value) == 8:
                 return value
-            # Arizona state ID
+            # Kentucky state ID
             elif unicode(value).isnumeric() and len(value) == 6:
                 return value
             else:
@@ -147,7 +147,7 @@ class Inmate(models.Model):
     class InmateType:
         FEDERAL = 1
         ILLINOIS = 2
-        ARIZONA = 3
+        KENTUCKY = 3
 
     @staticmethod
     def compute_inmate_type(inmate_id):
@@ -157,7 +157,7 @@ class Inmate(models.Model):
             if len(inmate_id) == 8:
                 return Inmate.InmateType.FEDERAL
             elif len(inmate_id) == 6:
-                return Inmate.InmateType.ARIZONA
+                return Inmate.InmateType.KENTUCKY
             return Inmate.InmateType.FEDERAL
         elif inmate_id[0] in string.ascii_letters:
             return Inmate.InmateType.ILLINOIS
@@ -172,7 +172,7 @@ class Inmate(models.Model):
             return self.inmate_id[0:5] + '-' + self.inmate_id[5:8]  # return "XXXXX-XXX" format used by the Federal Bureau of Prisons
         elif self.inmate_type() is Inmate.InmateType.ILLINOIS:
             return self.inmate_id.upper()                           # return "LETTER#####" format used by Illinois DOC
-        elif self.inmate_type() is Inmate.InmateType.ARIZONA:
+        elif self.inmate_type() is Inmate.InmateType.KENTUCKY:
             return self.inmate_id
 
     def full_name(self):
