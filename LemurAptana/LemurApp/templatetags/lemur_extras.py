@@ -23,7 +23,6 @@ def inmate_doc_link(inmate_pk, link_text):
     if inmate.inmate_type() is None:
         return 'No inmate ID'
     elif inmate.inmate_type() == Inmate.InmateType.FEDERAL:
-        # return '<a target="blank" href="http://www.bop.gov/iloc2/InmateFinderServlet?Transaction=IDSearch&IDType=IRN&IDNumber=%s">%s</a>' % (inmate.inmate_id_formatted(), link_text)
         return 'No DOC link for Federal inmates; manually search <a target="_blank" href="https://www.bop.gov/inmateloc/">here</a>'
     elif inmate.inmate_type() == Inmate.InmateType.ILLINOIS:
         return '''
