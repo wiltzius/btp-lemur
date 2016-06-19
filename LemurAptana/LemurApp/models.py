@@ -73,7 +73,7 @@ class InmateIDField(models.CharField):
         """Validates and formats an inmate ID"""
 
         error_format_message = '''
-            Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates) or 8 numbers (for Federal inmates) or 6 numbers (for Arizona inmates)
+            Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates) or 8 numbers (for Federal inmates) or 6 numbers (for Kentucky inmates)
             '''
 
         if (value == '' or value is None):
@@ -83,7 +83,7 @@ class InmateIDField(models.CharField):
             # federal ID
             if unicode(value).isnumeric() and len(value) == 8:
                 return value
-            # Arizona state ID
+            # Kentucky state ID
             elif unicode(value).isnumeric() and len(value) == 6:
                 return value
             else:

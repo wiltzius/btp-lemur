@@ -106,7 +106,6 @@ def kentucky_search_proxy(inmate_id):
         "returnResults": True,
         "DOC": inmate_id
     })
-    print r1.content
     bs = BeautifulSoup(r1.content, "html.parser")
 
     # there's a string embedded in the page of the format "(1) / (2)" where 2 is the inmate DOC number and 1 is the
@@ -127,8 +126,20 @@ def kentucky_search_proxy(inmate_id):
     try:
         # try to parse the parent institution
         # import ipdb; ipdb.set_trace()
+
         results["parent_institution"] = ' '.join(
             b2.find(string=re.compile('Location:'))
+                .find_parent('td')
+                .find_next_sibling('td')
+                .stripped_strings
+        )
+    except AttributeError:
+        results["parent_institution"] = None
+
+    try:
+        # try to parse the expected parole / release date
+        results["projected_parole"] = ' '.join(
+            b2.find(string=re.compile('TTS'))
                 .find_parent('td')
                 .find_next_sibling('td')
                 .stripped_strings
