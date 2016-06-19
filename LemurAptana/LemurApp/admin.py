@@ -1,4 +1,4 @@
-from LemurAptana.LemurApp.models import Facility, Inmate, Order, Book, BannerMessage
+from LemurAptana.LemurApp.models import Facility, Inmate, Order, Book, BannerMessage, LemurSettingsStore
 from django.contrib import admin
 
 admin.site.register(Facility)
@@ -14,3 +14,5 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(Book)
 
 admin.site.register(BannerMessage)
+
+admin.site.register(LemurSettingsStore)

@@ -29,6 +29,22 @@ class BannerMessage(models.Model):
         return BannerMessage.objects.get(handle__exact=1)
 
 
+class LemurSettingsStore(models.Model):
+    settingName = models.CharField(max_length=250, unique=True)
+    settingValue = models.CharField(max_length=250)
+
+    class Meta:
+        verbose_name_plural = "Lemur Settings"
+        ordering = ['settingName']
+
+    @classmethod
+    def order_age_warning(cls):
+        return int(cls.objects.get(settingName__exact='order_age_policy').settingValue)
+
+    def __unicode__(self):
+        return self.settingName + ": " + self.settingValue
+
+
 class FacilityManager(models.Manager):
     def get_queryset(self):
         """We have complicated ordering requirements (all facilities alphabetically,
@@ -187,8 +203,8 @@ class Inmate(models.Model):
         # if the inmate's facility restricts hardbacks, add a warning
         if self.facility.restrictsHardbacks:
             warnings += ["Patron's facility restricts hardbacks!"]
-        # if the inmate associated with this order has had an order within 3 months (3*30 days), add a warning
-        recent_orders = self.order_set.filter(status__exact='SENT').filter(date_closed__gte=(datetime.date.today() - datetime.timedelta(3*30))).order_by('-date_closed')
+        # if the inmate associated with this order has had an order within the order warning age, add a warning
+        recent_orders = self.order_set.filter(status__exact='SENT').filter(date_closed__gte=(datetime.date.today() - datetime.timedelta(LemurSettingsStore.order_age_warning()*30))).order_by('-date_closed')
         if recent_orders.count():
             warnings += ["Patron received an order less than 3 months ago (on %s)" % recent_orders[0].date_closed.strftime('%b %d, %Y')]
         # return the full warning list
@@ -203,7 +219,6 @@ class Inmate(models.Model):
                                     .filter(title__icontains='dictionary')
                                     .filter(order__date_closed__gt=five_years_ago))
         return dictionaries
-
 
     def clean(self):
         """Ensures that the inmate model is consistent
@@ -264,12 +279,13 @@ class Order(models.Model):
         """Return a list of text warnings associated with this order (e.g. if
            this inmate's recently received another similar order, etc."""
         warnings = list()
-        # if the inmate associated with this order has had an order within 3 months (3*30 days), add a warning
-        recent_orders = self.inmate.order_set \
-                                .filter(status__exact='SENT') \
-                                .filter(date_closed__gte=(datetime.date.today() - datetime.timedelta(3*30))) \
-                                .exclude(pk=self.pk) \
-                                .order_by('-date_closed')
+        # if the inmate associated with this order has had an order within the order warning age, add a warning
+        recent_orders = (self.inmate.order_set
+                         .filter(status__exact='SENT')
+                         .filter(date_closed__gte=(datetime.date.today() -
+                                                   datetime.timedelta(LemurSettingsStore.order_age_warning() * 30)))
+                         .exclude(pk=self.pk)
+                         .order_by('-date_closed'))
         if recent_orders.count():
             warnings += ["Patron received an order less than 3 months ago"]
         # if the inmate associated with this order has gotten a similar book before, add a warning
