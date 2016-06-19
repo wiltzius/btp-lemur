@@ -7,4 +7,4 @@ webpack
 # run any django migrations
 ./manage.py migrate
 # restart the server's fcgi service
-sudo initctl status lemur-fcgi
+sudo initctl restart lemur-fcgi   # TODO this doesn't work for KY
