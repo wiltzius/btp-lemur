@@ -19,7 +19,8 @@ class BannerMessage(models.Model):
 
     """
     message = models.CharField(max_length=250, unique=True)
-    handle = models.IntegerField(unique=True, verbose_name="Handle (leave this as 1!)")   # this should be set to 1 for the banner message entry row
+    # this should be set to 1 for the banner message entry row
+    handle = models.IntegerField(unique=True, verbose_name="Handle (leave this as 1!)")
 
     def __unicode__(self):
         return self.message
@@ -50,7 +51,8 @@ class FacilityManager(models.Manager):
         """We have complicated ordering requirements (all facilities alphabetically,
            followed by the "non-facility" facility) so this function returns the
            list we want in the order we want, as a normal queryset"""
-        # get the normal queryset, then additionally select a true/false column `non-facility`, then order first by this then by the facility name
+        # get the normal queryset, then additionally select a true/false column `non-facility`, then order first by
+        # this then by the facility name
         return super(FacilityManager, self).get_queryset() \
                     .extra(select={'non-facility': 'id=1'}) \
                     .extra(order_by=['non-facility', 'name'])
@@ -75,8 +77,10 @@ class Facility(models.Model):
 
     @staticmethod
     def get_non_facility():
-        """We have a special facility record that means "facility not in list of normal facilities, enter an address manually
-        This special record has a pk of 1; there should be a fixture that has the pk of 1 with this info in it"""
+        """We have a special facility record that means "facility not in list of normal facilities, enter an address
+        manually This special record has a pk of 1; there should be a fixture that has the pk of 1 with this info in
+        it.
+        """
         return Facility.objects.get(pk=1)
 
 
@@ -92,7 +96,7 @@ class InmateIDField(models.CharField):
             Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates) or 8 numbers (for Federal inmates) or 6 numbers (for Kentucky inmates)
             '''
 
-        if (value == '' or value is None):
+        if value == '' or value is None:
             # no ID (for limited use only!) which is acceptable
             return self.NO_ID
         elif value[0] in string.digits:
@@ -158,7 +162,7 @@ class Inmate(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('inmate-detail', [str(self.pk)])
+        return 'inmate-detail', [str(self.pk)]
 
     class InmateType:
         FEDERAL = 1
@@ -185,9 +189,11 @@ class Inmate(models.Model):
         if self.inmate_type() is None:
             return ""
         if self.inmate_type() is Inmate.InmateType.FEDERAL:
-            return self.inmate_id[0:5] + '-' + self.inmate_id[5:8]  # return "XXXXX-XXX" format used by the Federal Bureau of Prisons
+            # return "XXXXX-XXX" format used by the Federal Bureau of Prisons
+            return self.inmate_id[0:5] + '-' + self.inmate_id[5:8]
         elif self.inmate_type() is Inmate.InmateType.ILLINOIS:
-            return self.inmate_id.upper()                           # return "LETTER#####" format used by Illinois DOC
+            # return "LETTER#####" format used by Illinois DOC
+            return self.inmate_id.upper()
         elif self.inmate_type() is Inmate.InmateType.KENTUCKY:
             return self.inmate_id
 
@@ -222,9 +228,12 @@ class Inmate(models.Model):
         return dictionaries
 
     def clean(self):
-        """Ensures that the inmate model is consistent
-           Makes sure that either a facility is selected or the "other" facility is selected and an address is filled in"""
-        if self.facility_id and (self.facility == Facility.get_non_facility()): # we need the initial check for facility_id because if it wasn't filled in we'll get an exception trying to reference the self.facility object
+        """Ensures that the inmate model is consistent.
+
+        Makes sure that either a facility is selected or the "other" facility is selected and an address is filled in"""
+        # we need the initial check for facility_id because if it wasn't filled in we'll get an exception trying to
+        # reference the self.facility object
+        if self.facility_id and (self.facility == Facility.get_non_facility()):
             if not self.address:
                 raise ValidationError('Address: If the facility is not listed you must provide an address')
         else:
@@ -253,7 +262,7 @@ class Order(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('order-detail', (), {'pk': self.pk})
+        return 'order-detail', (), {'pk': self.pk}
 
     def save(self, *args, **kwargs):
         """Override the normal save method to make sure we validate before
@@ -291,12 +300,15 @@ class Order(models.Model):
             warnings += ["Patron received an order less than %s months ago" % LemurSettingsStore.order_age_warning()]
         # if the inmate associated with this order has gotten a similar book before, add a warning
         for book in self.book_set.all():
+            # That is to say: for all books, select those in a sent-out order that went to this inmate, and then
+            # subselect the books with titles like the title of a book in this order
             similar_books = Book.objects.filter(order__status='SENT') \
                                         .filter(order__inmate=self.inmate) \
                                         .filter(title__icontains=book.title) \
-                                        .exclude(order__pk=self.pk)      # That is to say: for all books, select those in a sent-out order that went to this inmate, and then subselect the books with titles like the title of a book in this order
+                                        .exclude(order__pk=self.pk)
             if similar_books.count():
-                warnings += ["Patron already received %s on %s" % (similar_books[0].title, similar_books[0].order.date_closed.strftime("%b %d, %Y"))]
+                warnings += ["Patron already received %s on %s" %
+                             (similar_books[0].title, similar_books[0].order.date_closed.strftime("%b %d, %Y"))]
         # if the inmate's facility restricts hardbacks, add a warning
         if self.inmate.facility.restrictsHardbacks:
             warnings += ["Shipping to %s, which does not allow hardbacks!" % self.inmate.facility]
@@ -316,7 +328,9 @@ class Order(models.Model):
 
 class Book(models.Model):
     """Books, which are either user-entered or pulled from Amazon"""
-    asin = models.CharField(max_length=13, verbose_name="ISBN", blank=True, null=True)    # Amazon identifier; an ISBN if the book has an ISBN or an amazon-invented alphanumeric ID otherwise. The "ISBN" verbose name is just so the users don't get confused.
+    # Amazon identifier; an ISBN if the book has an ISBN or an amazon-invented alphanumeric ID otherwise. The "ISBN"
+    # verbose name is just so the users don't get confused.
+    asin = models.CharField(max_length=13, verbose_name="ISBN", blank=True, null=True)
     title = models.CharField(max_length=250, verbose_name="Title")
     author = models.CharField(max_length=250, verbose_name="Author", blank=True)
     order = models.ForeignKey(Order)
@@ -349,7 +363,10 @@ class Book(models.Model):
         """
 
         # Set up the Amazon API
-        api = amazonproduct.API(settings.AWS_KEY, settings.AWS_SECRET_KEY, locale='us', associate_tag=settings.AWS_ASSOCIATE_TAG)
+        api = amazonproduct.API(settings.AWS_KEY,
+                                settings.AWS_SECRET_KEY,
+                                locale='us',
+                                associate_tag=settings.AWS_ASSOCIATE_TAG)
 
         # Do the Amazon lookup. This throw an exception if the ASIN isn't found.
         try:
