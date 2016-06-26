@@ -89,9 +89,8 @@ def inmate_search_proxy(request, pk):
     elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
         res = illinois_search_proxy(i.inmate_id)
     elif i.inmate_type() == Inmate.InmateType.KENTUCKY:
-        res = kentucky_search_proxy(i.inmate_id)
+        res = kentucky_search_proxy(i)
     # collapse paroled date / projected parole date into one field
-    print i.inmate_type()
     if res['paroled_date'] and not res['projected_parole']:
         res['parole_single'] = res['paroled_date']
     elif not res['paroled_date'] and res['projected_parole']:
@@ -99,18 +98,25 @@ def inmate_search_proxy(request, pk):
     return JsonResponse(res)
 
 
-def kentucky_search_proxy(inmate_id):
+def kentucky_search_proxy(inmate):
     """ Searches the Kentucky DOC site (KOOL) and parses some information for the result page """
-    kool_url = "http://kool.corrections.ky.gov/"
-    r1 = requests.get(kool_url, {
-        "returnResults": True,
-        "DOC": inmate_id
-    })
-    bs = BeautifulSoup(r1.content, "html.parser")
+    if inmate.inmate_doc_id:
+        pid_number = inmate.inmate_doc_id
+    else:
+        kool_url = "http://kool.corrections.ky.gov/"
+        r1 = requests.get(kool_url, {
+            "returnResults": True,
+            "DOC": inmate.inmate_id
+        })
+        bs = BeautifulSoup(r1.content, "html.parser")
 
-    # there's a string embedded in the page of the format "(1) / (2)" where 2 is the inmate DOC number and 1 is the
-    # "PID", which the site uses as their identifier
-    pid_number = unicode(bs.find(string=re.compile(inmate_id))).split('/')[0].strip()
+        # there's a string embedded in the page of the format "(1) / (2)" where 2 is the inmate DOC number and 1 is the
+        # "PID", which the site uses as their identifier
+        pid_number = unicode(bs.find(string=re.compile(inmate.inmate_id))).split('/')[0].strip()
+        if pid_number:
+            # if we succeeded in finding one of these, store it for future lookups
+            inmate.inmate_doc_id = pid_number
+            inmate.save()
 
     kool_detail_url = "http://kool.corrections.ky.gov/KOOL/Details/%s" % pid_number
     r2 = requests.get(kool_detail_url)
@@ -126,7 +132,6 @@ def kentucky_search_proxy(inmate_id):
     try:
         # try to parse the parent institution
         # import ipdb; ipdb.set_trace()
-
         results["parent_institution"] = ' '.join(
             b2.find(string=re.compile('Location:'))
                 .find_parent('td')
@@ -146,8 +151,6 @@ def kentucky_search_proxy(inmate_id):
         )
     except AttributeError:
         results["parent_institution"] = None
-
-    print results
 
     return results
 
@@ -276,7 +279,6 @@ def order_add_book_isbn(request):
 def order_add_book_asin(request):
     """Adds a book with the ASIN passed via POST. Used for AJAX book adds of
        books that were found in Amazon"""
-    print "boo"
     try:
         book = Book.get_book(request.POST['ASIN'])
         order_add_book(request, book)

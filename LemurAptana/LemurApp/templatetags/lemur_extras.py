@@ -6,6 +6,7 @@ from LemurAptana.LemurApp.models import Inmate
 
 register = template.Library()
 
+
 @register.filter
 def jsonify(object):
     """template tag to return a JSON representation of a given object"""
@@ -13,13 +14,14 @@ def jsonify(object):
         return serialize('json', object)
     return json.dumps(object)
 
+
 jsonify.is_safe = True
 
 
 @register.simple_tag
 def inmate_doc_link(inmate_pk, link_text):
     """template tag to make DOC links for inmates"""
-    inmate = Inmate.objects.get(pk=inmate_pk)   #TODO catch a not-found exception and return blank
+    inmate = Inmate.objects.get(pk=inmate_pk)  # TODO catch a not-found exception and return blank
     if inmate.inmate_type() is None:
         return 'No inmate ID'
     elif inmate.inmate_type() == Inmate.InmateType.FEDERAL:
@@ -33,12 +35,17 @@ def inmate_doc_link(inmate_pk, link_text):
                     <input type="text" size="16" name="idoc" value="%(inmate_id)s" maxlength="25" />
                 </form>
                 <a href="javascript:$('#inmateform%(inmate_pk)s').submit()">%(link_text)s</a>
-                ''' % { 'inmate_id': inmate.inmate_id_formatted(), 'link_text': link_text, 'inmate_pk': inmate.pk }
+                ''' % {'inmate_id': inmate.inmate_id_formatted(), 'link_text': link_text, 'inmate_pk': inmate.pk}
     elif inmate.inmate_type() == Inmate.InmateType.KENTUCKY:
-        return '<a target="blank" href="http://www.azcorrections.gov/inmate_datasearch/results_Minh.aspx?InmateNumber=%s">%s</a>' % (inmate.inmate_id_formatted(), link_text) 
+        if inmate.inmate_doc_id:
+            return ('<a target="_blank" href="http://kool.corrections.ky.gov/KOOL/Details/%s">%s</a>' %
+                    (inmate.inmate_doc_id, link_text))
+        else:
+            # TODO this sucks, fix by making this DOC tag an async react component instead of a sync template render
+            return 'DOC link not yet available, still processing KOOL information'
 
 
-## Below taken from http://djangosnippets.org/snippets/194/
+# Below taken from http://djangosnippets.org/snippets/194/
 
 @register.filter
 def truncchar(value, arg):
@@ -49,23 +56,25 @@ def truncchar(value, arg):
         return value[:arg] + '...'
 
 
-## Below taken from http://djangosnippets.org/snippets/1627/
+# Below taken from http://djangosnippets.org/snippets/1627/
 
 """
 Decorator to facilitate template tag creation
 """
+
+
 def easy_tag(func):
     """deal with the repetitive parts of parsing template tags"""
+
     def inner(parser, token):
-        #print token
         try:
             return func(*token.split_contents())
         except TypeError:
             raise template.TemplateSyntaxError('Bad arguments for tag "%s"' % token.split_contents()[0])
+
     inner.__name__ = func.__name__
     inner.__doc__ = inner.__doc__
     return inner
-
 
 
 class AppendGetNode(template.Node):
@@ -74,22 +83,20 @@ class AppendGetNode(template.Node):
         for pair in dict.split(','):
             pair = pair.split('=')
             self.dict_pairs[pair[0]] = template.Variable(pair[1])
-            
+
     def render(self, context):
         get = context['request'].GET.copy()
 
         for key in self.dict_pairs:
             get[key] = self.dict_pairs[key].resolve(context)
-        
+
         path = context['request'].META['PATH_INFO']
-        
-        #print "&".join(["%s=%s" % (key, value) for (key, value) in get.items() if value])
-        
+
         if len(get):
             path += "?%s" % "&".join(["%s=%s" % (key, value) for (key, value) in get.items() if value])
-        
-        
+
         return path
+
 
 @register.tag()
 @easy_tag
