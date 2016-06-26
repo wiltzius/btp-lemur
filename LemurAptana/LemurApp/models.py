@@ -206,7 +206,8 @@ class Inmate(models.Model):
         # if the inmate associated with this order has had an order within the order warning age, add a warning
         recent_orders = self.order_set.filter(status__exact='SENT').filter(date_closed__gte=(datetime.date.today() - datetime.timedelta(LemurSettingsStore.order_age_warning()*30))).order_by('-date_closed')
         if recent_orders.count():
-            warnings += ["Patron received an order less than 3 months ago (on %s)" % recent_orders[0].date_closed.strftime('%b %d, %Y')]
+            warnings += ["Patron received an order less than %s months ago (on %s)" %
+                         (LemurSettingsStore.order_age_warning(), recent_orders[0].date_closed.strftime('%b %d, %Y'))]
         # return the full warning list
         return warnings
 
@@ -287,7 +288,7 @@ class Order(models.Model):
                          .exclude(pk=self.pk)
                          .order_by('-date_closed'))
         if recent_orders.count():
-            warnings += ["Patron received an order less than 3 months ago"]
+            warnings += ["Patron received an order less than %s months ago" % LemurSettingsStore.order_age_warning()]
         # if the inmate associated with this order has gotten a similar book before, add a warning
         for book in self.book_set.all():
             similar_books = Book.objects.filter(order__status='SENT') \
