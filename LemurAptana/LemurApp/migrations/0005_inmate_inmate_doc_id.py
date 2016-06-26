@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='inmate',
             name='inmate_doc_id',
-            field=models.CharField(default=b'', unique=True, max_length=250, verbose_name=b'Inmate DOC ID', blank=True),
+            field=models.CharField(default=b'', max_length=250, verbose_name=b'Inmate DOC ID', blank=True),
             preserve_default=True,
         ),
     ]
