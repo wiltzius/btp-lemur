@@ -1,13 +1,15 @@
 from django import forms
-from models import inmate, InmateIDField, Order
+from models.inmate import Inmate
+from models.Order import Order
 from LemurAptana.LemurApp.models.Book import Book
 
 
 class InmateForm(forms.ModelForm):
-    inmate_id = forms.CharField(required=False)     # TODO I don't like this hack at all, it should be specified within the InmateIDField or Inmate model somehow
+    # TODO I don't like this hack at all, it should be specified within the InmateIDField or Inmate model somehow
+    inmate_id = forms.CharField(required=False)
 
     class Meta:
-        model = inmate
+        model = Inmate
         fields = '__all__'
 
 

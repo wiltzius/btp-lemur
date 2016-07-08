@@ -1,5 +1,6 @@
 import views
-from django.conf.urls import *
+import api
+from django.conf.urls import patterns, url
 
 # Lemur-specific views
 urlpatterns = patterns('LemurAptana.LemurApp.views',
@@ -31,4 +32,4 @@ urlpatterns += patterns('',
 
 )
 
-urlpatterns += views.router.urls
+# urlpatterns += api.configure_router().urls

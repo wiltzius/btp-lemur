@@ -5,6 +5,7 @@ import amazonproduct
 import forms
 from LemurAptana.LemurApp.lib.inmate_search_proxy import illinois_search_proxy, federal_search_proxy, \
     kentucky_search_proxy
+from LemurAptana.LemurApp.models.Book import Book
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
@@ -18,23 +19,9 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from fuzzywuzzy import process
 from lib import isbn
-from models import inmate, Order, Facility
-from LemurAptana.LemurApp.models.Book import Book
-from rest_framework import routers, generics, serializers
-from rest_framework.generics import RetrieveUpdateAPIView
-
-router = routers.SimpleRouter()
-
-class InmateSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = inmate
-        fields = ('url', 'username', 'email', 'groups')
-
-class InmateViewSet(RetrieveUpdateAPIView):
-    queryset = inmate.objects.all()
-    serializer_class = InmateSerializer
-
-router.register(r'inmateadd', InmateViewSet)
+from models.inmate import Inmate
+from models.Order import Order
+from models.Facility import Facility
 
 
 def inmate_search(request, pk=None):
@@ -61,7 +48,7 @@ def inmate_search(request, pk=None):
     context_dict['has_results'] = False
     if pk is not None:
         # inmate = get_object_or_404(Inmate, pk=object_id)
-        query = inmate.objects.filter(pk__exact=pk)
+        query = Inmate.objects.filter(pk__exact=pk)
         if query.count() != 1:
             raise Http404
         context_dict['form'] = forms.InmateForm(instance=query[0])  # A form bound to this Inmate instance
@@ -74,7 +61,7 @@ def inmate_search(request, pk=None):
         inmate_id = request.GET.get('inmate_id', '')
         first_name = request.GET.get('first_name', '')
         last_name = request.GET.get('last_name', '')
-        query = inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(
+        query = Inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(
                 last_name__icontains=last_name)
         # grab the paginated result list
         context_dict['inmate_list'] = paginate_results(query)
@@ -96,12 +83,12 @@ def inmate_add_searched(request):
 
 
 def inmate_search_proxy_pk(request, pk):
-    i = inmate.objects.get(pk=pk)
+    i = Inmate.objects.get(pk=pk)
     return inmate_search_proxy_id(request, i)
 
 
 def inmate_search_proxy_id(request, inmate_id):
-    i = inmate.objects.get(inmate_id=inmate_id)
+    i = Inmate.objects.get(inmate_id=inmate_id)
     res = {}
     if i.inmate_type() == inmate.InmateType.FEDERAL:
         res = federal_search_proxy(i.inmate_id)
@@ -123,7 +110,7 @@ def order_create(request, inmate_pk):
     """Create a new order for the given inmate"""
     try:
         # look at the request to find the current inmate
-        inmate = inmate.objects.get(pk=inmate_pk)
+        inmate = Inmate.objects.get(pk=inmate_pk)
         # create a new order object for this inmate
         order = Order()
         order.inmate = inmate
@@ -133,7 +120,7 @@ def order_create(request, inmate_pk):
         request.session['order'] = order
         # redirect to the order_build view via named URLs to start adding books
         return redirect(reverse('order-build'))
-    except inmate.DoesNotExist:
+    except Inmate.DoesNotExist:
         print "There is no inmate with primary key " + request.session['inmate']
         raise
 
@@ -365,7 +352,7 @@ class OrderDetail(DetailView):
 class InmateCreate(CreateView):
     # form_class = forms.InmateForm
     # template_name = 'LemurApp/inmate_add.html'
-    model = inmate
+    model = Inmate
 
     # def post(self, request, *args, **kwargs):
     #     print 'posting'
@@ -388,7 +375,7 @@ class InmateCreate(CreateView):
 class InmateUpdate(UpdateView):
     form_class = forms.InmateForm
     template_name = 'LemurApp/inmate_edit.html'
-    model = inmate
+    model = Inmate
 
 
 class OrderCleanupList(OrderList):
