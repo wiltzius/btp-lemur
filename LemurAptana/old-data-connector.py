@@ -22,6 +22,8 @@ table, since this way not much harm can come of it.
 import sys
 import copy
 import optparse
+
+import LemurAptana.LemurApp.models.Book
 import MySQLdb
 import settings
 import datetime
@@ -64,7 +66,7 @@ def add_books(cursor, order, old_order):
         old_books = cursor.fetchall()
         assert len(old_books) == 1           # just a sanity check to make sure we're dealing with a unique ID
         old_book = old_books[0]
-        book = models.Book()
+        book = LemurAptana.LemurApp.models.Book.Book()
         book.order = order
         book.title = old_book['title'].decode('latin_1')
         book.author = ', '.join(unicode.split(old_book['authors'].decode('latin_1'), '&&'))
@@ -257,7 +259,7 @@ def import_old_data(settings):
     if not settings.counts_only:
         # Kill the old database 
         print "Deleting old books...",
-        models.Book.objects.all().delete()
+        LemurAptana.LemurApp.models.Book.Book.objects.all().delete()
         print "done."
         print "Deleting old orders...",
         models.Order.objects.all().delete()
@@ -287,7 +289,7 @@ def import_old_data(settings):
     print "Orders:", old_counts['orders'], "old", \
                      models.Order.objects.count(), "new but", \
                      old_counts['orders_empty'], "had no books so really", old_counts['orders']-old_counts['orders_empty'], "old"
-    print "Books:", old_counts['books'], "old", models.Book.objects.count(), "new"
+    print "Books:", old_counts['books'], "old", LemurAptana.LemurApp.models.Book.Book.objects.count(), "new"
     
     return 0
     

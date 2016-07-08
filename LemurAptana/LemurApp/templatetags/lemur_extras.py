@@ -2,7 +2,7 @@ from django.core.serializers import serialize
 from django.db.models.query import QuerySet
 import json
 from django import template
-from LemurAptana.LemurApp.models import Inmate
+from LemurAptana.LemurApp.models import inmate
 from django.utils.html import escapejs
 from django.utils.safestring import mark_safe
 
@@ -20,12 +20,12 @@ def jsonify(object):
 @register.simple_tag
 def inmate_doc_link(inmate_pk, link_text):
     """template tag to make DOC links for inmates"""
-    inmate = Inmate.objects.get(pk=inmate_pk)  # TODO catch a not-found exception and return blank
+    inmate = inmate.objects.get(pk=inmate_pk)  # TODO catch a not-found exception and return blank
     if inmate.inmate_type() is None:
         return 'No inmate ID'
-    elif inmate.inmate_type() == Inmate.InmateType.FEDERAL:
+    elif inmate.inmate_type() == inmate.InmateType.FEDERAL:
         return 'No DOC link for Federal inmates; manually search <a target="_blank" href="https://www.bop.gov/inmateloc/">here</a>'
-    elif inmate.inmate_type() == Inmate.InmateType.ILLINOIS:
+    elif inmate.inmate_type() == inmate.InmateType.ILLINOIS:
         return '''
                 <form action="http://www.idoc.state.il.us/subsections/search/ISinms2.asp" style="display:none;" method="post" onsubmit="return validate()" target="blank" id="inmateform%(inmate_pk)s">
                     <select name="selectlist1" size="4" onchange="setfocus()">
@@ -35,7 +35,7 @@ def inmate_doc_link(inmate_pk, link_text):
                 </form>
                 <a href="javascript:$('#inmateform%(inmate_pk)s').submit()">%(link_text)s</a>
                 ''' % {'inmate_id': inmate.inmate_id_formatted(), 'link_text': link_text, 'inmate_pk': inmate.pk}
-    elif inmate.inmate_type() == Inmate.InmateType.KENTUCKY:
+    elif inmate.inmate_type() == inmate.InmateType.KENTUCKY:
         if inmate.inmate_doc_id:
             return ('<a target="_blank" href="http://kool.corrections.ky.gov/KOOL/Details/%s">%s</a>' %
                     (inmate.inmate_doc_id, link_text))

@@ -1,7 +1,7 @@
 """
 Basic tests for the Lemur app.
 """
-
+import LemurAptana.LemurApp.models.Book
 from django.test import TestCase
 from django.test.client import Client
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
@@ -63,7 +63,7 @@ class OrderTest(TestCase):
         o1.status = 'SENT'
         o1.save()
         # ...with 1 dummy book
-        b1 = models.Book()
+        b1 = LemurAptana.LemurApp.models.Book.Book()
         b1.title = "dictionary"
         b1.order = o1
         b1.save()
@@ -80,7 +80,7 @@ class OrderTest(TestCase):
         o2.date_closed = datetime.datetime.now()
         o2.save()
         # ...with 1 dummy book
-        b2 = models.Book()
+        b2 = LemurAptana.LemurApp.models.Book.Book()
         b2.title = "dictionary"
         b2.order = o2
         b2.full_clean()
@@ -110,7 +110,7 @@ class OrderTest(TestCase):
         self.assertFalse(True in ["Two books in this" in warning for warning in o2.warnings()])
 
         # Add another book
-        b3 = models.Book()
+        b3 = LemurAptana.LemurApp.models.Book.Book()
         b3.order = o2
         b3.title = "dictionary"
         b3.full_clean()
@@ -135,7 +135,7 @@ class OrderTest(TestCase):
         # clean slate
         models.Order.objects.all().delete()
         models.Inmate.objects.all().delete()
-        models.Book.objects.all().delete()
+        LemurAptana.LemurApp.models.Book.Book.objects.all().delete()
 
         # create an open order
         i = OrderTest.create_inmate()
@@ -148,7 +148,7 @@ class OrderTest(TestCase):
         o2 = models.Order()
         o2.inmate = i
         o2.save()
-        b1 = models.Book()
+        b1 = LemurAptana.LemurApp.models.Book.Book()
         b1.title = "dictionary"
         b1.order = o2
         b1.save()
@@ -182,7 +182,7 @@ class OrderTest(TestCase):
     def test_unicode_errors_db(self):
         """Makes sure that funny characters from Amazon don't mess up the database"""
         order = OrderTest.create_order_1()
-        book = models.Book.get_book('8478889019')
+        book = LemurAptana.LemurApp.models.Book.Book.get_book('8478889019')
         book.order = order
         book.save()
 

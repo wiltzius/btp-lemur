@@ -3,7 +3,8 @@ from datetime import datetime
 
 import amazonproduct
 import forms
-from LemurAptana.LemurApp.lib.inmate_search_proxy import illinois_search_proxy, federal_search_proxy
+from LemurAptana.LemurApp.lib.inmate_search_proxy import illinois_search_proxy, federal_search_proxy, \
+    kentucky_search_proxy
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
@@ -17,7 +18,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from fuzzywuzzy import process
 from lib import isbn
-from models import Book, Inmate, Order, Facility
+from models import inmate, Order, Facility
+from LemurAptana.LemurApp.models.Book import Book
 from rest_framework import routers, generics, serializers
 from rest_framework.generics import RetrieveUpdateAPIView
 
@@ -25,16 +27,14 @@ router = routers.SimpleRouter()
 
 class InmateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Inmate
+        model = inmate
         fields = ('url', 'username', 'email', 'groups')
 
 class InmateViewSet(RetrieveUpdateAPIView):
-    queryset = Inmate.objects.all()
+    queryset = inmate.objects.all()
     serializer_class = InmateSerializer
 
 router.register(r'inmateadd', InmateViewSet)
-
-
 
 
 def inmate_search(request, pk=None):
@@ -61,7 +61,7 @@ def inmate_search(request, pk=None):
     context_dict['has_results'] = False
     if pk is not None:
         # inmate = get_object_or_404(Inmate, pk=object_id)
-        query = Inmate.objects.filter(pk__exact=pk)
+        query = inmate.objects.filter(pk__exact=pk)
         if query.count() != 1:
             raise Http404
         context_dict['form'] = forms.InmateForm(instance=query[0])  # A form bound to this Inmate instance
@@ -74,7 +74,7 @@ def inmate_search(request, pk=None):
         inmate_id = request.GET.get('inmate_id', '')
         first_name = request.GET.get('first_name', '')
         last_name = request.GET.get('last_name', '')
-        query = Inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(
+        query = inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(
                 last_name__icontains=last_name)
         # grab the paginated result list
         context_dict['inmate_list'] = paginate_results(query)
@@ -96,18 +96,18 @@ def inmate_add_searched(request):
 
 
 def inmate_search_proxy_pk(request, pk):
-    i = Inmate.objects.get(pk=pk)
-    return inmate_search_proxy_id(request, i.inmate_id)
+    i = inmate.objects.get(pk=pk)
+    return inmate_search_proxy_id(request, i)
 
 
 def inmate_search_proxy_id(request, inmate_id):
-    inmate_type = Inmate.compute_inmate_type(inmate_id)
+    i = inmate.objects.get(inmate_id=inmate_id)
     res = {}
-    if i.inmate_type() == Inmate.InmateType.FEDERAL:
+    if i.inmate_type() == inmate.InmateType.FEDERAL:
         res = federal_search_proxy(i.inmate_id)
-    elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
+    elif i.inmate_type() == inmate.InmateType.ILLINOIS:
         res = illinois_search_proxy(i.inmate_id)
-    elif i.inmate_type() == Inmate.InmateType.KENTUCKY:
+    elif i.inmate_type() == inmate.InmateType.KENTUCKY:
         res = kentucky_search_proxy(i)
     # collapse paroled date / projected parole date into one field
     if res['paroled_date'] and not res['projected_parole']:
@@ -119,139 +119,11 @@ def inmate_search_proxy_id(request, inmate_id):
     return JsonResponse(res)
 
 
-def kentucky_search_proxy(inmate):
-    """ Searches the Kentucky DOC site (KOOL) and parses some information for the result page """
-    if inmate.inmate_doc_id:
-        pid_number = inmate.inmate_doc_id
-    else:
-        kool_url = "http://kool.corrections.ky.gov/"
-        r1 = requests.get(kool_url, {
-            "returnResults": True,
-            "DOC": inmate.inmate_id
-        })
-        bs = BeautifulSoup(r1.content, "html.parser")
-
-        # there's a string embedded in the page of the format "(1) / (2)" where 2 is the inmate DOC number and 1 is the
-        # "PID", which the site uses as their identifier
-        pid_number = unicode(bs.find(string=re.compile(inmate.inmate_id))).split('/')[0].strip()
-        if pid_number:
-            # if we succeeded in finding one of these, store it for future lookups
-            inmate.inmate_doc_id = pid_number
-            inmate.save()
-
-    kool_detail_url = "http://kool.corrections.ky.gov/KOOL/Details/%s" % pid_number
-    r2 = requests.get(kool_detail_url)
-
-    b2 = BeautifulSoup(r2.content, "html.parser")
-
-    results = {
-        "projected_parole": None,
-        "paroled_date": None,
-        "parent_institution": None
-    }
-
-    try:
-        # try to parse the parent institution
-        # import ipdb; ipdb.set_trace()
-        results["parent_institution"] = ' '.join(
-            b2.find(string=re.compile('Location:'))
-                .find_parent('td')
-                .find_next_sibling('td')
-                .stripped_strings
-        )
-    except AttributeError:
-        results["parent_institution"] = None
-
-    try:
-        # try to parse the expected parole / release date
-        results["projected_parole"] = ' '.join(
-            b2.find(string=re.compile('TTS'))
-                .find_parent('td')
-                .find_next_sibling('td')
-                .stripped_strings
-        )
-    except AttributeError:
-        results["parent_institution"] = None
-
-    return results
-
-
-def illinois_search_proxy(inmate_id):
-    """ Searches the Illinois DOC website for this inmate's ID and parses out some information from the result page. """
-
-    il_doc_search_url = "http://www.idoc.state.il.us/subsections/search/ISinms2.asp"
-
-    r = requests.post(il_doc_search_url, {
-        "selectlist1": "IDOC",
-        "idoc": inmate_id
-    })
-
-    results = {
-        "projected_parole": None,
-        "paroled_date": None,
-        "parent_institution": None
-    }
-    bs = BeautifulSoup(r.content, "html.parser")
-
-    try:
-        # try to parse out the projected parole date
-        results["projected_parole"] = next(
-                bs.find(string=re.compile('Projected Parole Date'))
-                    .find_parent('td')
-                    .find_next_sibling('td')
-                    .stripped_strings
-        )
-    except AttributeError:
-        results["projected_parole"] = None
-
-    if results["projected_parole"] is None:
-        # if that didn't work, see if they've been paroled already
-        try:
-            results["paroled_date"] = next(
-                    bs.find(string=re.compile('Parole Date'))
-                        .find_parent('td')
-                        .find_next_sibling('td')
-                        .stripped_strings
-            )
-        except AttributeError:
-            results["paroled_date"] = None
-
-    try:
-        # try to parse the parent institution
-        results["parent_institution"] = next(
-                bs.find(string=re.compile('Parent Institution'))
-                    .find_parent('td')
-                    .find_next_sibling('td')
-                    .stripped_strings
-        )
-    except AttributeError:
-        results["parent_institution"] = None
-
-    return results
-
-
-def federal_search_proxy(inmate_id):
-    res = requests.post('https://www.bop.gov/PublicInfo/execute/inmateloc',
-                        data={
-                            'todo': 'query',
-                            'output': 'json',
-                            'inmateNumType': 'IRN',
-                            'inmateNum': inmate_id
-                        }).json()
-    inmate_data = res['InmateLocator'][0]
-    return {
-        'projected_parole': inmate_data['projRelDate'],
-        'parent_institution': inmate_data['faclName'],
-        'paroled_date': inmate_data['actRelDate']
-    }
-    # return HttpResponse(res.json())
-
-
 def order_create(request, inmate_pk):
     """Create a new order for the given inmate"""
     try:
         # look at the request to find the current inmate
-        inmate = Inmate.objects.get(pk=inmate_pk)
+        inmate = inmate.objects.get(pk=inmate_pk)
         # create a new order object for this inmate
         order = Order()
         order.inmate = inmate
@@ -261,7 +133,7 @@ def order_create(request, inmate_pk):
         request.session['order'] = order
         # redirect to the order_build view via named URLs to start adding books
         return redirect(reverse('order-build'))
-    except Inmate.DoesNotExist:
+    except inmate.DoesNotExist:
         print "There is no inmate with primary key " + request.session['inmate']
         raise
 
@@ -493,7 +365,7 @@ class OrderDetail(DetailView):
 class InmateCreate(CreateView):
     # form_class = forms.InmateForm
     # template_name = 'LemurApp/inmate_add.html'
-    model = Inmate
+    model = inmate
 
     # def post(self, request, *args, **kwargs):
     #     print 'posting'
@@ -516,7 +388,7 @@ class InmateCreate(CreateView):
 class InmateUpdate(UpdateView):
     form_class = forms.InmateForm
     template_name = 'LemurApp/inmate_edit.html'
-    model = Inmate
+    model = inmate
 
 
 class OrderCleanupList(OrderList):
