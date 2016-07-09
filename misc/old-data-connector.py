@@ -25,13 +25,13 @@ import optparse
 
 import server.LemurApp.models.book
 import MySQLdb
-import settings
+import server.settings
 import datetime
 import difflib
 from django.core.exceptions import ValidationError
 from django.core.management import setup_environ
-setup_environ(settings)     # This needs to be done before the model import below (we need a Django environment in order to import Django models)
-from LemurApp import models
+setup_environ(server.settings)     # This needs to be done before the model import below (we need a Django environment in order to import Django models)
+from server.LemurApp import models
 from django.db import DatabaseError
 
 ## SETTINGS ("do not modify below this line" hahaha jkjk lol)
@@ -252,11 +252,11 @@ def import_old_data(settings):
     Save everything to the new database."""
     
     # prepare the MySQL connection
-    db = MySQLdb.connect(host=OLD_DATABASE_HOST, user=settings.user, passwd=settings.password, db=OLD_DATABASE_DB)
+    db = MySQLdb.connect(host=OLD_DATABASE_HOST, user=server.settings.user, passwd=server.settings.password, db=OLD_DATABASE_DB)
     c = db.cursor(MySQLdb.cursors.DictCursor)
     
     # If we're doing a real import (not just counting stats)
-    if not settings.counts_only:
+    if not server.settings.counts_only:
         # Kill the old database 
         print "Deleting old books...",
         server.LemurApp.models.book.Book.objects.all().delete()
