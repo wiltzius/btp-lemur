@@ -1,8 +1,9 @@
+import json
+
+from LemurAptana.LemurApp.models.inmate import Inmate
+from django import template
 from django.core.serializers import serialize
 from django.db.models.query import QuerySet
-import json
-from django import template
-from LemurAptana.LemurApp.models import inmate
 from django.utils.html import escapejs
 from django.utils.safestring import mark_safe
 
@@ -20,7 +21,7 @@ def jsonify(object):
 @register.simple_tag
 def inmate_doc_link(inmate_pk, link_text):
     """template tag to make DOC links for inmates"""
-    inmate = inmate.objects.get(pk=inmate_pk)  # TODO catch a not-found exception and return blank
+    inmate = Inmate.objects.get(pk=inmate_pk)  # TODO catch a not-found exception and return blank
     if inmate.inmate_type() is None:
         return 'No inmate ID'
     elif inmate.inmate_type() == inmate.InmateType.FEDERAL:
