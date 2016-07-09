@@ -5,7 +5,7 @@ venv
 books2pr_dev
 webpack-stats.json
 node_modules/
-assets/bundles/
+client/bundles/
 webpack-stats.json
 server/static/
 sqlite.db
