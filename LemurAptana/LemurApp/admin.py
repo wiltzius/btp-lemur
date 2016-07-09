@@ -1,8 +1,8 @@
-from LemurAptana.LemurApp.models.Book import Book
-from LemurAptana.LemurApp.models.Facility import Facility
+from LemurAptana.LemurApp.models.book import Book
+from LemurAptana.LemurApp.models.facility import Facility
 from LemurAptana.LemurApp.models.inmate import Inmate
-from LemurAptana.LemurApp.models.Order import Order
-from LemurAptana.LemurApp.models.SettingsStore import BannerMessage, LemurSettingsStore
+from LemurAptana.LemurApp.models.order import Order
+from LemurAptana.LemurApp.models.settings_store import BannerMessage, LemurSettingsStore
 from django.contrib import admin
 
 admin.site.register(Facility)

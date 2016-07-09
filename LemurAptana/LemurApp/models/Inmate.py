@@ -1,8 +1,8 @@
 import datetime
 import string
 
-from LemurAptana.LemurApp.models.SettingsStore import LemurSettingsStore
-from LemurAptana.LemurApp.models.Facility import Facility
+from LemurAptana.LemurApp.models.settings_store import LemurSettingsStore
+from LemurAptana.LemurApp.models.facility import Facility
 from django.core.exceptions import ValidationError
 from django.db import models
 

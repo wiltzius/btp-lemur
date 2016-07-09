@@ -1,7 +1,7 @@
 from __future__ import print_function
 from __future__ import print_function
-from models.Facility import Facility
-from models.SettingsStore import BannerMessage
+from models.facility import Facility
+from models.settings_store import BannerMessage
 
 
 # Extra context for the LemurApp

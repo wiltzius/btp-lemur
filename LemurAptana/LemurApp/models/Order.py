@@ -1,6 +1,6 @@
 import datetime
 
-from LemurAptana.LemurApp.models.SettingsStore import LemurSettingsStore
+from LemurAptana.LemurApp.models.settings_store import LemurSettingsStore
 from LemurAptana.LemurApp.models.inmate import Inmate
 from django.core.exceptions import ValidationError
 from django.db import models

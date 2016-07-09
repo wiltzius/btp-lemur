@@ -1,7 +1,7 @@
 import datetime
 
 import amazonproduct
-from LemurAptana.LemurApp.models.Order import Order
+from LemurAptana.LemurApp.models.order import Order
 from django.conf import settings
 from django.db import models
 

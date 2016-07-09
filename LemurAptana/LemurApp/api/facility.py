@@ -1,4 +1,4 @@
-from LemurAptana.LemurApp.models.Facility import Facility
+from LemurAptana.LemurApp.models.facility import Facility
 from rest_framework import serializers
 from rest_framework import viewsets
 

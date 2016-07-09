@@ -8,9 +8,10 @@ class FacilityManager(models.Manager):
            list we want in the order we want, as a normal queryset"""
         # get the normal queryset, then additionally select a true/false column `non-facility`, then order first by
         # this then by the facility name
-        return super(FacilityManager, self).get_queryset() \
-                    .extra(select={'non-facility': 'id=1'}) \
-                    .extra(order_by=['non-facility', 'name'])
+        return (super(FacilityManager, self)
+                .get_queryset()
+                .extra(select={'non-facility': 'id=1'})
+                .extra(order_by=['non-facility', 'name']))
 
 
 class Facility(models.Model):

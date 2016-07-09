@@ -1,7 +1,7 @@
 from django import forms
 from models.inmate import Inmate
-from models.Order import Order
-from LemurAptana.LemurApp.models.Book import Book
+from models.order import Order
+from LemurAptana.LemurApp.models.book import Book
 
 
 class InmateForm(forms.ModelForm):

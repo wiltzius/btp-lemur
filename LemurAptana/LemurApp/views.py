@@ -5,7 +5,7 @@ import amazonproduct
 import forms
 from LemurAptana.LemurApp.lib.inmate_search_proxy import illinois_search_proxy, federal_search_proxy, \
     kentucky_search_proxy
-from LemurAptana.LemurApp.models.Book import Book
+from LemurAptana.LemurApp.models.book import Book
 from django.conf import settings
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
@@ -20,8 +20,8 @@ from django.views.generic.list import ListView
 from fuzzywuzzy import process
 from lib import isbn
 from models.inmate import Inmate
-from models.Order import Order
-from models.Facility import Facility
+from models.order import Order
+from models.facility import Facility
 
 
 def inmate_search(request, pk=None):
