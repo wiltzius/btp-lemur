@@ -1,4 +1,4 @@
-LemurAptana/settings_secret.py
+server/settings_secret.py
 *.pyc
 venv
 .idea
@@ -7,5 +7,5 @@ webpack-stats.json
 node_modules/
 assets/bundles/
 webpack-stats.json
-LemurAptana/static/
+server/static/
 sqlite.db

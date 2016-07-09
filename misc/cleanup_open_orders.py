@@ -2,13 +2,13 @@
 
 # Preliminary Django settings import
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LemurAptana.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
 import django
 django.setup()
 
 import datetime
 
-from LemurAptana.LemurApp import models
+from server.LemurApp import models
 
 def cleanup_orders():
   """Marks all crrently open orders as sent, unless they have no books in which case they're deleted."""
