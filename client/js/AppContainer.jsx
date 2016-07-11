@@ -6,17 +6,6 @@ import Navbar from './Navbar';
 
 export default class AppContainer extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      banner_message: 'loading...'
-    }
-  }
-
-  componentDidMount() {
-
-  }
-
   render() {
     return <div id="container">
       {/* restricted books header */}
@@ -34,11 +23,11 @@ export default class AppContainer extends React.Component {
         {/* end nav bar/header */}
 
         <div id="searchContainer">
-          // TOOD react's version of ui-router ui-view would go here
+          {this.props.children}
         </div>
 
         <div id="searchResults">
-          // TODO this becomes a sub-ui-view, some pages have search results some dont
+          {/* TODO is this stil used?*/ }
         </div>
       </div>
       {/* footer */}

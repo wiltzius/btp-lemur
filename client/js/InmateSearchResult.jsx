@@ -7,9 +7,11 @@ export default class InmateSearchResult extends React.Component {
     return <div class="inmateResult" id="inmateResult{{ inmate.pk }}">
           <h3>{inmate.full_name}</h3>
 
-          <!-- dictionary and other warnings -->
 
-          (/*<ul class="inmateErrors error">
+
+      {/*
+          <!-- dictionary and other warnings -->
+          <ul class="inmateErrors error">
             {{inmate.warnings | unordered_list }}
             {% if inmate.dictionaries|length == 1 %}
             <li>Patron already received dictionary ({{inmate.dictionaries.0 }})</li>

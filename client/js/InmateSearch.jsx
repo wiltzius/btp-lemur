@@ -1,41 +1,72 @@
 import React from 'react';
+import InmateSearchResults from './InmateSearchResults';
+import axios from 'axios';
 
 export default class InmateSearch extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      formInputs: {}
+    };
   }
 
   componentDidMount() {
 
   }
 
+  //handleChange(event) {
+  //  this.setState({inmate_id: event.target.value});
+  //}
+
+  handleChange(propName) {
+    const update = function(event) {
+      console.log('setting state', propName, 'to', event.target.value);
+      const new_state = {
+        formInputs: {}
+      };
+      new_state.formInputs[propName] = event.target.value;
+      this.setState(new_state);
+    };
+    return update.bind(this);
+  }
+
+  handleSubmit(event) {
+    console.log(this.state);
+    axios.get('/api/inmate/', {
+      params: this.state.formInputs
+    }).then(res => {
+      this.setState({
+        results: res
+      })
+    });
+    event.preventDefault();
+  }
+
   render() {
     return <div>
       <div id="inmateSearch">
-        <form>
+        <form onSubmit={this.handleSubmit.bind(this)}>
           <div id="searchBoxLeft">
-            <div class="fieldWrapper">
-              Inmate ID: <input type="text"/>
-              <p class="note">e.g. K12345</p>
+            <div className="fieldWrapper">
+              Inmate ID: <input type="text" value={this.state.formInputs.inmate_id} onChange={this.handleChange('inmate_id')}/>
+              <p className="note">e.g. K12345</p>
             </div>
           </div>
           <div id="searchBoxRight">
-            <div class="fieldWrapper">
-              First name: <input type="text"/>
+            <div className="fieldWrapper">
+              First name: <input type="text" value={this.state.formInputs.first_name} onChange={this.handleChange('first_name')}/>
             </div>
-            <div class="fieldWrapper">
-              Last name: <input type="text"/>
+            <div className="fieldWrapper">
+              Last name: <input type="text" value={this.state.formInputs.last_name} onChange={this.handleChange('last_name')}/>
             </div>
           </div>
-          <div class="formfooter">
-            <input type="submit" name="submit" value="Search for Inmate"/>
+          <div className="formfooter">
+            <input type="submit" name="submit" value="Search for Inmate" />
           </div>
         </form>
       </div>
-
-  
+      <InmateSearchResults results={this.state.results} />
     </div>
   }
 

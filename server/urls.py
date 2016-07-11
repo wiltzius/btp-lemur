@@ -11,7 +11,7 @@ from server.LemurApp import api
 
 urlpatterns = patterns('',
     # Enable the Lemur app
-    (r'^$', RedirectView.as_view(url='/inmate/search')),
+    (r'^$', RedirectView.as_view(url='/app/inmate/search')),
     # (r'^api/', include('server.LemurApp.urls')),
     (r'^api/', include(api.configure_router().urls)),
     (r'^app/*', BaseView),

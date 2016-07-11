@@ -4,15 +4,6 @@ import InmateSearchResult from './InmateSearchResult';
 
 export default class InmateSearchResults extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
-
-  componentDidMount() {
-
-  }
-
   /* Pagination
   <div class="pagination">
           <span class="current">
@@ -60,13 +51,21 @@ export default class InmateSearchResults extends React.Component {
           we've never sent them a package before.</p>
    */
 
+  emptyResults() {
+    return <div>No results</div>
+  }
+
+  resultsList() {
+    return <div className="resultsPadding">
+      {this.props.results.map(inmate => <InmateSearchResult inmate={inmate} />)}
+    </div>
+  }
+
   render() {
     // todo: only visible if inmate results are present
     return <div id="searchResults">
       <h2>Search Results</h2>
-      <div class="resultsPadding">
-        {this.props.map(inmate => <InmateSearchResult inmate={inmate} />)}
-      </div>
+      {this.props.results ? this.resultsList() : this.emptyResults()}
     </div>
   }
 

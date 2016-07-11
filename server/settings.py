@@ -53,9 +53,9 @@ STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static/')
 STATIC_URL = '/static/'
 
 # Initial data loading directory
-FIXTURE_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'fixtures/')
-)
+# FIXTURE_DIRS = (
+#     os.path.join(os.path.dirname(__file__), 'fixtures')
+# )
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -112,7 +112,8 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
 
 INSTALLED_APPS = (
@@ -128,5 +129,6 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'webpack_loader',
-    'rest_framework'
+    'rest_framework',
+    'crispy_forms',
 )

@@ -36,6 +36,9 @@
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
+    "babel-plugin-check-es2015-constants": "^6.8.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.10.3",
+    "babel-plugin-transform-regenerator": "^6.9.0",
     "babel-plugin-transform-runtime": "^6.9.0"
   }
 }
