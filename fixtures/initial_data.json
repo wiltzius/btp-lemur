@@ -333,5 +333,21 @@
       "sender": null,
       "date_opened": "2010-11-15 17:20:49"
     }
+  },
+  {
+    "pk": 1,
+    "model": "LemurApp.LemurSettingsStore",
+    "fields": {
+      "settingName": "banner_message",
+      "settingValue": "hello banner"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "LemurApp.LemurSettingsStore",
+    "fields": {
+      "settingName": "order_age_policy",
+      "settingValue": "3"
+    }
   }
 ]

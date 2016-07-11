@@ -23,6 +23,8 @@ from models.inmate import Inmate
 from models.order import Order
 from models.facility import Facility
 
+def BaseView(request):
+    return render_to_response('LemurApp/base.html', {}, context_instance=RequestContext(request))
 
 def inmate_search(request, pk=None):
     """Searches for the inmate whose information is passed in via GET parameters"""

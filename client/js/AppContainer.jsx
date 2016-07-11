@@ -1,7 +1,6 @@
 import React from "react";
 import BannerMessage from './BannerMessage.jsx';
 import OrderSummary from './OrderSummary';
-import ReactDOM from "react/lib/ReactDOM";
 import HeaderTitle from './HeaderTitle';
 import Navbar from './Navbar';
 
@@ -15,11 +14,7 @@ export default class AppContainer extends React.Component {
   }
 
   componentDidMount() {
-    $.get('/lemur/api/settings/?setting=banner', (results) => {
-      this.setState({
-        banner_message: results
-      });
-    }, "json");
+
   }
 
   render() {
@@ -51,8 +46,5 @@ export default class AppContainer extends React.Component {
         UC BTP "Lemur"
       </div>
     </div>
-
   }
 }
-
-ReactDOM.render(<AppContainer />, document.getElementById('app'));
