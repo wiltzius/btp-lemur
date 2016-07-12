@@ -37,7 +37,7 @@ export default class InmateSearch extends React.Component {
       params: this.state.formInputs
     }).then(res => {
       this.setState({
-        results: res
+        results: res.data
       })
     });
     event.preventDefault();

@@ -9,7 +9,8 @@ from server.LemurApp.models.inmate import Inmate
 class InmateSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Inmate
-        fields = ('pk', 'inmate_id', 'inmate_doc_id', 'first_name', 'last_name', 'creation_date', 'facility')
+        fields = ('pk', 'inmate_id', 'inmate_doc_id', 'first_name', 'last_name', 'full_name', 'creation_date',
+                  'facility')
 
 
 class InmateFilter(filters.FilterSet):

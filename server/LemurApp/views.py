@@ -86,17 +86,18 @@ def inmate_add_searched(request):
 
 def inmate_search_proxy_pk(request, pk):
     i = Inmate.objects.get(pk=pk)
-    return inmate_search_proxy_id(request, i)
+    return inmate_search_proxy_id(request, i.inmate_id)
 
 
 def inmate_search_proxy_id(request, inmate_id):
     i = Inmate.objects.get(inmate_id=inmate_id)
+    print 'inmate is', i, 'for pk', inmate_id
     res = {}
-    if i.inmate_type() == inmate.InmateType.FEDERAL:
+    if i.inmate_type() == Inmate.InmateType.FEDERAL:
         res = federal_search_proxy(i.inmate_id)
-    elif i.inmate_type() == inmate.InmateType.ILLINOIS:
+    elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
         res = illinois_search_proxy(i.inmate_id)
-    elif i.inmate_type() == inmate.InmateType.KENTUCKY:
+    elif i.inmate_type() == Inmate.InmateType.KENTUCKY:
         res = kentucky_search_proxy(i)
     # collapse paroled date / projected parole date into one field
     if res['paroled_date'] and not res['projected_parole']:

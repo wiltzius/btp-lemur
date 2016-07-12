@@ -123,9 +123,11 @@ class Inmate(models.Model):
         elif self.inmate_type() is Inmate.InmateType.KENTUCKY:
             return self.inmate_id
 
+    @property
     def full_name(self):
         return self.first_name + ' ' + self.last_name
 
+    @property
     def full_name_last(self):
         return self.last_name + ', ' + self.first_name
 

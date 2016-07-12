@@ -12,7 +12,7 @@ from server.LemurApp import api
 urlpatterns = patterns('',
     # Enable the Lemur app
     (r'^$', RedirectView.as_view(url='/app/inmate/search')),
-    # (r'^api/', include('server.LemurApp.urls')),
+    (r'^lemur/', include('server.LemurApp.urls')),
     (r'^api/', include(api.configure_router().urls)),
     (r'^app/*', BaseView),
     # Uncomment the admin/doc line below to enable admin documentation:

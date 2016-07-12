@@ -319,6 +319,7 @@
       "last_name": "wiltzius",
       "facility": 3,
       "inmate_id": "X00001",
+      "inmate_doc_id": "",
       "creation_date": "2010-11-15 17:20:47",
       "address": ""
     }

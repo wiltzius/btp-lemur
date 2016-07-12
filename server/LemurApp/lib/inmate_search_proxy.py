@@ -77,6 +77,8 @@ def illinois_search_proxy(inmate_id):
     }
     bs = BeautifulSoup(r.content, "html.parser")
 
+    # TODO -- if "Inmate Not Found" is in the body of the page, raise a 404
+
     try:
         # try to parse out the projected parole date
         results["projected_parole"] = next(

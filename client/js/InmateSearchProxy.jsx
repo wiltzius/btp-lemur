@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import classNames from 'classnames';
+import axios from 'axios';
 
 export default class InmateSearchProxy extends React.Component {
 
@@ -8,7 +9,8 @@ export default class InmateSearchProxy extends React.Component {
     super(props);
     this.state = {
       parole_single: 'loading...',
-      facility_name: 'loading...'
+      facility_name: 'loading...',
+      server_error: false
     }
   }
 
@@ -24,22 +26,37 @@ export default class InmateSearchProxy extends React.Component {
   }
 
   componentDidMount() {
-    $.get('/lemur/inmate_search_proxy_pk/' + this.props.inmatePk, (results) => {
-      this.setState({
-        parole_single: results.parole_single || '--',
-        facility_name: results.facility_name || "unknown"
-      });
-    }, "json");
+    axios.get('/lemur/inmate_search_proxy_pk/' + this.props.inmatePk).then(res => {
+      console.log('in here');
+      if (res.status != 200) {
+        this.setState({
+          server_error: true
+        })
+      }
+      else {
+        const results = res.data;
+        this.setState({
+          server_error: false,
+          parole_single: results.parole_single || '--',
+          facility_name: results.facility_name || "unknown"
+        });
+      }
+    }).catch(res => {
+      this.setState({ server_error: true });
+    });
   }
 
-  render() {
+  error() {
+    return <div>Could not load inmate information</div>
+  }
+
+  results() {
     const paroleClasses = classNames({
       'docLabel': true,
       'error': this.oldParoledDate()
     });
 
-    return <ul className="inmateDOC">
-      <h4>Current DOC/FBOP Records</h4>
+    return <div>
       <li>
         <span className={paroleClasses}>Parole/release date:</span>
         <span className="docValue">{this.state.parole_single}</span>
@@ -48,13 +65,13 @@ export default class InmateSearchProxy extends React.Component {
         <span className="docLabel">Parent institution:</span>
         <span className="docValue">{this.state.facility_name}</span>
       </li>
+        </div>
+  }
+
+  render() {
+    return <ul className="inmateDOC">
+      <h4>Current DOC/FBOP Records</h4>
+      {this.state.server_error ? this.error() : this.results()}
     </ul>
   }
 }
-
-// bootstrapping / mount the component
-const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
-Array.from(inmate_search_proxy_containers).forEach(el => {
-  const inmate_pk = el.attributes["data-inmate-id"].value;
-  ReactDOM.render(<InmateSearchProxy inmatePk={inmate_pk}/>, el);
-});

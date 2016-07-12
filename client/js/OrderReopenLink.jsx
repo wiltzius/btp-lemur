@@ -53,9 +53,3 @@ export default class OrderReopenLink extends React.Component {
       </span>
   }
 }
-
-const alert_link_containers = document.querySelectorAll('.orderReopenLink');
-Array.from(alert_link_containers).forEach((el) => {
-  const order_href = el.attributes["data-order-href"].value;
-  ReactDOM.render(<OrderReopenLink orderHref={order_href} />, el);
-});
