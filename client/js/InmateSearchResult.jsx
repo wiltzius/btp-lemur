@@ -16,6 +16,14 @@ export default class InmateSearchResult extends React.Component {
     }
   }
 
+  componentDidMount() {
+    axios.get('/api/order/', {
+      params: {
+        
+      }
+    })
+  }
+
   render() {
     const inmate = this.props.inmate;
     return <div className="inmateResult" id="inmateResult{{ inmate.pk }}">
@@ -28,7 +36,7 @@ export default class InmateSearchResult extends React.Component {
           <span className="resultLabel">Inmate ID:</span><span className="resultValue">{inmate.inmate_id}</span>
         </li>
         <li>
-          <span className="resultLabel">Facility:</span><span className="resultValue">{inmate.facility}</span>
+          <span className="resultLabel">Facility:</span><span className="resultValue">{inmate.facility.name}</span>
         </li>
         {this.otherRestrictions(inmate)}
       </ul>
@@ -37,7 +45,7 @@ export default class InmateSearchResult extends React.Component {
         <li>{/* TODO inmate DOC link */}</li>
         <li><a>History</a>
           <ul className="historyList">
-            {inmate.orders.map(o => this.orderListItem(o))}
+            {inmate.order_set.map(o => this.orderListItem(o))}
           </ul>
         </li>
         <li><Link to="/app/inmate/edit">Edit Information</Link></li>
@@ -73,10 +81,10 @@ export default class InmateSearchResult extends React.Component {
 
   }
 
-  orderListItem(o) {
+  orderListItem(order) {
     return <li>
-      <a>Order #{o.pk}</a>, (<OrderReopenLink orderPk={o.pk}/>)
-      opened {o.date_opened}
+      <a>Order #{order.pk}</a>, (<OrderReopenLink orderPk={order.pk}/>)
+      opened {order.date_opened}
       { order.status == 'SENT' ? <span>, closed {o.date_closed}</span> : null}
       { order.sender ? <span>by {o.sender}</span> : null}
 

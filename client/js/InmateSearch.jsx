@@ -33,8 +33,10 @@ export default class InmateSearch extends React.Component {
 
   handleSubmit(event) {
     console.log(this.state);
+    const params = this.state.formInputs;
+    params['include'] = 'facility';
     axios.get('/api/inmate/', {
-      params: this.state.formInputs
+      params: params
     }).then(res => {
       this.setState({
         results: res.data
