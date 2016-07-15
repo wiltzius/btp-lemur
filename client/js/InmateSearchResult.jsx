@@ -5,23 +5,28 @@ import OrderReopenLink from './OrderReopenLink';
 export default class InmateSearchResult extends React.Component {
 
   otherRestrictions(inmate) {
-    if (inmate.facility.otherRestrictions) {
+    if (inmate.attributes.facility.attributes.otherRestrictions) {
       return <li>
         <span className="resultLabel">Restrictions:</span>
-        <span className="resultValue">{inmate.facility.otherRestrictions}</span>
+        <span className="resultValue">{inmate.attributes.facility.attributes.otherRestrictions}</span>
       </li>
     }
     else {
       return null;
     }
   }
+  
+  orderListItem(order) {
+    return <li>
+      <a>Order #{order.pk}</a>, (<OrderReopenLink orderPk={order.pk}/>)
+      opened {order.date_opened}
+      { order.status == 'SENT' ? <span>, closed {o.date_closed}</span> : null}
+      { order.sender ? <span>by {o.sender}</span> : null}
 
-  componentDidMount() {
-    axios.get('/api/order/', {
-      params: {
-        
-      }
-    })
+      <ul className="orderlist" id="orderList{{ order.pk }}" style="display:none;">
+        {order.books.map(b => <li>{b.title}</li>)}
+      </ul>
+    </li>
   }
 
   render() {
@@ -33,10 +38,10 @@ export default class InmateSearchResult extends React.Component {
 
       <ul className="inmateDetails">
         <li>
-          <span className="resultLabel">Inmate ID:</span><span className="resultValue">{inmate.inmate_id}</span>
+          <span className="resultLabel">Inmate ID:</span><span className="resultValue">{inmate.attributes.inmate_id}</span>
         </li>
         <li>
-          <span className="resultLabel">Facility:</span><span className="resultValue">{inmate.facility.name}</span>
+          <span className="resultLabel">Facility:</span><span className="resultValue">{inmate.attributes.facility.attributes.name}</span>
         </li>
         {this.otherRestrictions(inmate)}
       </ul>
@@ -79,18 +84,5 @@ export default class InmateSearchResult extends React.Component {
        */}
     </div>
 
-  }
-
-  orderListItem(order) {
-    return <li>
-      <a>Order #{order.pk}</a>, (<OrderReopenLink orderPk={order.pk}/>)
-      opened {order.date_opened}
-      { order.status == 'SENT' ? <span>, closed {o.date_closed}</span> : null}
-      { order.sender ? <span>by {o.sender}</span> : null}
-
-      <ul className="orderlist" id="orderList{{ order.pk }}" style="display:none;">
-        {order.books.map(b => <li>{b.title}</li>)}
-      </ul>
-    </li>
   }
 }

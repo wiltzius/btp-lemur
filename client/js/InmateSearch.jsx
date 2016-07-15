@@ -1,8 +1,22 @@
 import React from 'react';
 import InmateSearchResults from './InmateSearchResults';
+import {readEndpoint} from 'redux-json-api';
+import {connect} from'react-redux';
 import axios from 'axios';
+import _ from 'lodash';
 
-export default class InmateSearch extends React.Component {
+function map_includes(item, includes, state) {
+  const newItem = _.clone(item);
+  _.each(includes, include_string => {
+    const include_type = _.get(item.relationships, [include_string, 'data', 'type']);
+    // TODO if data is an array, then go find all of the entries
+    const include_id = _.get(item.relationships, [include_string, 'data', 'id']);
+    newItem.attributes[include_string] = _.find(state.api[include_type].data, {id: include_id});
+  });
+  return newItem;
+}
+
+class InmateSearch extends React.Component {
 
   constructor(props) {
     super(props);
@@ -15,9 +29,24 @@ export default class InmateSearch extends React.Component {
 
   }
 
-  //handleChange(event) {
-  //  this.setState({inmate_id: event.target.value});
-  //}
+  static generateEndpointQuery(state) {
+    return 'inmate?include=facility';
+  }
+
+  static inmateListFromQueryResults(state) {
+    // inmate list, with subresources inlined
+    const query_results = state.inmateSearch.inmate_ids;
+    return _.map(query_results, id => {
+      console.log('foo');
+      const inmate = _.find(state.api.Inmate.data, {id: id});
+      const to_return = map_includes(inmate, ['facility'], state);
+      console.log('mapped includes are', to_return);
+      return to_return;
+      //inmate.facility = _.find(state.api.Facility.data, {id: inmate.relationships.facility.data.id});
+      //inmate.order_set = _.filter(state.api.Order.data, o => inmate.order_set.data o.id{id: inmate.relationships.facility.data.id});
+      //return inmate;
+    });
+  };
 
   handleChange(propName) {
     const update = function(event) {
@@ -32,17 +61,24 @@ export default class InmateSearch extends React.Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault();
     console.log(this.state);
     const params = this.state.formInputs;
     params['include'] = 'facility';
-    axios.get('/api/inmate/', {
-      params: params
-    }).then(res => {
-      this.setState({
-        results: res.data
-      })
+    this.props.dispatch(readEndpoint(InmateSearch.generateEndpointQuery(this.state))).then(resp => {
+      this.props.dispatch({
+        type: 'INMATE_SEARCH_RESULTS',
+        inmate_ids: resp.data.map(i => i.id)
+      });
     });
-    event.preventDefault();
+    //axios.get('/api/inmate/', {
+    //  params: params
+    //}).then(res => {
+    //  this.setState({
+    //    results: res.data
+    //  })
+    //});
+
   }
 
   render() {
@@ -68,8 +104,16 @@ export default class InmateSearch extends React.Component {
           </div>
         </form>
       </div>
-      <InmateSearchResults results={this.state.results} />
+      <InmateSearchResults results={this.props.search_results} />
     </div>
   }
 
 }
+
+function mapStateToProps(state) {
+  return {
+    search_results: InmateSearch.inmateListFromQueryResults(state)
+  }
+}
+
+export default connect(mapStateToProps)(InmateSearch);

@@ -58,7 +58,7 @@ export default class InmateSearchResults extends React.Component {
   resultsList() {
     console.log('rendering results list', this.props.results);
     return <div className="resultsPadding">
-      {this.props.results.map(inmate => <InmateSearchResult inmate={inmate} key={inmate.pk} />)}
+      {this.props.results.map(inmate => <InmateSearchResult inmate={inmate} key={inmate.id} />)}  
     </div>
   }
 
