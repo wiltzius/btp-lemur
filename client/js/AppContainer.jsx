@@ -7,7 +7,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
-import lemurReducer from './reducers';
+import lemurReducer from './state/reducers';
 import {setEndpointPath, setEndpointHost} from 'redux-json-api';
 
 export default class AppContainer extends React.Component {

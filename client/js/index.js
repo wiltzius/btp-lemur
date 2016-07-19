@@ -4,7 +4,7 @@ import {Router, Route, browserHistory} from 'react-router';
 
 import AppContainer from './AppContainer';
 import InmateAddForm from './InmateAddForm';
-import InmateSearch from './InmateSearch';
+import InmateSearch from './InmateSearch/InmateSearch';
 
 ReactDOM.render((
     <Router history={browserHistory}>

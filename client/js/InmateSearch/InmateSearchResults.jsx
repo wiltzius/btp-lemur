@@ -63,10 +63,10 @@ export default class InmateSearchResults extends React.Component {
   }
 
   render() {
-    // todo: only visible if inmate results are present
     return <div id="searchResults">
       <h2>Search Results</h2>
       {this.props.results ? this.resultsList() : this.emptyResults()}
+      {/*TODO pagination */}
     </div>
   }
 

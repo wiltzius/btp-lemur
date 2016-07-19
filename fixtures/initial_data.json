@@ -336,6 +336,17 @@
     }
   },
   {
+    "pk": 5,
+    "model": "LemurApp.book",
+    "fields": {
+      "asin": "",
+      "title": "some title",
+      "author": "some person",
+      "order": 1,
+      "creation_date": "2010-11-15 18:00:00"
+    }
+  },
+  {
     "pk": 1,
     "model": "LemurApp.LemurSettingsStore",
     "fields": {
