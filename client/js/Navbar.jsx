@@ -8,12 +8,7 @@ export default class Navbar extends React.Component {
     this.state = {}
   }
 
-  componentDidMount() {
-
-  }
-
   render() {
-    // TODO use whatever react's version of ui-routeris for these
     return <ul id="navlist">
       <li>
         {/*

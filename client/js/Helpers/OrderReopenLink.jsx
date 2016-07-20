@@ -1,6 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import classNames from 'classnames';
+import * as React from 'react';
 import Modal from 'react-modal';
 
 const customStyles = {

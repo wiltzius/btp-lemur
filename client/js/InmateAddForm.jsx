@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import classNames from 'classnames';
-import Modal from 'react-modal';
 import axios from 'axios';
 
 export default class InmateAddForm extends React.Component {

@@ -1,6 +1,7 @@
 import React from 'react';
 import InmateSearchProxy from './InmateSearchProxy';
 import InmateSearchOrderHistory from './InmateSearchOrderHistory';
+import InmateSearchWarnings from './InmateSearchWarnings';
 import {Link} from 'react-router';
 
 export default class InmateSearchResult extends React.Component {
@@ -22,6 +23,8 @@ export default class InmateSearchResult extends React.Component {
     return <div className="inmateResult">
       <h3>{inmate.attributes.first_name} {inmate.attributes.last_name}</h3>
 
+      <InmateSearchWarnings inmate={inmate} />
+      
       <InmateSearchProxy inmatePk={inmate.pk}/>
 
       <ul className="inmateDetails">
@@ -40,25 +43,6 @@ export default class InmateSearchResult extends React.Component {
         <li><Link to="/app/inmate/edit">Edit Information</Link></li>
         <li><Link to="/app/order/create" className="bold">Start a new order for this inmate</Link></li>
       </ul>
-
-      {/*
-       <!-- dictionary and other warnings -->
-       <ul class="inmateErrors error">
-       {{inmate.warnings | unordered_list }}
-       {% if inmate.dictionaries|length == 1 %}
-       <li>Patron already received dictionary ({{inmate.dictionaries.0 }})</li>
-       {% endif %}
-       {% if inmate.dictionaries|length > 1 %}
-       <li>Patron has already received multiple dictionaries. <a
-       href="javascript:$('#inmateResult{{ inmate.pk }} .dictionaries').toggle('fast');">Click to
-       expand</a>
-       <ul class="dictionaries" style="display:none;">
-       {{inmate.dictionaries | unordered_list }}
-       </ul>
-       </li>
-       {% endif %}
-       </ul>
-       */}
     </div>
 
   }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as _ from 'lodash';
-import OrderReopenLink from '../OrderReopenLink';
+import OrderReopenLink from '../Helpers/OrderReopenLink';
 
 export default class InmateSearchOrderHistory extends React.Component {
 

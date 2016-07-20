@@ -319,7 +319,20 @@
       "last_name": "wiltzius",
       "facility": 3,
       "inmate_id": "X00001",
-      "inmate_doc_id": "",
+      "inmate_doc_id": "X00001",
+      "creation_date": "2010-11-15 17:20:47",
+      "address": ""
+    }
+  },
+  {
+    "pk": 2,
+    "model": "LemurApp.inmate",
+    "fields": {
+      "first_name": "tom",
+      "last_name": "wiltziussuperlonglastname",
+      "facility": 3,
+      "inmate_id": "X00002",
+      "inmate_doc_id": "X00002",
       "creation_date": "2010-11-15 17:20:47",
       "address": ""
     }
@@ -328,9 +341,20 @@
     "pk": 1,
     "model": "LemurApp.order",
     "fields": {
-      "status": "OPEN",
+      "status": "SENT",
       "inmate": 1,
-      "date_closed": null,
+      "date_closed": "2010-11-15 17:20:49",
+      "sender": null,
+      "date_opened": "2010-11-15 17:20:49"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "LemurApp.order",
+    "fields": {
+      "status": "SENT",
+      "inmate": 2,
+      "date_closed": "2010-11-15 17:20:49",
       "sender": null,
       "date_opened": "2010-11-15 17:20:49"
     }
@@ -340,10 +364,32 @@
     "model": "LemurApp.book",
     "fields": {
       "asin": "",
-      "title": "some title",
+      "title": "a dictionary",
       "author": "some person",
       "order": 1,
-      "creation_date": "2010-11-15 18:00:00"
+      "creation_date": "2015-11-15 18:00:00"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "LemurApp.book",
+    "fields": {
+      "asin": "",
+      "title": "another dictionary",
+      "author": "some person",
+      "order": 1,
+      "creation_date": "2015-11-15 18:00:00"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "LemurApp.book",
+    "fields": {
+      "asin": "",
+      "title": "a Dictionary",
+      "author": "some person",
+      "order": 2,
+      "creation_date": "2015-11-15 18:00:00"
     }
   },
   {
