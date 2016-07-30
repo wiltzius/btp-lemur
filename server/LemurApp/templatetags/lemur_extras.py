@@ -20,7 +20,7 @@ def jsonify(object):
 
 @register.simple_tag
 def inmate_doc_link(inmate_pk, link_text):
-    """template tag to make DOC links for inmates"""
+    """template tag to make DOnC links for inmates"""
     inmate = Inmate.objects.get(pk=inmate_pk)  # TODO catch a not-found exception and return blank
     if inmate.inmate_type() is None:
         return 'No inmate ID'

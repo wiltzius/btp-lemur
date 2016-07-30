@@ -25,7 +25,7 @@ export default class InmateSearchResult extends React.Component {
 
       <InmateSearchWarnings inmate={inmate} />
       
-      <InmateSearchProxy inmatePk={inmate.pk}/>
+      <InmateSearchProxy inmatePk={inmate.attributes.pk}/>
 
       <ul className="inmateDetails">
         <li>

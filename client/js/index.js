@@ -11,6 +11,7 @@ ReactDOM.render((
       <Route component={AppContainer}>
         <Route path="/app/inmate/search" component={InmateSearch} />
         <Route path="/app/inmate/edit" component={InmateAddForm} />
+        <Route path="/app/inmate/add" component={InmateAddForm} />
       </Route>
     </Router>
 ), document.getElementById('app'));
