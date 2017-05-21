@@ -1,6 +1,7 @@
 LemurAptana/settings_secret.py
 *.pyc
 venv
+BTPENV
 .idea
 books2pr_dev
 webpack-stats.json
@@ -9,3 +10,4 @@ assets/bundles/
 webpack-stats.json
 LemurAptana/static/
 sqlite.db
+

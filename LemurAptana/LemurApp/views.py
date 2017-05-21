@@ -84,12 +84,14 @@ def inmate_add_searched(request):
 def inmate_search_proxy(request, pk):
     i = Inmate.objects.get(pk=pk)
     res = {}
-    if i.inmate_type() == Inmate.InmateType.FEDERAL:
+    if i.inmate_type() is Inmate.InmateType.FEDERAL:
         res = federal_search_proxy(i.inmate_id)
-    elif i.inmate_type() == Inmate.InmateType.ILLINOIS:
+    elif i.inmate_type() is Inmate.InmateType.ILLINOIS:
         res = illinois_search_proxy(i.inmate_id)
-    elif i.inmate_type() == Inmate.InmateType.KENTUCKY:
+    elif i.inmate_type() is Inmate.InmateType.KENTUCKY:
         res = kentucky_search_proxy(i)
+    elif i.inmate_type() is Inmate.InmateType.VIRGINIA:
+        return JsonResponse({})
     # collapse paroled date / projected parole date into one field
     if res['paroled_date'] and not res['projected_parole']:
         res['parole_single'] = res['paroled_date']

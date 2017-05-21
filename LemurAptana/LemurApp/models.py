@@ -93,7 +93,8 @@ class InmateIDField(models.CharField):
         """Validates and formats an inmate ID"""
 
         error_format_message = '''
-            Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates) or 8 numbers (for Federal inmates) or 6 numbers (for Kentucky inmates)
+            Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates), 8 numbers (for Federal 
+            inmates), 6 numbers (for Kentucky inmates), or 7 numbers (for Virginia inmates)
             '''
 
         if value == '' or value is None:
@@ -105,6 +106,9 @@ class InmateIDField(models.CharField):
                 return value
             # Kentucky state ID
             elif unicode(value).isnumeric() and len(value) == 6:
+                return value
+            # Kentucky state ID
+            elif unicode(value).isnumeric() and len(value) == 7:
                 return value
             else:
                 raise ValidationError(error_format_message)
@@ -160,17 +164,18 @@ class Inmate(models.Model):
     def save(self, *args, **kwargs):
         """Override the normal save method to make sure we validate before
            saving into the database"""
-        self.full_clean()                         # validate the model
-        super(Inmate, self).save(*args, **kwargs) # Call the "real" save() method.
+        self.full_clean()                           # validate the model
+        super(Inmate, self).save(*args, **kwargs)   # Call the "real" save() method.
 
     @models.permalink
     def get_absolute_url(self):
         return 'inmate-detail', [str(self.pk)]
 
-    class InmateType:
+    class InmateType(object):
         FEDERAL = 1
         ILLINOIS = 2
         KENTUCKY = 3
+        VIRGINIA = 4
 
     @staticmethod
     def compute_inmate_type(inmate_id):
@@ -181,6 +186,8 @@ class Inmate(models.Model):
                 return Inmate.InmateType.FEDERAL
             elif len(inmate_id) == 6:
                 return Inmate.InmateType.KENTUCKY
+            elif len(inmate_id) == 7:
+                return Inmate.InmateType.VIRGINIA
             return Inmate.InmateType.FEDERAL
         elif inmate_id[0] in string.ascii_letters:
             return Inmate.InmateType.ILLINOIS
@@ -198,6 +205,10 @@ class Inmate(models.Model):
             # return "LETTER#####" format used by Illinois DOC
             return self.inmate_id.upper()
         elif self.inmate_type() is Inmate.InmateType.KENTUCKY:
+            return self.inmate_id
+        elif self.inmate_type() is Inmate.InmateType.VIRGINIA:
+            return self.inmate_id
+        else:
             return self.inmate_id
 
     def full_name(self):
