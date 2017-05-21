@@ -43,6 +43,20 @@ def inmate_doc_link(inmate_pk, link_text):
         else:
             # TODO this sucks, fix by making this DOC tag an async react component instead of a sync template render
             return 'DOC link not yet available, still processing KOOL information'
+    elif inmate.inmate_type() is Inmate.InmateType.VIRGINIA:
+        return '''
+                <form action="https://vadoc.virginia.gov/offenders/locator/results.aspx" style="display:none;" method="post" target="blank" id="inmateform%(inmate_pk)s">
+                    <select name="selectlist1" size="4" onchange="setfocus()">
+                        <option value="IDOC" selected="selected">&nbsp;</option>
+                    </select>
+                    <input type="text" name="txtOffenderId" value="%(inmate_id)s" />
+                    <input type="text" name="__PREVIOUSPAGE" value="lW6Dz6HnkhcHqvduqWE9LDcw2CSb_GC86LvGs2b1mlrxvWsjCfq2sCx2w-TZwd1dcRLwpC5JExJoSqqdGa16pihaRPimLlIc7l2zpimSgY6SlpRS0" />
+                    <input type="text" name="btnFormOffenderIdSubmitButton" />
+                    <input type="text" name="txtFirstName" value="" />
+                    <input type="text" name="txtLastName" value="" />
+                </form>
+                <a href="javascript:$('#inmateform%(inmate_pk)s').submit()">%(link_text)s</a>
+        ''' % {'inmate_id': inmate.inmate_id, 'link_text': link_text, 'inmate_pk': inmate.pk}
 
 
 # Below taken from http://djangosnippets.org/snippets/194/

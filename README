@@ -20,6 +20,8 @@ To run the server locally:
 -) pip install -r requirements.txt
 -) set up settings_secret.py; use SqlLite database
 -) Run development server with `./manage.py runserver`
+-) install client deps with `yarn` in root directory
+-) install webpack globally if it isn't with `yarn global add webpack` (webpack 2.5.1 works)
 -) Build/watch webpack assets with `webpack -w` in base project directory
 
 To manage the server in production:
@@ -27,3 +29,6 @@ To manage the server in production:
 -) Use lemur-fcgi.conf in /etc/init/
 -) Query service status, restart, etc with `sudo initctl status lemur-fcgi`
 -) Rebuild client, run migrations, and restart service with `./production_restart.sh`
+
+For site administration (production or local)
+-) Django admin site is located at `/admin`

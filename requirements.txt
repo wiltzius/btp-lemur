@@ -8,4 +8,4 @@ beautifulsoup4==4.4.1
 django-webpack-loader==0.2.4
 ndg-httpsclient==0.4.0
 pyasn1==0.1.9
-pyOpenSSL==0.13
+pyOpenSSL==16.2.0

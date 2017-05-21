@@ -17,7 +17,7 @@ module.exports = {
   ],
 
   module: {
-    loaders: [
+    rules: [
       {
         // to transform JSX into JS
         test: /\.jsx?$/,
@@ -31,7 +31,7 @@ module.exports = {
   },
 
   resolve: {
-    modulesDirectories: ['node_modules', 'bower_components'],
-    extensions: ['', '.js', '.jsx']
+    modules: ['node_modules', 'bower_components'],
+    extensions: ['.js', '.jsx']
   }
 };
