@@ -57,11 +57,16 @@ def inmate_search(request, pk=None):
         context_dict['form'] = forms.InmateForm(request.GET)  # A form bound to the GET data
         context_dict['query'] = request.META['QUERY_STRING']
         # Try to find the inmate
-        inmate_id = request.GET.get('inmate_id', '')
-        first_name = request.GET.get('first_name', '')
-        last_name = request.GET.get('last_name', '')
-        query = Inmate.objects.filter(inmate_id__icontains=inmate_id).filter(first_name__icontains=first_name).filter(
-                last_name__icontains=last_name)
+        query = Inmate.objects.all()
+        inmate_id = request.GET.get('inmate_id')
+        if inmate_id:
+            query = query.filter(inmate_id__icontains=inmate_id)
+        first_name = request.GET.get('first_name')
+        if first_name:
+            query = query.filter(first_name__icontains=first_name)
+        last_name = request.GET.get('last_name')
+        if last_name:
+            query = query.filter(last_name__icontains=last_name)
         # grab the paginated result list
         context_dict['inmate_list'] = paginate_results(query)
         context_dict['has_results'] = True
