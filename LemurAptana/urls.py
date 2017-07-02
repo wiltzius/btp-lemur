@@ -8,7 +8,7 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
     # Enable the Lemur app
-    (r'^$', RedirectView.as_view(url='/lemur/inmate/search')),
+    (r'^$', RedirectView.as_view(url='/lemur/inmate/search', permanent=True)),
     (r'^lemur/', include('LemurAptana.LemurApp.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
