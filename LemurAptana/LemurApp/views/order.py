@@ -137,9 +137,9 @@ def order_build(request):
     context_dict['formSearch'] = forms.BookForm(request.GET, auto_id='search_id_%s')
     power = []
     if request.GET.get('author', False):
-      power += ['author:' + request.GET['author']]
+      power += ['inauthor:' + request.GET['author']]
     if request.GET.get('title', False):
-      power += ['title:' + request.GET['title']]
+      power += ['intitle:' + request.GET['title']]
     if not power:
       # If we wanted to do something special for searching with all fields empty we could here,
       # but for now just let Google return whatever

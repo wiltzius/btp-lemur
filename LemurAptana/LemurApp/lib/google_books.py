@@ -18,10 +18,14 @@ def _isbn13_from_industry_identifiers(industry_identifiers):
 
 
 def _tuple_result(result):
-  volumeInfo = result['volumeInfo']
-  return booktuple(title=volumeInfo['title'],
-                   author=', '.join(volumeInfo['authors']),     # authors is a list
-                   isbn=_isbn13_from_industry_identifiers(volumeInfo['industryIdentifiers']))
+  try:
+    volumeInfo = result['volumeInfo']
+    return booktuple(title=volumeInfo['title'],
+                     author=', '.join(volumeInfo.get('authors', [])),     # authors is a list, if it exists
+                     isbn=_isbn13_from_industry_identifiers(volumeInfo['industryIdentifiers']))
+  except (KeyError, ValueError):
+    # Sometimes the Google API returns results missing some of the key fields; just skip them.
+    return None
 
 
 def search(q, page=0):
@@ -29,10 +33,11 @@ def search(q, page=0):
                                    startIndex=page * RESULTS_PER_PAGE,
                                    maxResults=RESULTS_PER_PAGE,
                                    fields="totalItems,items(volumeInfo(title, authors, industryIdentifiers))")
-  response = request.execute()
   # import ipdb; ipdb.set_trace()
-  return searchresult(pages=response['totalItems'] // RESULTS_PER_PAGE,
-                      books=[_tuple_result(r) for r in response['items']])
+  response = request.execute()
+  total_items = response['totalItems']
+  return searchresult(pages=total_items // RESULTS_PER_PAGE,
+                      books=[_tuple_result(r) for r in response.get('items', []) if _tuple_result(r)])
 
 
 def search_isbn(isbn):
