@@ -1,13 +1,13 @@
 # Django settings for LemurAptana project.
 import os
 
-from settings_secret import *
+from .settings_secret import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Tom Wiltzius', 'tom.wiltzius@gmail.com'),
+  ('Tom Wiltzius', 'tom.wiltzius@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -37,50 +37,50 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-#MEDIA_ROOT = base_project_directory + 'media/'
+# MEDIA_ROOT = base_project_directory + 'media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-#MEDIA_URL = '/static/'
+# MEDIA_URL = '/static/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-#ADMIN_MEDIA_PREFIX = '/media/'
+# ADMIN_MEDIA_PREFIX = '/media/'
 
 STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static/')
 STATIC_URL = '/static/'
 
 # Initial data loading directory
 FIXTURE_DIRS = (
-   base_project_directory + 'fixtures/',
+  base_project_directory + 'fixtures/',
 )
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+  'django.template.loaders.filesystem.Loader',
+  'django.template.loaders.app_directories.Loader',
+  #     'django.template.loaders.eggs.Loader',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS =(
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.contrib.messages.context_processors.messages",
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.request",
-    "LemurAptana.LemurApp.context_processors.restricted_facilities",
-    "LemurAptana.LemurApp.context_processors.banner_message"
+TEMPLATE_CONTEXT_PROCESSORS = (
+  "django.core.context_processors.debug",
+  "django.core.context_processors.i18n",
+  "django.core.context_processors.media",
+  "django.contrib.messages.context_processors.messages",
+  "django.contrib.auth.context_processors.auth",
+  "django.core.context_processors.request",
+  "LemurAptana.LemurApp.context_processors.restricted_facilities",
+  "LemurAptana.LemurApp.context_processors.banner_message"
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+  'django.middleware.common.CommonMiddleware',
+  'django.contrib.sessions.middleware.SessionMiddleware',
+  'django.middleware.csrf.CsrfViewMiddleware',
+  'django.contrib.auth.middleware.AuthenticationMiddleware',
+  'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'LemurAptana.urls'
@@ -95,31 +95,31 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-print BASE_DIR
+print(BASE_DIR)
 
 STATICFILES_DIRS = (
-    # We do this so that django's collectstatic copies our bundles and other files to the STATIC_ROOT
-    os.path.join(BASE_DIR, 'assets'),
+  # We do this so that django's collectstatic copies our bundles and other files to the STATIC_ROOT
+  os.path.join(BASE_DIR, 'assets'),
 )
 
 WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'bundles/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
-    }
+  'DEFAULT': {
+    'BUNDLE_DIR_NAME': 'bundles/',
+    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+  }
 }
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.staticfiles',
-    'django.contrib.messages',
-    'LemurAptana.LemurApp',
-    # Uncomment the next line to enable the admin:
-    'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    'django.contrib.admindocs',
-    'webpack_loader'
+  'django.contrib.auth',
+  'django.contrib.contenttypes',
+  'django.contrib.sessions',
+  'django.contrib.sites',
+  'django.contrib.staticfiles',
+  'django.contrib.messages',
+  'LemurAptana.LemurApp',
+  # Uncomment the next line to enable the admin:
+  'django.contrib.admin',
+  # Uncomment the next line to enable admin documentation:
+  'django.contrib.admindocs',
+  'webpack_loader'
 )
