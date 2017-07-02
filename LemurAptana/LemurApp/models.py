@@ -5,6 +5,7 @@ from django.conf import settings
 import string
 import datetime
 # from . import lib.isbn as isbn
+from LemurAptana.LemurApp.lib import google_books
 from .lib import isbn
 
 
@@ -374,27 +375,17 @@ class Book(models.Model):
     ordering = ['-creation_date']
 
   @staticmethod
-  def get_book(ASIN):
-    """Factory method, looks up the book with the given ASIN and add returns a
+  def get_book(isnb_):
+    """Factory method, looks up the book with the given ISBN and add returns a
     populated Book object
     Raises InvalidParameterValue (from the item_lookup call) if the ISBN isn't found
     """
-
-    # Set up the Amazon API
-    api = amazonproduct.API(settings.AWS_KEY,
-                            settings.AWS_SECRET_KEY,
-                            locale='us',
-                            associate_tag=settings.AWS_ASSOCIATE_TAG)
-
-    # Do the Amazon lookup. This throw an exception if the ASIN isn't found.
     try:
-      node = api.item_lookup(ASIN, IdType='ISBN', SearchIndex='Books')
-      # Parse out the results
-      xmlBook = node.Items.Item
+      booktuple = google_books.search_isbn(isnb_)
       book = Book()
-      book.title = xmlBook.ItemAttributes.Title.text
-      book.author = xmlBook.ItemAttributes.Author.text
-      book.asin = xmlBook.ASIN.text
+      book.title = booktuple.title
+      book.author = booktuple.author
+      book.asin = booktuple.isbn
       return book
     except Exception as e:
       # For debugging help we dump the exception to console should the search throw one, which it often does...
