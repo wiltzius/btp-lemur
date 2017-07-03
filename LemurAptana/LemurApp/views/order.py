@@ -152,15 +152,10 @@ def order_build(request):
       # if for some reason 'page' is a GET parameter but not a valid number, just default to 1
       page = 1
     search_result = google_books.search(q=power, page=page)
-    # api = amazonproduct.API(settings.AWS_KEY, settings.AWS_SECRET_KEY, locale='us',
-    #                         associate_tag=settings.AWS_ASSOCIATE_TAG)
-    # results = api.item_search('Books', Power=' and '.join(power), ItemPage=str(page))
 
     if search_result.pages:
       context_dict['books'] = []
       context_dict['books'] = search_result.books
-      # for book in search_result.books:
-      #   context_dict['books'].append(book)
       context_dict['totalPages'] = search_result.pages
       if search_result.pages > 1:
         context_dict['pagination'] = True
@@ -186,6 +181,7 @@ def order_build(request):
 
   context_dict['currentOrderHTML'] = order_get_snippet_html(request)
   context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
+  print(context_dict)
   return render_to_response('LemurApp/order_build.html', context_dict, context_instance=RequestContext(request))
 
 

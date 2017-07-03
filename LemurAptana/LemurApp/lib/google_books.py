@@ -33,7 +33,6 @@ def search(q, page=0):
                                    startIndex=page * RESULTS_PER_PAGE,
                                    maxResults=RESULTS_PER_PAGE,
                                    fields="totalItems,items(volumeInfo(title, authors, industryIdentifiers))")
-  # import ipdb; ipdb.set_trace()
   response = request.execute()
   total_items = response['totalItems']
   return searchresult(pages=total_items // RESULTS_PER_PAGE,
@@ -45,4 +44,6 @@ def search_isbn(isbn):
                                    fields="totalItems,items(volumeInfo(title, authors, industryIdentifiers))")
   response = request.execute()
   # hopefully there's only one result!
+  if response['totalItems'] == 0:
+    return None
   return _tuple_result(response['items'][0])

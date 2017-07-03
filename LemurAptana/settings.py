@@ -58,22 +58,30 @@ FIXTURE_DIRS = (
 )
 
 # List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-  'django.template.loaders.filesystem.Loader',
-  'django.template.loaders.app_directories.Loader',
-  #     'django.template.loaders.eggs.Loader',
-)
+TEMPLATES = [
+  {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'OPTIONS': {
+      'string_if_invalid': 'TEMPLATE ERROR',
+      'loaders': [
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+      ],
+      'context_processors': (
+        "django.core.context_processors.debug",
+        "django.core.context_processors.i18n",
+        "django.core.context_processors.media",
+        "django.contrib.messages.context_processors.messages",
+        "django.contrib.auth.context_processors.auth",
+        "django.core.context_processors.request",
+        "LemurAptana.LemurApp.context_processors.restricted_facilities",
+        "LemurAptana.LemurApp.context_processors.banner_message"
+      ),
+    }
+  },
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-  "django.core.context_processors.debug",
-  "django.core.context_processors.i18n",
-  "django.core.context_processors.media",
-  "django.contrib.messages.context_processors.messages",
-  "django.contrib.auth.context_processors.auth",
-  "django.core.context_processors.request",
-  "LemurAptana.LemurApp.context_processors.restricted_facilities",
-  "LemurAptana.LemurApp.context_processors.banner_message"
-)
+]
+
 
 MIDDLEWARE_CLASSES = (
   'django.middleware.common.CommonMiddleware',

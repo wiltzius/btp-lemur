@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
                 ('last_name', models.CharField(max_length=250, verbose_name=b'Last name')),
                 ('address', models.CharField(max_length=250, null=True, verbose_name=b'Address', blank=True)),
                 ('creation_date', models.DateTimeField(default=datetime.datetime.now, editable=False)),
-                ('facility', models.ForeignKey(to='LemurApp.Facility')),
+                ('facility', models.ForeignKey(to='...models.facility.Facility')),
             ],
             options={
             },
@@ -73,7 +73,7 @@ class Migration(migrations.Migration):
                 ('date_opened', models.DateTimeField(default=datetime.datetime.now, verbose_name=b'Date opened', editable=False)),
                 ('date_closed', models.DateTimeField(null=True, verbose_name=b'Date closed', blank=True)),
                 ('sender', models.CharField(max_length=250, null=True, verbose_name=b'Sender', blank=True)),
-                ('inmate', models.ForeignKey(verbose_name=b'Inmate', to='LemurApp.Inmate')),
+                ('inmate', models.ForeignKey(verbose_name=b'Inmate', to='...models.inmate.Inmate')),
             ],
             options={
             },
@@ -82,7 +82,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='book',
             name='order',
-            field=models.ForeignKey(to='LemurApp.Order'),
+            field=models.ForeignKey(to='...models.order.Order'),
             preserve_default=True,
         ),
     ]
