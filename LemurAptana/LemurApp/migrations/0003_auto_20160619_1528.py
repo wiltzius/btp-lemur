@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='facility',
             name='otherRestrictions',
-            field=models.CharField(default=b'', max_length=250, verbose_name=b'Other Restrictions', blank=True),
+            field=models.CharField(default='', max_length=250, verbose_name='Other Restrictions', blank=True),
         ),
     ]
