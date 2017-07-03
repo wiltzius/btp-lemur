@@ -3,9 +3,9 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from LemurAptana.LemurApp.models import Book
-from LemurAptana.LemurApp.models.inmate import Inmate
-from LemurAptana.LemurApp.models.settings_store import LemurSettingsStore
+from .book import Book
+from .inmate import Inmate
+from .settings_store import LemurSettingsStore
 
 
 class Order(models.Model):
