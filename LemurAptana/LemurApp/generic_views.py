@@ -18,6 +18,11 @@ class OrderList(ListView):
 class OrderDetail(DetailView):
   model = Order
 
+  def render_to_response(self, context, **response_kwargs):
+    print(context)
+    # import ipdb; ipdb.set_trace()
+    return super(OrderDetail, self).render_to_response(context, **response_kwargs)
+
 
 class InmateCreate(CreateView):
   form_class = forms.InmateForm
