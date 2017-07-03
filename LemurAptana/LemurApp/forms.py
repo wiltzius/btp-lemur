@@ -1,10 +1,10 @@
 from django import forms
-from .models import Inmate, Book, InmateIDField, Order
+from .models import Inmate, Book, Order
 
 
 class InmateForm(forms.ModelForm):
-  inmate_id = forms.CharField(
-    required=False)  # TODO I don't like this hack at all, it should be specified within the InmateIDField or Inmate model somehow
+  # TODO I don't like this 'false' hack at all, it should be specified within the InmateIDField or Inmate model somehow
+  inmate_id = forms.CharField(required=False)
 
   class Meta:
     model = Inmate

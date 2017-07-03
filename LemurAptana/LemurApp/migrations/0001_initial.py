@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
             name='Inmate',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('inmate_id', LemurAptana.LemurApp.models.InmateIDField(max_length=250, unique=True, null=True, verbose_name=b'Inmate ID')),
+                ('inmate_id', LemurAptana.LemurApp.models.inmate.InmateIDField(max_length=250, unique=True, null=True, verbose_name=b'Inmate ID')),
                 ('first_name', models.CharField(max_length=250, verbose_name=b'First name')),
                 ('last_name', models.CharField(max_length=250, verbose_name=b'Last name')),
                 ('address', models.CharField(max_length=250, null=True, verbose_name=b'Address', blank=True)),

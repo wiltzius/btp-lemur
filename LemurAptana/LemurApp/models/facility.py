@@ -1,6 +1,6 @@
 from django.db import models
 
-from LemurAptana.LemurApp.models import FacilityManager
+from .facility_manager import FacilityManager
 
 
 class Facility(models.Model):
