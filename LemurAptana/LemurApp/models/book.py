@@ -42,6 +42,8 @@ class Book(models.Model):
     """
     try:
       booktuple = google_books.search_isbn(isnb_)
+      if not booktuple:
+        return
       book = Book()
       book.title = booktuple.title
       book.author = booktuple.author

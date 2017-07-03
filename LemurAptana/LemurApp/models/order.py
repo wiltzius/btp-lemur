@@ -3,8 +3,9 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from .book import Book
-from .inmate import Inmate
+from LemurAptana.LemurApp.models import Book
+from LemurAptana.LemurApp.models import Inmate
+# relative import since this hasn't been declared in models/__init__.py yet
 from .settings_store import LemurSettingsStore
 
 

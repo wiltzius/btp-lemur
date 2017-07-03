@@ -218,15 +218,3 @@ def federal_search_proxy(inmate_id):
     'parent_institution': inmate_data['faclName'],
     'paroled_date': inmate_data['actRelDate']
   }
-  # return HttpResponse(res.json())
-
-# def order_add_book_asin(request):
-#   """Adds a book with the ASIN passed via POST. Used for AJAX book adds of
-#      books that were found in Amazon"""
-#   try:
-#     book = Book.get_book(request.POST['ASIN'])
-#     order_add_book(request, book)
-#     return order_render_as_response(request)
-#   except amazonproduct.InvalidParameterValue:
-#     # this ASIN isn't found, so return 404-not-found error message
-#     raise Http404('No book with that ASIN found on Amazon')

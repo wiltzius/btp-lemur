@@ -52,19 +52,7 @@
          error: searchError
        });
     }
-    
-    // Function to handle adding books from Amazon to order, AJAX-style
-{#    function addToOrderASIN(bookData) {#}
-{#      $.ajax({#}
-{#         type: "POST",#}
-{#         url: "{% url 'order-add-book-ASIN' %}",   // use Django's template system to load URLs#}
-{#         data: bookData,#}
-{#         dataType: 'json',#}
-{#         success: updateOrder,#}
-{#         error: searchError#}
-{#       });#}
-{#     }#}
-    
+
     // Function to handle adding books from ISBN direct-entry to order, AJAX-style
     function addToOrderISBN(bookData) {
       $.ajax({

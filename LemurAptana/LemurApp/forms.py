@@ -1,5 +1,5 @@
 from django import forms
-from .models import Inmate, Book, Order
+from LemurAptana.LemurApp.models import Inmate, Book, Order
 
 
 class InmateForm(forms.ModelForm):

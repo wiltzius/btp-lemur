@@ -4,9 +4,9 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 
+from LemurAptana.LemurApp import forms
+from LemurAptana.LemurApp.models import Inmate, Order
 from LemurAptana.LemurApp.views.order import order_unset
-from . import forms
-from .models import Inmate, Order
 
 
 class OrderList(ListView):

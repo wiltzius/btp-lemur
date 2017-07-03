@@ -1,5 +1,4 @@
-from LemurAptana.LemurApp.models.banner_message import BannerMessage
-from .models import Facility
+from LemurAptana.LemurApp.models import BannerMessage, Facility
 
 
 # Extra context for the LemurApp

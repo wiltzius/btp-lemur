@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseBadRequest, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, Http404
 from django.shortcuts import redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -36,11 +36,10 @@ def order_add_book_isbn(request):
   if isbn.isValid(isbn.isbn_strip(request.POST['ISBN'])):
     # try:
     book = Book.get_book(isbn.isbn_strip(request.POST['ISBN']))
+    if not book:
+      raise Http404('No book with that ISBN found')
     order_add_book(request, book)
     return order_render_as_response(request)
-    # except Exception:
-    # this ASIN isn't found, so return 404-not-found error message
-    # raise Http404('No book with that ISBN found on Amazon')
   else:
     # this ASIN isn't well-formatted, so return 400-bad-request error message
     return HttpResponseBadRequest()
