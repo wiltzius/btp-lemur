@@ -13,7 +13,7 @@
   {% else %}
     {% with request.session.order as order %}
       <h3>Order details</h3> 
-      {% if order.book_set.all.count == 0 %}
+      {% if order.books.all.count == 0 %}
         <p><strong>There are no books in this order. <a href="{% url 'order-build' %}">Add some</a> before sending it out.</p> 
       {% else %}
         <p><strong>Review the order below. If it's correct, click the Send It button. If you were looking for a different order, <a href="{% url 'order-list' %}">click here</a>.</strong></p>

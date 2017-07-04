@@ -320,7 +320,7 @@
       "facility": 3,
       "inmate_id": "X00001",
       "creation_date": "2010-11-15 17:20:47",
-      "address": ""
+      "address": "1269B South Van Ness Ave, SF CA 94110"
     }
   },
   {
@@ -332,6 +332,27 @@
       "date_closed": null,
       "sender": null,
       "date_opened": "2010-11-15 17:20:49"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "LemurApp.order",
+    "fields": {
+      "status": "OPEN",
+      "inmate": 1,
+      "date_closed": "2017-06-15 19:20:49",
+      "sender": null,
+      "date_opened": "2017-06-15 17:20:49"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "LemurApp.book",
+    "fields": {
+      "asin": null,
+      "author": "Alexander Shulgin, Ann Shulgin",
+      "title": "PiHKAL: A Chemical Love Story",
+      "order": "2"
     }
   }
 ]

@@ -30,4 +30,5 @@ urlpatterns += patterns(
   url(r'^order/list/$', generic_views.OrderList.as_view(), name="order-list"),
   url(r'^order/cleanup/$', generic_views.OrderCleanupList.as_view(), name='order-cleanup'),
   url(r'^order/detail/(?P<pk>\d+)/$', generic_views.OrderDetail.as_view(), name="order-detail"),
+  url(r'^order/invoice/(?P<pk>\d+)/$', generic_views.OrderInvoice.as_view(), name="order-invoice"),
 )

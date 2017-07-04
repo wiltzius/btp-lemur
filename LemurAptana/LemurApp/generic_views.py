@@ -24,6 +24,11 @@ class OrderDetail(DetailView):
     return super(OrderDetail, self).render_to_response(context, **response_kwargs)
 
 
+class OrderInvoice(DetailView):
+  model = Order
+  template_name = 'LemurApp/invoice.html'
+
+
 class InmateCreate(CreateView):
   form_class = forms.InmateForm
   template_name = 'LemurApp/inmate_add.html'
@@ -41,7 +46,7 @@ class OrderCleanupList(OrderList):
     """Marks all currently open orders as sent, unless they have no books in which case they're deleted."""
     for order in Order.objects.filter(status__exact='OPEN'):
       # Mark orders with books as sent
-      if order.book_set.count():
+      if order.books.count():
         order.status = 'SENT'
         order.date_closed = datetime.now()
         order.save()

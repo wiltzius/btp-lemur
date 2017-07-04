@@ -91,7 +91,7 @@
               <li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>
               <li><a href="javascript:$('#inmateResult{{ inmate.pk }} .historyList').toggle('fast')">History</a>
                 <ul class="historyList" style="display:none;">
-                  {% for order in inmate.order_set.all %}
+                  {% for order in inmate.orders.all %}
                     <li>
                       <a href="javascript:$('#orderList{{ order.pk }}').toggle('fast')">Order #{{ order.pk }}</a>,
                       (<span class="orderReopenLink" data-order-href="{% url 'order-reopen' order_pk=order.pk %}"></span>)
@@ -99,7 +99,7 @@
                       {{ order.date_closed|date:"M jS, Y" }}{% if order.sender %} by {{ order.sender }}
                       {% endif %}{% endif %}
                       <ul class="orderlist" id="orderList{{ order.pk }}" style="display:none;">
-                        {% for book in order.book_set.all %}
+                        {% for book in order.books.all %}
                           <li>{{ book.title }}</li>
                         {% endfor %}
                       </ul>

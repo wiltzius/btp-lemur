@@ -12,7 +12,7 @@ class Book(models.Model):
   asin = models.CharField(max_length=13, verbose_name="ISBN", blank=True, null=True)
   title = models.CharField(max_length=250, verbose_name="Title")
   author = models.CharField(max_length=250, verbose_name="Author", blank=True)
-  order = models.ForeignKey('Order')
+  order = models.ForeignKey('Order', related_name="books")
   creation_date = models.DateTimeField(default=datetime.datetime.now, editable=False, verbose_name="Creation date")
 
   def __str__(self):

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+  <link href="https://fonts.googleapis.com/css?family=Exo+2:100,300,600" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Spectral:300,400,600" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 8.5in;
+      min-height: 11in;
+    {#      font-family: 'Exo 2', sans-serif;#} font-family: 'Spectral', sans-serif;
+      font-weight: 100;
+    }
+
+    @media screen {
+      body {
+        /* on screens make it look like a piece of paper to be cute */
+        margin: 10px auto 20px;
+        border: 1px solid lightgray;
+        padding: 0.5in;
+        box-shadow: grey 1px 2px 4px 0;
+      }
+    }
+
+    h1 {
+      font-weight: 100;
+      font-size: 1.5em;
+    }
+
+    .logo {
+      height: 1.5in;
+      width: 2in;
+    }
+
+    #invoice {
+      border-top: 1px solid rgba(0, 0, 0, 0.14);
+      padding-top: 0.3in;
+    }
+
+    #invoice address {
+      float: right;
+    }
+
+    #invoice .bold {
+      font-weight: 400;
+    }
+
+    #invoice .ship-to {
+      float: left;
+    }
+
+    #invoice .ship-to h2 {
+      font-size: inherit;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
+
+    #invoice .ship-to p {
+      margin-top: 0;
+    }
+
+    #invoice .invoice-details {
+      float: right;
+    }
+
+    #invoice table {
+      width: 100%;
+      margin-right: 0.5in;
+      border-collapse: collapse;
+    }
+
+    #invoice th {
+      text-decoration: underline;
+      text-align: left;
+      font-weight: 100;
+    }
+
+    #invoice tbody td {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    }
+
+    #invoice td, th {
+      padding: 0.1in;
+    }
+
+    #invoice td:first-of-type, #invoice th:first-of-type {
+      padding-left: 0.05in;
+    }
+
+    #invoice td:last-of-type, #invoice th:last-of-type {
+      padding-right: 0.05in;
+    }
+
+    #invoice tfoot td {
+      padding: 0 0.1in;
+    }
+
+    #invoice tfoot tr:first-of-type td {
+      padding-top: 0.1in;
+    }
+
+    #shipping-label {
+      padding-bottom: 0.3in;
+    }
+
+    #shipping-label address.return-address {
+      float: right;
+    }
+
+    #shipping-label address.delivery-address {
+      margin: 0.25in auto;
+      width: 2.5in;
+    }
+
+    #shipping-label .media-mail {
+      text-transform: uppercase;
+      font-weight: bold;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    #shipping-label .media-mail span {
+      flex: 1;
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+<div id="shipping-label">
+  <img class="logo"/>
+  <address class="return-address">
+    City Lights Bookstore<br/>
+    San Francisco, CA 94107
+  </address>
+  <address class="delivery-address">
+    {{ order.inmate.full_name }}<br/>
+    {% with order.inmate.parsed_address.0 as address %}
+      {{ address.address1 }}<br/>
+      {{ address.city }} {{ address.state }} {{ address.zip_code }}
+    {% endwith %}
+  </address>
+  <div class="media-mail">
+    <span>Media Mail</span>
+    <span>Books Enclosed</span>
+    <span>Media</span>
+  </div>
+</div>
+
+<div id="invoice">
+  <img class="logo"/>
+  <address>
+    (415) 555-5555<br/>
+    City Lights Bookstore<br/>
+    San Francisco, CA 94107
+  </address>
+  <h1>Invoice</h1>
+
+  <section class="ship-to">
+    <h2>Ship To:</h2>
+    <p>
+      {{ order.inmate.full_name }}<br/>
+      {% with order.inmate.parsed_address.0 as address %}
+        {{ address.address1 }}<br/>
+        {{ address.city }} {{ address.state }} {{ address.zip_code }}
+      {% endwith %}
+    </p>
+  </section>
+  <section class="invoice-details">
+      <span class="bold">Invoice Number:</span> {{ order.pk | stringformat:".6d" }}<br/>
+      <span class="bold">Invoice Date:</span> {{ order.date_closed | date }}
+  </section>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Quantity</th>
+      <th>ISBN</th>
+      <th>Description</th>
+      <th>Discount</th>
+      <th>Price</th>
+      <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for book in order.books.all %}
+      <tr>
+        <td>1</td>
+        <td>{{ book.asin | default_if_none:"&mdash;" }}</td>
+        <td>{{ book.title }} by {{ book.author }}</td>
+        <td>100%</td>
+        <td>$0.00</td>
+        <td>$0.00</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="4"></td>
+      <td colspan="1">Subtotal</td>
+      <td>$0.00</td>
+    </tr>
+    <tr>
+      <td colspan="4"></td>
+      <td colspan="1">Tax</td>
+      <td>$0.00</td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+</body>
+</html>

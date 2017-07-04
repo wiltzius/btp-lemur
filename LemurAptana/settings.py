@@ -103,8 +103,6 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-print(BASE_DIR)
-
 STATICFILES_DIRS = (
   # We do this so that django's collectstatic copies our bundles and other files to the STATIC_ROOT
   os.path.join(BASE_DIR, 'assets'),

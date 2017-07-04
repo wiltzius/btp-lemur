@@ -4,7 +4,7 @@
     {% with request.session.order as order %}
         <a href="{% url 'order-build' %}">Order #{{ order.pk }}</a>,
         for <a href="{% url 'inmate-detail' pk=order.inmate.pk %}">{{ order.inmate.full_name|truncchar:50 }}</a>,
-        {{ order.book_set.all.count }} book{{ order.book_set.all.count|pluralize }}
+        {{ order.books.all.count }} book{{ order.books.all.count|pluralize }}
         {% if order.warnings|length > 0 %}
             &nbsp;&nbsp;<span class="error">(<a href="{% url 'order-build' %}">warnings</a>)</span>
         {% endif %}

@@ -11,6 +11,7 @@
   <h3>Order details</h3> 
   {% if order.status == 'SENT' %}
     <p><strong><span class="orderHeader">Order #{{order.pk}}</span> marked as sent, please ensure it is delivered to the packing station.</strong></p>
+    <p><a href="{% url 'order-invoice' pk=order.pk %}" target="_blank">Print Invoice</a></p>
   {% endif %}
 
   {% include "LemurApp/order_sendout_snippet.html" %}
