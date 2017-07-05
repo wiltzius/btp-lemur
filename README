@@ -7,10 +7,9 @@
 ###   Oct 2010-2016
 ###
 
-Dependencies:
--) Django version 1.7
--) Python Amazon Product API, (originally used version 2.4.1), see: http://packages.python.org/python-amazon-product-api/index.html
-    Note that this itself requires lxml and libxslt, along with their Python bindings (and possibly their development versions)
+Python dependencies listed in requirements.txt
+
+Also requires a Google Books API key.
 
 To run tests:
 `./manage.py test`
