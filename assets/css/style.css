@@ -242,12 +242,13 @@ div#inmateSearch div.fieldWrapper {
 }
 
 div.fieldWrapper label {
-  width: 80px;
-  float: left;
+  /*width: 80px;*/
+  /*float: left;*/
 }
 
 div.fieldWrapper input, div.fieldWrapper select {
   width: 230px;
+    float: right;
 }
 
 #buildorderform #id_asin {
