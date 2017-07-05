@@ -14,7 +14,7 @@ def cleanup_orders():
   """Marks all crrently open orders as sent, unless they have no books in which case they're deleted."""
   for order in models.Order.objects.filter(status__exact='OPEN'):
     # Mark orders with books as sent
-    if order.book_set.count():
+    if order.books.count():
       print 'Cleaning up', order
       order.status = 'SENT'
       order.date_closed = datetime.datetime.now()

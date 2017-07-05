@@ -9,6 +9,7 @@ class Facility(models.Model):
   name = models.CharField(max_length=250, unique=True)
   restrictsHardbacks = models.BooleanField(verbose_name="This facility restricts hardbacks", default=False)
   otherRestrictions = models.CharField(max_length=250, default="", blank=True, verbose_name="Other Restrictions")
+  address = models.CharField(max_length=250, default="", blank=True)
 
   def __str__(self):
     return self.name

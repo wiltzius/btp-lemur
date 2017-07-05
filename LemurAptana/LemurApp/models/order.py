@@ -19,7 +19,7 @@ class Order(models.Model):
 
   # actual fields
   status = models.CharField(max_length=6, choices=ORDER_STATUS, default='OPEN', verbose_name="Order status")
-  inmate = models.ForeignKey(Inmate, verbose_name="Inmate")
+  inmate = models.ForeignKey(Inmate, verbose_name="Inmate", related_name="orders")
   date_opened = models.DateTimeField(default=datetime.datetime.now, editable=False, verbose_name="Date opened")
   date_closed = models.DateTimeField(blank=True, null=True, verbose_name="Date closed")
   sender = models.CharField(max_length=250, null=True, blank=True, verbose_name="Sender")
@@ -61,7 +61,7 @@ class Order(models.Model):
     try:
       warnings = list()
       # if the inmate associated with this order has had an order within the order warning age, add a warning
-      recent_orders = (self.inmate.order_set
+      recent_orders = (self.inmate.orders
                        .filter(status__exact='SENT')
                        .filter(date_closed__gte=(datetime.date.today() -
                                                  datetime.timedelta(LemurSettingsStore.order_age_warning() * 30)))
@@ -70,7 +70,7 @@ class Order(models.Model):
       if recent_orders.count():
         warnings += ["Patron received an order less than %s months ago" % LemurSettingsStore.order_age_warning()]
       # if the inmate associated with this order has gotten a similar book before, add a warning
-      for book in self.book_set.all():
+      for book in self.books.all():
         # That is to say: for all books, select those in a sent-out order that went to this inmate, and then
         # subselect the books with titles like the title of a book in this order
         similar_books = Book.objects.filter(order__status='SENT') \
@@ -88,8 +88,8 @@ class Order(models.Model):
         warnings += ["%s restriction: %s" % (self.inmate.facility, self.inmate.facility.otherRestrictions)]
       # if there are two books of the same name in an order, warn
       duplicate_warning = False
-      for book1 in self.book_set.all():
-        for book2 in self.book_set.all():
+      for book1 in self.books.all():
+        for book2 in self.books.all():
           if (not book1 == book2) and book1.title == book2.title:
             duplicate_warning = True
       if duplicate_warning:

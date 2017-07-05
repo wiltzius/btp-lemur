@@ -1,6 +1,7 @@
 import datetime
 import string
 
+import usaddress
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -51,10 +52,10 @@ class InmateIDField(models.CharField):
 
     if value is not None:
       # strip the spaces and dashes
-      value = string.replace(value, ' ', '')
-      value = string.replace(value, '-', '')
+      value = value.replace(' ', '')
+      value = value.replace('-', '')
       # make it all uppercase
-      value = string.upper(value)
+      value = value.upper()
     # so we can have multiple values with no ID (i.e. null ID field)
     if value == '':
       value = None
@@ -143,6 +144,41 @@ class Inmate(models.Model):
   def full_name_last(self):
     return self.last_name + ', ' + self.first_name
 
+  @property
+  def parsed_address(self):
+    # TODO handle if there isn't an explicit address but rather a facility address
+    addr = self.address or self.facility.address
+    if not addr:
+      return None
+    return usaddress.tag(addr, tag_mapping={
+      'Recipient': 'recipient',
+      'AddressNumber': 'address1',
+      'AddressNumberPrefix': 'address1',
+      'AddressNumberSuffix': 'address1',
+      'StreetName': 'address1',
+      'StreetNamePreDirectional': 'address1',
+      'StreetNamePreModifier': 'address1',
+      'StreetNamePreType': 'address1',
+      'StreetNamePostDirectional': 'address1',
+      'StreetNamePostModifier': 'address1',
+      'StreetNamePostType': 'address1',
+      'CornerOf': 'address1',
+      'IntersectionSeparator': 'address1',
+      'LandmarkName': 'address1',
+      'USPSBoxGroupID': 'address1',
+      'USPSBoxGroupType': 'address1',
+      'USPSBoxID': 'address1',
+      'USPSBoxType': 'address1',
+      'BuildingName': 'address2',
+      'OccupancyType': 'address2',
+      'OccupancyIdentifier': 'address2',
+      'SubaddressIdentifier': 'address2',
+      'SubaddressType': 'address2',
+      'PlaceName': 'city',
+      'StateName': 'state',
+      'ZipCode': 'zip_code',
+    })
+
   def warnings(self):
     """Returns a list of warnings to be displayed on the inmate's record on the search page"""
     warnings = list()
@@ -150,7 +186,7 @@ class Inmate(models.Model):
     if self.facility.restrictsHardbacks:
       warnings += ["Patron's facility restricts hardbacks!"]
     # if the inmate associated with this order has had an order within the order warning age, add a warning
-    recent_orders = self.order_set.filter(status__exact='SENT').filter(date_closed__gte=(
+    recent_orders = self.orders.filter(status__exact='SENT').filter(date_closed__gte=(
     datetime.date.today() - datetime.timedelta(LemurSettingsStore.order_age_warning() * 30))).order_by('-date_closed')
     if recent_orders.count():
       warnings += ["Patron received an order less than %s months ago (on %s)" %
