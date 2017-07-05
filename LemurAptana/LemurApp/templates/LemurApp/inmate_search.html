@@ -86,6 +86,11 @@
                   <span>({{ inmate.facility.otherRestrictions }})</span>
                 {% endif %}
               </li>
+            {% if inmate.address %}
+              <li>
+                <span class="resultLabel">Address:</span><span class="resultValue">{{ inmate.address }}</span>
+              </li>
+            {% endif %}
             </ul>
             <ul class="inmateHistory">
               <li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>

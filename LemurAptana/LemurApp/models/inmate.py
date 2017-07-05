@@ -147,7 +147,10 @@ class Inmate(models.Model):
   @property
   def parsed_address(self):
     # TODO handle if there isn't an explicit address but rather a facility address
-    return usaddress.tag(self.address, tag_mapping={
+    addr = self.address or self.facility.address
+    if not addr:
+      return None
+    return usaddress.tag(addr, tag_mapping={
       'Recipient': 'recipient',
       'AddressNumber': 'address1',
       'AddressNumberPrefix': 'address1',

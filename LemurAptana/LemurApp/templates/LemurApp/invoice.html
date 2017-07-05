@@ -141,10 +141,14 @@
   </address>
   <address class="delivery-address">
     {{ order.inmate.full_name }}<br/>
-    {% with order.inmate.parsed_address.0 as address %}
-      {{ address.address1 }}<br/>
-      {{ address.city }} {{ address.state }} {{ address.zip_code }}
-    {% endwith %}
+    {% if order.inmate.parsed_address %}
+      {% with order.inmate.parsed_address.0 as address %}
+        {{ address.address1 }}<br/>
+        {{ address.city }} {{ address.state }} {{ address.zip_code }}
+      {% endwith %}
+    {% else %}
+      &lt;Edit inmate to add address or edit facility {{ order.inmate.facility }} in admin panel to add address!&gt;
+    {% endif %}
   </address>
   <div class="media-mail">
     <span>Media Mail</span>
@@ -166,15 +170,19 @@
     <h2>Ship To:</h2>
     <p>
       {{ order.inmate.full_name }}<br/>
-      {% with order.inmate.parsed_address.0 as address %}
-        {{ address.address1 }}<br/>
-        {{ address.city }} {{ address.state }} {{ address.zip_code }}
-      {% endwith %}
+      {% if order.inmate.parsed_address %}
+        {% with order.inmate.parsed_address.0 as address %}
+          {{ address.address1 }}<br/>
+          {{ address.city }} {{ address.state }} {{ address.zip_code }}
+        {% endwith %}
+      {% else %}
+        &lt;Edit inmate to add address or edit facility {{ order.inmate.facility }} in admin panel to add address!&gt;
+      {% endif %}
     </p>
   </section>
   <section class="invoice-details">
-      <span class="bold">Invoice Number:</span> {{ order.pk | stringformat:".6d" }}<br/>
-      <span class="bold">Invoice Date:</span> {{ order.date_closed | date }}
+    <span class="bold">Invoice Number:</span> {{ order.pk | stringformat:".6d" }}<br/>
+    <span class="bold">Invoice Date:</span> {{ order.date_closed | date }}
   </section>
 
   <table>
@@ -215,5 +223,6 @@
   </table>
 </div>
 
+<script>window.print();</script>
 </body>
 </html>
