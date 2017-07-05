@@ -1,71 +1,83 @@
 {% load render_bundle from webpack_loader %}
+{% load raven %}
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>BTP | {% block title %}Books to Prisoners{% endblock %}</title>
-	<link rel="stylesheet" href="/static/css/style.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/js-vendor/csrf-jquery-hack.js"></script>
+  <title>BTP | {% block title %}Books to Prisoners{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+  <script src="https://cdn.ravenjs.com/3.16.1/raven.min.js" crossorigin="anonymous"></script>
+  <script>Raven.config('{% sentry_public_dsn %}').install()</script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/static/js-vendor/csrf-jquery-hack.js"></script>
 
-    <!-- react -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  <!-- react -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
 
 
-    {% block extra_head %}{% endblock %}
+  {% block extra_head %}{% endblock %}
 </head>
 
 <body>
-  
-  <div id="container">
-    <!-- restricted books header -->
-    <div id="restricted">{{banner_message}}&nbsp;</div>
-    <!-- order summary -->
-    <div id="topOrderSummary">{% include "LemurApp/order_summary.html" %}</div>
-    <!-- container to pad everything in the main body of the page -->
-    <div id="containerpadding"> 
-      <!-- begin navbar/header --> 
-      <h1>{% block header_title %}Books to Prisoners{% endblock %}</h1>
-      <ul id="navlist">
-        <li id="active">
-          <a href="{% url 'inmate-search' %}" class="{% block current_inmates %}notcurrent{% endblock %}">search inmates</a>
-        </li> 
-        <li>
-          <a href="{% url 'inmate-add' %}" class="{% block current_inmates_add %}notcurrent{% endblock %}">{% block inmate_tab_name %}add inmate{% endblock %}</a>
-        </li>
-        <li>
-          <a href="{% url 'order-list' %}" class="{% block current_order_list %}notcurrent{% endblock %}">select existing order</a>
-        </li>
-        <li>
-          <a href="{% url 'order-build' %}" class="{% block current_build_order %}notcurrent{% endblock %}">build order</a>
-        </li>
-        <li>
-          <a href="{% url 'order-send-out' %}" class="{% block current_order_sendout %}notcurrent{% endblock %}">send out order</a>
-        </li> 
-      </ul>
-      <div id="navsep">
-        &nbsp;   
-      </div> 
-      <!-- end nav bar/header -->
-    
-      <div id="searchContainer">
-         {% block content %}{% endblock %}
-      </div>
-      
-      <div id="searchResults">
-         {% block searchResults %}{% endblock %}  
-      </div>
+
+<script>
+    throw new Error('aii');
+</script>
+<div id="container">
+  <!-- restricted books header -->
+  <div id="restricted">{{ banner_message }}&nbsp;</div>
+  <!-- order summary -->
+  <div id="topOrderSummary">{% include "LemurApp/order_summary.html" %}</div>
+  <!-- container to pad everything in the main body of the page -->
+  <div id="containerpadding">
+    <!-- begin navbar/header -->
+    <h1>{% block header_title %}Books to Prisoners{% endblock %}</h1>
+    <ul id="navlist">
+      <li id="active">
+        <a href="{% url 'inmate-search' %}" class="{% block current_inmates %}notcurrent{% endblock %}">search
+          inmates</a>
+      </li>
+      <li>
+        <a href="{% url 'inmate-add' %}" class="{% block current_inmates_add %}notcurrent{% endblock %}">
+          {% block inmate_tab_name %}add inmate{% endblock %}</a>
+      </li>
+      <li>
+        <a href="{% url 'order-list' %}" class="{% block current_order_list %}notcurrent{% endblock %}">select existing
+          order</a>
+      </li>
+      <li>
+        <a href="{% url 'order-build' %}" class="{% block current_build_order %}notcurrent{% endblock %}">build
+          order</a>
+      </li>
+      <li>
+        <a href="{% url 'order-send-out' %}" class="{% block current_order_sendout %}notcurrent{% endblock %}">send out
+          order</a>
+      </li>
+    </ul>
+    <div id="navsep">
+      &nbsp;
     </div>
-    <!-- footer -->
-    <div id="footer">
-        UC BTP "Lemur" | last updated {% include "LemurApp/hgversion.txt" %}
+    <!-- end nav bar/header -->
+
+    <div id="searchContainer">
+      {% block content %}{% endblock %}
+    </div>
+
+    <div id="searchResults">
+      {% block searchResults %}{% endblock %}
     </div>
   </div>
+  <!-- footer -->
+  <div id="footer">
+    UC BTP "Lemur" | last updated {% include "LemurApp/hgversion.txt" %}
+  </div>
+</div>
 
-  {% render_bundle 'main' %}
+{% render_bundle 'main' %}
 </body>
 </html>

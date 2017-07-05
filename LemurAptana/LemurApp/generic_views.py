@@ -20,7 +20,6 @@ class OrderDetail(DetailView):
 
   def render_to_response(self, context, **response_kwargs):
     print(context)
-    # import ipdb; ipdb.set_trace()
     return super(OrderDetail, self).render_to_response(context, **response_kwargs)
 
 
