@@ -8,6 +8,7 @@ def federal_search_proxy(inmate_id=None, first_name=None, last_name=None):
     return None
   res = requests.post('https://www.bop.gov/PublicInfo/execute/inmateloc',
                       data={
+                        # TODO find a way to limit to 10 results, not 100
                         'todo': 'query',
                         'output': 'json',
                         'inmateNumType': 'IRN',

@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 
 export default class InmateDOCAutocomplete extends React.Component {
 
@@ -9,13 +10,11 @@ export default class InmateDOCAutocomplete extends React.Component {
     }
   }
 
-  searchProxies(model) {
-    // TODO debounce / throttle this to once a second or something
-    console.log('searching');
+  searchProxies(first, last, inmate_id) {
     $.post('/lemur/inmate/doc_autocomplete/', {
-      first_name: model.first_name,
-      last_name: model.last_name,
-      inmate_id: model.inmate_id
+      first_name: first,
+      last_name: last,
+      inmate_id: inmate_id
     }).then(resp => {
       this.setState({
         proxy_search_results: resp.proxy_search_results
@@ -23,9 +22,17 @@ export default class InmateDOCAutocomplete extends React.Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    // ({first_name, last_name, inmate_id} = nextProps.model);
-    this.searchProxies(nextProps.model)
+  componentWillReceiveProps({model, skip}) {
+    console.log('receiving props', model.last_name);
+    if (!skip) {
+      this.debouncedSearchProxy(model.first_name, model.last_name, model.inmate_id)
+    }
+  }
+
+  componentWillMount() {
+    this.debouncedSearchProxy = _.debounce((first, last, inmate_id) => {
+      this.searchProxies(first, last, inmate_id);
+    }, 400, {leading: true, trailing: true})
   }
 
   render() {
