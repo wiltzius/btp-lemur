@@ -78,6 +78,8 @@ def inmate_search_proxy(request, pk):
   res = {}
   if i.inmate_type() is Inmate.InmateType.FEDERAL:
     res = federal_search_proxy(i.inmate_id)
+    if res:
+      res = res[0]
   elif i.inmate_type() is Inmate.InmateType.ILLINOIS:
     res = illinois_search_proxy(i.inmate_id)
   elif i.inmate_type() is Inmate.InmateType.KENTUCKY:
@@ -90,3 +92,11 @@ def inmate_search_proxy(request, pk):
   elif not res['paroled_date'] and res['projected_parole']:
     res['parole_single'] = res['projected_parole']
   return JsonResponse(res)
+
+
+def inmate_doc_autocomplete(request):
+  res = federal_search_proxy(first_name=request.POST.get('first_name'),
+                             last_name=request.POST.get('last_name'),
+                             inmate_id=request.POST.get('inmate_id'))
+  # todo fuzzy-match facility to an existing one if possible
+  return JsonResponse({"proxy_search_results": res})
