@@ -7,7 +7,7 @@ from LemurAptana.LemurApp import forms
 from LemurAptana.LemurApp.lib.search_proxy.federal import federal_search_proxy
 from LemurAptana.LemurApp.lib.search_proxy.ky import kentucky_search_proxy
 from LemurAptana.LemurApp.lib.search_proxy.il import illinois_search_proxy
-from LemurAptana.LemurApp.models import Inmate
+from LemurAptana.LemurApp.models import Inmate, Facility
 
 
 def inmate_search(request, pk=None):
@@ -98,5 +98,8 @@ def inmate_doc_autocomplete(request):
   res = federal_search_proxy(first_name=request.POST.get('first_name'),
                              last_name=request.POST.get('last_name'),
                              inmate_id=request.POST.get('inmate_id'))
-  # todo fuzzy-match facility to an existing one if possible
+  if res:
+    for r in res:
+      guessed_facility = Facility.guess_facility(r['parent_institution'])
+      r['facility'] = guessed_facility.id if guessed_facility else None
   return JsonResponse({"proxy_search_results": res})

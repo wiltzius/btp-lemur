@@ -20,7 +20,8 @@ export default class InmateSearchProxy extends React.Component {
   }
 
   componentDidMount() {
-    coreapi.client.action(coreapi.schema, ['facilities', 'list']).then(res => this.setState({facilities: res}));
+    // load the facilities list
+    coreapi.client.action(coreapi.schema, ['facilities', 'list']).then(res => this.setState({facilities: res['results']}));
   }
 
   handleInputChange(event) {
