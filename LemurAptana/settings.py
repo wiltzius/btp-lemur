@@ -129,4 +129,5 @@ INSTALLED_APPS = (
   'django.contrib.admindocs',
   'webpack_loader',
   'raven.contrib.django.raven_compat',
+  'rest_framework',
 )

@@ -1,4 +1,6 @@
 import React from 'react';
+import coreapi from './coreapi';
+import InmateDOCAutocomplete from "./InmateDOCAutocomplete";
 
 export default class InmateSearchProxy extends React.Component {
 
@@ -11,12 +13,15 @@ export default class InmateSearchProxy extends React.Component {
         address: '',
         inmate_id: '',
         facility: null,
-      }
+      },
+      facilities: []
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  // componentDidMount() {}
+  componentDidMount() {
+    coreapi.client.action(coreapi.schema, ['facilities', 'list']).then(res => this.setState({facilities: res}));
+  }
 
   handleInputChange(event) {
     const newModel = {...this.state.model, [event.target.name]: event.target.value};
@@ -26,18 +31,18 @@ export default class InmateSearchProxy extends React.Component {
     console.log(this.state);
   }
 
-  searchProxies() {
-    // TODO debounce / throttle this to once a second or something
-    $.post('/lemur/inmate/doc_autocomplete/', {
-      first_name: this.state.model.first_name,
-      last_name: this.state.model.last_name,
-      inmate_id: this.state.model.inmate_id
-    }).then(resp => {
-      this.setState({
-        proxy_search_results: resp.proxy_search_results
-      })
-    });
-  }
+  autocompleteSelected(doc_inmate) {
+    const newModel = {
+      ...this.state.model,
+      first_name: doc_inmate.first_name,
+      last_name: doc_inmate.last_name,
+      inmate_id: doc_inmate.inmate_id,
+      // facility: doc_inmate.facility.pk
+    };
+    this.setState({
+      model: newModel
+    })
+  };
 
   render() {
     return <form>
@@ -76,6 +81,11 @@ export default class InmateSearchProxy extends React.Component {
                     name="facility"
                     value={this.state.model.facility}
                     onChange={this.handleInputChange}>
+              {
+                this.state.facilities.map(facility =>
+                  <option key={facility.id} value={facility.id}>{facility.name}</option>
+                )
+              }
             </select>
           </label>
         </div>
@@ -96,18 +106,7 @@ export default class InmateSearchProxy extends React.Component {
       <div className="formfooter">
         <input type="submit" value="Add New Record"/>
       </div>
-      <div>
-        {
-          (this.state.proxy_search_results || [])
-            .map((res, idx) =>
-              <div key={idx}>
-                {res.first_name} -
-                {res.last_name} -
-                {res.inmate_id}
-              </div>
-            )
-        }
-      </div>
+      <InmateDOCAutocomplete model={this.state.model} selectedCallback={this.autocompleteSelected.bind(this)} />
     </form>
   }
 }

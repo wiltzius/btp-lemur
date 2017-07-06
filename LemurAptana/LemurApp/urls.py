@@ -1,3 +1,7 @@
+from rest_framework.documentation import include_docs_urls
+from rest_framework.schemas import get_schema_view
+
+from LemurAptana.LemurApp.api import router
 from . import generic_views
 from django.conf.urls import *
 
@@ -33,3 +37,11 @@ urlpatterns += patterns(
   url(r'^order/detail/(?P<pk>\d+)/$', generic_views.OrderDetail.as_view(), name="order-detail"),
   url(r'^order/invoice/(?P<pk>\d+)/$', generic_views.OrderInvoice.as_view(), name="order-invoice"),
 )
+
+# API views
+urlpatterns += [
+  url(r'^api/', include(router.urls)),
+  url(r'^schema/$', get_schema_view(title='BTP API')),
+  url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+  url(r'^docs/', include_docs_urls(title='My API service'))
+]
