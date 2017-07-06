@@ -2087,7 +2087,7 @@ react-modal@^0.6.1:
     exenv "1.2.0"
     lodash.assign "^3.2.0"
 
-react@^0.14.7:
+react@^0.14.9:
   version "0.14.9"
   resolved "https://registry.yarnpkg.com/react/-/react-0.14.9.tgz#9110a6497c49d44ba1c0edd317aec29c2e0d91d1"
   dependencies:
