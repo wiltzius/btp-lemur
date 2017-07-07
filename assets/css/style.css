@@ -455,6 +455,15 @@ div.pagination {
 }
 
 /*
+ * For inmate add page
+ */
+
+.inmateAutocomplete {
+  padding: 10px;
+  border: 1px solid black;
+}
+
+/*
  * For inmate search page
  */
 

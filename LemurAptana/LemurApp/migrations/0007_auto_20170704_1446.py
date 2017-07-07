@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('LemurApp', '0006_auto_20170703_1217'),
+        ('LemurApp', '0005_inmate_inmate_doc_id'),
     ]
 
     operations = [

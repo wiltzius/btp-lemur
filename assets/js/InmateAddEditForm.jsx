@@ -57,7 +57,6 @@ export default class InmateSearchProxy extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     coreapi.client.action(schema, ['inmates', 'create'], this.state.model).then(resp => {
-      console.log(resp);
       window.location.assign(`/lemur/inmate/search/?inmate_id=${resp.inmate_id}`);
     })
   }

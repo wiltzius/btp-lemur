@@ -16,6 +16,7 @@ export default class InmateDOCAutocomplete extends React.Component {
       last_name: last,
       inmate_id: inmate_id
     }).then(resp => {
+      this.setState({loading: false});
       this.setState({
         proxy_search_results: resp.proxy_search_results
       })
@@ -23,8 +24,10 @@ export default class InmateDOCAutocomplete extends React.Component {
   }
 
   componentWillReceiveProps({model, skip}) {
-    console.log('receiving props', model.last_name);
     if (!skip) {
+      this.setState({
+        loading: true,
+      });
       this.debouncedSearchProxy(model.first_name, model.last_name, model.inmate_id)
     }
   }
@@ -36,16 +39,22 @@ export default class InmateDOCAutocomplete extends React.Component {
   }
 
   render() {
+    if (!this.state.loading && !this.state.proxy_search_results) {
+      return <div></div>;
+    }
     return <div>
-      {
-        (this.state.proxy_search_results || [])
-          .map((res, idx) =>
-            <div key={idx} onClick={() => this.props.selectedCallback(res)}>
-              {res.first_name} -
-              {res.last_name} -
-              {res.inmate_id}
-            </div>
-          )
+      {this.state.loading ? <div>Loading...</div> : ''}
+      {this.state.proxy_search_results === null || this.state.proxy_search_results.length === 0 ? '' :
+        <div className="inmateAutocomplete">
+          {
+            (this.state.proxy_search_results || [])
+              .map((res, idx) =>
+                <div key={idx} onClick={() => this.props.selectedCallback(res)}>
+                  {res.first_name} {res.last_name} (#{res.inmate_id}), {res.parent_institution}
+                </div>
+              )
+          }
+        </div>
       }
     </div>
   }

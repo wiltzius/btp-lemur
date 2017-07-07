@@ -95,11 +95,36 @@ def inmate_search_proxy(request, pk):
 
 
 def inmate_doc_autocomplete(request):
-  res = federal_search_proxy(first_name=request.POST.get('first_name'),
-                             last_name=request.POST.get('last_name'),
-                             inmate_id=request.POST.get('inmate_id'))
-  if res:
-    for r in res:
+  first_name, last_name, inmate_id = [request.POST.get(x) for x in ('first_name', 'last_name', 'inmate_id')]
+
+  if inmate_id:
+    # if there's an inmate ID specified and it fits a type, only search that one
+    inmate_type = Inmate.compute_inmate_type(inmate_id)
+    if inmate_type is Inmate.InmateType.FEDERAL:
+      searches = [federal_search_proxy]
+    elif inmate_type is Inmate.InmateType.ILLINOIS:
+      searches = [illinois_search_proxy]
+    elif inmate_type is Inmate.InmateType.KENTUCKY:
+      searches = [kentucky_search_proxy]
+    else:
+      # unknown / invalid inmate type, wouldn't return anything anyway
+      return JsonResponse({"proxy_search_results": None, "error": "Invalid inmate ID"})
+  else:
+    # if searching by name, default to all the sites
+    searches = [federal_search_proxy, illinois_search_proxy]  # , kentucky_search_proxy]
+
+  all_results = []
+  for search in searches:
+    res = search(first_name=first_name,
+                 last_name=last_name,
+                 inmate_id=inmate_id)
+    if res:
+      all_results += res
+
+  # try to best-guess match facilities for each result
+  if all_results:
+    for r in all_results:
       guessed_facility = Facility.guess_facility(r['parent_institution'])
       r['facility'] = guessed_facility.id if guessed_facility else None
-  return JsonResponse({"proxy_search_results": res})
+
+  return JsonResponse({"proxy_search_results": all_results})

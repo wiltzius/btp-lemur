@@ -6,7 +6,7 @@ from django.db import migrations
 
 def load_stores_from_fixture(apps, schema_editor):
   from django.core.management import call_command
-  call_command("loaddata", "initial_data")
+  call_command("loaddata", "basic_data")
   Inmate = apps.get_model('LemurApp', 'Inmate')
   Facility = apps.get_model('LemurApp', 'Facility')
   facilities = Facility.objects.all()
@@ -21,7 +21,7 @@ def load_stores_from_fixture(apps, schema_editor):
 
 class Migration(migrations.Migration):
   dependencies = [
-    ('LemurApp', '0005_inmate_inmate_doc_id'),
+    ('LemurApp', '0007_auto_20170704_1446'),
   ]
 
   operations = [
