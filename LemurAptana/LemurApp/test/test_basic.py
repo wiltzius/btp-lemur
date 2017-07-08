@@ -8,10 +8,10 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.test.client import Client
 
-from . import models
+from LemurAptana.LemurApp import models
 # import amazonproduct
 # from . import templatetags.lemur_extras as lemur_extras
-from .templatetags import lemur_extras
+from LemurAptana.LemurApp.templatetags import lemur_extras
 
 
 class BasicLoadTest(TestCase):

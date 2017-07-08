@@ -1,3 +1,4 @@
+pydash==4.1.0
 raven==6.1
 ipdb==0.10.3
 Django==1.8

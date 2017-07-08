@@ -83,7 +83,7 @@ def inmate_search_proxy(request, pk):
   elif i.inmate_type() is Inmate.InmateType.ILLINOIS:
     res = illinois_search_proxy(i.inmate_id)
   elif i.inmate_type() is Inmate.InmateType.KENTUCKY:
-    res = kentucky_search_proxy(i)
+    res = kentucky_search_proxy(i.inmate_id)
   elif i.inmate_type() is Inmate.InmateType.VIRGINIA:
     return JsonResponse({})
   # collapse paroled date / projected parole date into one field

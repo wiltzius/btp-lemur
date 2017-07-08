@@ -3,6 +3,7 @@ from multiprocessing.dummy import Pool
 
 import requests
 from bs4 import BeautifulSoup
+from pydash import py_
 
 
 def parse_inmate_detail_page(inmate_id, html):
@@ -19,6 +20,9 @@ def parse_inmate_detail_page(inmate_id, html):
   # grab the inmate's name
   inmate_name_regex = re.compile(r'[\w]* - (?P<last_name>.*), (?P<first_name>.*)')
   inmate_id_and_name = bs.find(string=inmate_name_regex)
+  if not inmate_id_and_name:
+    # this inmate isn't found
+    return None
   results.update(inmate_name_regex.match(inmate_id_and_name).groupdict())
 
   try:
@@ -62,11 +66,14 @@ def parse_inmate_detail_page(inmate_id, html):
 def parse_result_list(html):
   bs = BeautifulSoup(html, "html.parser")
 
-  option_text = [o.text for o in bs.find_all('option')]
+  # only care about the first 10 results so we don't slam the parallel search below
+  option_text = [o.text for o in bs.find_all('option', limit=10)]
+  if not option_text:
+    return []
   split_texts = [text.split(' | ') for text in option_text]
 
   # fetch all the inmate details in parallel
-  with Pool(max(len(split_texts), 32)) as p:
+  with Pool(len(split_texts)) as p:
     return p.map(_search_inmate_id, [inmate_id for inmate_id, _bday, _fullname in split_texts])
 
 
@@ -79,7 +86,7 @@ def _search_list(first_name, last_name):
     "selectlist1": "Last",
     "idoc": q
   })
-  return parse_result_list(r.content)
+  return py_.without(parse_result_list(r.content), None)
 
 
 def _search_inmate_id(inmate_id):
@@ -95,7 +102,8 @@ def illinois_search_proxy(inmate_id=None, first_name=None, last_name=None):
   """ Searches the Illinois DOC website for this inmate's ID and parses out some information from the result page. """
 
   if inmate_id:
-    return [_search_inmate_id(inmate_id)]
+    res = _search_inmate_id(inmate_id)
+    return [res] if res else None
   elif last_name:
     return _search_list(first_name, last_name)
   else:
