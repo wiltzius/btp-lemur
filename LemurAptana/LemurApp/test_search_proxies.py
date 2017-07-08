@@ -1,4 +1,5 @@
-from unittest import TestCase
+# from unittest import TestCase
+from django.test import TestCase, Client
 
 from LemurAptana.LemurApp.lib.search_proxy.federal import federal_search_proxy
 from LemurAptana.LemurApp.lib.search_proxy.il import illinois_search_proxy
@@ -6,6 +7,10 @@ from LemurAptana.LemurApp.lib.search_proxy.ky import kentucky_search_proxy
 
 
 class SearchProxyTests(TestCase):
+
+  def setUp(self):
+    c = Client()
+
   # def test_il_single(self):
   #   results = illinois_search_proxy(inmate_id='N91569')
   #   assert set({
@@ -52,7 +57,7 @@ class SearchProxyTests(TestCase):
   #   assert not results
 
   def test_kentucky_multi(self):
-    results = kentucky_search_proxy(first_name='Aaron', last_name='Jones')
+    results = kentucky_search_proxy(first_name='John', last_name='Smith')
     assert len(results) > 2
 
   def test_kentucky_single(self):
@@ -61,13 +66,14 @@ class SearchProxyTests(TestCase):
                  'inmate_id': '190902',
                  'first_name': 'ALICIA LEANN',
                  'last_name': 'JONES',
-                 'paroled_date': '',
-                 'projected_parole': '1/24/2019',
+                 'paroled_date': None,
+                 'projected_parole': '5/28/2020',
                  'parent_institution': 'McCracken County Jail'
                }.items()) <= set(results[0].items())
 
   def test_kentucky_notfound_id(self):
     results = kentucky_search_proxy(inmate_id='12345670')
+    print(results)
     assert not results
 
   def test_kentucky_notfound_name(self):
