@@ -101,6 +101,7 @@ def _search_inmate_id(inmate_id):
 def illinois_search_proxy(inmate_id=None, first_name=None, last_name=None):
   """ Searches the Illinois DOC website for this inmate's ID and parses out some information from the result page. """
 
+  # import ipdb; ipdb.set_trace()
   if inmate_id:
     res = _search_inmate_id(inmate_id)
     return [res] if res else None

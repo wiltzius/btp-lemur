@@ -79,21 +79,23 @@ def inmate_search_proxy(request, pk):
   i = Inmate.objects.get(pk=pk)
   res = {}
   if i.inmate_type() is Inmate.InmateType.FEDERAL:
-    res = federal_search_proxy(i.inmate_id)
-    if res:
-      res = res[0]
+    res = federal_search_proxy(inmate_id=i.inmate_id)
   elif i.inmate_type() is Inmate.InmateType.ILLINOIS:
-    res = illinois_search_proxy(i.inmate_id)
+    res = illinois_search_proxy(inmate_id=i.inmate_id)
   elif i.inmate_type() is Inmate.InmateType.KENTUCKY:
-    res = kentucky_search_proxy(i.inmate_id)
+    res = kentucky_search_proxy(inmate_id=i.inmate_id)
   elif i.inmate_type() is Inmate.InmateType.VIRGINIA:
     return JsonResponse({})
   # collapse paroled date / projected parole date into one field
-  if res['paroled_date'] and not res['projected_parole']:
-    res['parole_single'] = res['paroled_date']
-  elif not res['paroled_date'] and res['projected_parole']:
-    res['parole_single'] = res['projected_parole']
-  return JsonResponse(res)
+  if res:
+    res = res[0]
+    if res['paroled_date'] and not res['projected_parole']:
+      res['parole_single'] = res['paroled_date']
+    elif not res['paroled_date'] and res['projected_parole']:
+      res['parole_single'] = res['projected_parole']
+    return JsonResponse(res)
+  else:
+    return JsonResponse({})
 
 
 def inmate_doc_autocomplete(request):
