@@ -1,3 +1,5 @@
+from multiprocessing.dummy import Pool
+
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.http import Http404, JsonResponse
 from django.shortcuts import render_to_response
@@ -111,20 +113,25 @@ def inmate_doc_autocomplete(request):
       return JsonResponse({"proxy_search_results": None, "error": "Invalid inmate ID"})
   else:
     # if searching by name, default to all the sites
-    searches = [federal_search_proxy, illinois_search_proxy]  # , kentucky_search_proxy]
+    searches = [federal_search_proxy, illinois_search_proxy, kentucky_search_proxy]
 
-  all_results = []
-  for search in searches:
-    res = search(first_name=first_name,
-                 last_name=last_name,
-                 inmate_id=inmate_id)
-    if res:
-      all_results += res
+  with Pool(len(searches)) as p:
+    all_results = p.map(lambda search_fn: search_fn(first_name=first_name,
+                                                    last_name=last_name,
+                                                    inmate_id=inmate_id),
+                        searches)
 
-  # try to best-guess match facilities for each result
-  if all_results:
-    for r in all_results:
-      guessed_facility = Facility.guess_facility(r['parent_institution'])
-      r['facility'] = guessed_facility.id if guessed_facility else None
+  final_results = []
+  for result_set in all_results:
+    if result_set:
+      # try to best-guess match facilities for each result
+      results_with_facilities = []
+      for r in result_set:
+        if r['parent_institution']:
+          guessed_facility = Facility.guess_facility(r['parent_institution'])
+          if guessed_facility:
+            r['facility'] = guessed_facility.id
+            results_with_facilities.append(r)
+      final_results += results_with_facilities[:10]   # take at most 10 valid entries from each source
 
-  return JsonResponse({"proxy_search_results": all_results})
+  return JsonResponse({"proxy_search_results": final_results})

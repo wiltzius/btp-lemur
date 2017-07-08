@@ -119,9 +119,9 @@ def kentucky_search_proxy(first_name=None, last_name=None, inmate_id=None):
     return [res] if res else []
   else:
     pids = _search_inmate_list(first_name=first_name, last_name=last_name)
-    print(pids)
     if not pids:
       return []
-    pids = pids[:10]  # don't bother with more than 10 results
+    # TODO filter out any results that don't have a facility in the database here, before bothering to fetch detail
+    # pages, and then go back for more on the next page if that leaves too few results
     with Pool(len(pids)) as p:
       return p.map(_search_pid, pids)

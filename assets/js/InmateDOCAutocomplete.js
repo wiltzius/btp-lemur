@@ -50,7 +50,9 @@ export default class InmateDOCAutocomplete extends React.Component {
             (this.state.proxy_search_results || [])
               .map((res, idx) =>
                 <div key={idx} onClick={() => this.props.selectedCallback(res)}>
-                  {res.first_name} {res.last_name} (#{res.inmate_id}), {res.parent_institution}
+                  <span className="autocompleteResult">
+                    {res.first_name} {res.last_name} (#{res.inmate_id}), {res.parent_institution}
+                    </span>
                 </div>
               )
           }

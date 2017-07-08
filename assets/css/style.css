@@ -460,7 +460,11 @@ div.pagination {
 
 .inmateAutocomplete {
   padding: 10px;
-  border: 1px solid black;
+  border: 1px solid #414256;
+}
+
+.inmateAutocomplete .autocompleteResult {
+  cursor: pointer;
 }
 
 /*
