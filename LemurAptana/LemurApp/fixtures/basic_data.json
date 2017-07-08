@@ -304,6 +304,47 @@
     }
   },
   {
+    "pk": 39,
+    "model": "LemurApp.facility",
+    "fields": {
+      "name": "Calloway County Jail",
+      "restrictsHardbacks": false
+    }
+  },
+  {
+    "pk": 40,
+    "model": "LemurApp.facility",
+    "fields": {
+      "name": "Fulton County Jail",
+      "restrictsHardbacks": false
+    }
+  },
+  {
+    "pk": 50,
+    "model": "LemurApp.facility",
+    "fields": {
+      "name": "Manchester Federal Correctional Institution",
+      "restrictsHardbacks": false
+    }
+  },
+  {
+    "pk": 51,
+    "model": "LemurApp.facility",
+    "fields": {
+      "name": "Wallens Ridge State Prison",
+      "restrictsHardbacks": false
+    }
+  },
+  {
+    "pk": 52,
+    "model": "LemurApp.facility",
+    "fields": {
+      "name": "Roederer Assessment Cntr",
+      "restrictsHardbacks": false
+    }
+  },
+
+  {
     "pk": 1,
     "model": "LemurApp.facility",
     "fields": {
