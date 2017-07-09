@@ -31,3 +31,10 @@ To manage the server in production:
 
 For site administration (production or local)
 -) Django admin site is located at `/admin`
+
+Machine dependencies:
+-) yarn
+-) webpack
+-) MySQL or sqlite
+-) Ability to build python3 lxml from source or install system package (e.g. ubuntu python3-lxml)
+-) libssl-dev on Linux
