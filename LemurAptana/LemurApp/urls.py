@@ -1,3 +1,7 @@
+from rest_framework.documentation import include_docs_urls
+from rest_framework.schemas import get_schema_view
+
+from LemurAptana.LemurApp.api import router
 from . import generic_views
 from django.conf.urls import *
 
@@ -9,6 +13,7 @@ urlpatterns = patterns(
   url(r'^inmate/search/(?P<pk>\d+)/$', 'inmate.inmate_search', name='inmate-detail'),
   url(r'^inmate/add/searched/$', 'inmate.inmate_add_searched', name='inmate-add-searched'),
   url(r'^inmate_search_proxy/(?P<pk>\d+)/$', 'inmate.inmate_search_proxy', name='inmate-search-proxy'),
+  url(r'^inmate/doc_autocomplete/$', 'inmate.inmate_doc_autocomplete', name='inmate-search-autocomplete'),
   url(r'^order/build/$', 'order.order_build', name='order-build'),
   url(r'^order/create/(?P<inmate_pk>\d+)/$', 'order.order_create', name='order-create'),
   # url(r'^order/addbook/ASIN/$', 'order_add_book_asin', name='order-add-book-ASIN'),
@@ -26,9 +31,16 @@ urlpatterns = patterns(
 urlpatterns += patterns(
   '',
   url(r'^inmate/add/$', generic_views.InmateCreate.as_view(), name="inmate-add"),
-  url(r'^inmate/edit/(?P<pk>\d+)/$', generic_views.InmateUpdate.as_view(), name="inmate-edit"),
   url(r'^order/list/$', generic_views.OrderList.as_view(), name="order-list"),
   url(r'^order/cleanup/$', generic_views.OrderCleanupList.as_view(), name='order-cleanup'),
   url(r'^order/detail/(?P<pk>\d+)/$', generic_views.OrderDetail.as_view(), name="order-detail"),
   url(r'^order/invoice/(?P<pk>\d+)/$', generic_views.OrderInvoice.as_view(), name="order-invoice"),
 )
+
+# API views
+urlpatterns += [
+  url(r'^api/', include(router.urls)),
+  url(r'^schema/$', get_schema_view(title='BTP API')),
+  url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+  url(r'^docs/', include_docs_urls(title='My API service'))
+]

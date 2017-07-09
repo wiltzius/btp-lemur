@@ -2,14 +2,16 @@
 Basic tests for the Lemur app.
 """
 
+import datetime
+
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.test.client import Client
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-from . import models
-import datetime
+
+from LemurAptana.LemurApp import models
 # import amazonproduct
 # from . import templatetags.lemur_extras as lemur_extras
-from .templatetags import lemur_extras
+from LemurAptana.LemurApp.templatetags import lemur_extras
 
 
 class BasicLoadTest(TestCase):
@@ -183,7 +185,7 @@ class OrderTest(TestCase):
   def test_unicode_errors_db(self):
     """Makes sure that funny characters from Amazon don't mess up the database"""
     order = OrderTest.create_order_1()
-    book = models.Book.get_book('8478889019')
+    book = models.Book.get_book('1781101361')
     book.order = order
     book.save()
 

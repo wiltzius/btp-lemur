@@ -9,7 +9,7 @@
 
 Python dependencies listed in requirements.txt
 
-Also requires a Google Books API key.
+Also requires a Google Books API key, yarn, webpack, MySQL or sqlite
 
 To run tests:
 `./manage.py test`

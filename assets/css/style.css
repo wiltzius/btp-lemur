@@ -241,13 +241,9 @@ div#inmateSearch div.fieldWrapper {
   height: 2em;
 }
 
-div.fieldWrapper label {
-  width: 80px;
-  float: left;
-}
-
 div.fieldWrapper input, div.fieldWrapper select {
   width: 230px;
+    float: right;
 }
 
 #buildorderform #id_asin {
@@ -451,6 +447,19 @@ div.pagination {
 
 .bookSearchRight p {
   margin: 0.5em;
+}
+
+/*
+ * For inmate add page
+ */
+
+.inmateAutocomplete {
+  padding: 10px;
+  border: 1px solid #414256;
+}
+
+.inmateAutocomplete .autocompleteResult {
+  cursor: pointer;
 }
 
 /*

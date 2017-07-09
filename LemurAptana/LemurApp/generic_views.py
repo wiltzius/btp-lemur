@@ -34,12 +34,6 @@ class InmateCreate(CreateView):
   model = Inmate
 
 
-class InmateUpdate(UpdateView):
-  form_class = forms.InmateForm
-  template_name = 'LemurApp/inmate_edit.html'
-  model = Inmate
-
-
 class OrderCleanupList(OrderList):
   def get(self, request):
     """Marks all currently open orders as sent, unless they have no books in which case they're deleted."""
