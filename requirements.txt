@@ -1,3 +1,4 @@
+uwsgi==2.0.15
 pydash==4.1.0
 raven==6.1
 ipdb==0.10.3
