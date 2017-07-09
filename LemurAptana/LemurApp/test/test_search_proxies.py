@@ -1,4 +1,3 @@
-# from unittest import TestCase
 import json
 
 from django.test import TestCase, Client
@@ -9,9 +8,7 @@ from LemurAptana.LemurApp.lib.search_proxy.ky import kentucky_search_proxy
 
 
 class SearchProxyTests(TestCase):
-
-  def setUp(self):
-    c = Client()
+  """ These tests kinda suck because they're 'live' but hey, at least they're testing the real thing. """
 
   def test_il_single(self):
     results = illinois_search_proxy(inmate_id='N91569')

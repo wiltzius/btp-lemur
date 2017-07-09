@@ -241,11 +241,6 @@ div#inmateSearch div.fieldWrapper {
   height: 2em;
 }
 
-div.fieldWrapper label {
-  /*width: 80px;*/
-  /*float: left;*/
-}
-
 div.fieldWrapper input, div.fieldWrapper select {
   width: 230px;
     float: right;

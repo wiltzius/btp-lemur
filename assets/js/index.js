@@ -18,6 +18,5 @@ Array.from(alert_link_containers).forEach((el) => {
 
 const inmate_add_edit_form = document.querySelectorAll('.inmateAddEditForm');
 Array.from(inmate_add_edit_form).forEach((el) => {
-  // const order_href = el.attributes["data-order-href"].value;
   ReactDOM.render(<InmateAddEditForm />, el);
 });
