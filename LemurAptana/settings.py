@@ -89,6 +89,7 @@ MIDDLEWARE_CLASSES = (
   'django.middleware.csrf.CsrfViewMiddleware',
   'django.contrib.auth.middleware.AuthenticationMiddleware',
   'django.contrib.messages.middleware.MessageMiddleware',
+  'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'LemurAptana.urls'
@@ -117,7 +118,9 @@ WEBPACK_LOADER = {
 
 REST_FRAMEWORK = {
   'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-  'PAGE_SIZE': 10
+  'PAGE_SIZE': 10,
+  'DEFAULT_AUTHENTICATION_CLASSES': [],
+  'DEFAULT_PERMISSION_CLASSES': [],
 }
 
 INSTALLED_APPS = (
@@ -135,4 +138,5 @@ INSTALLED_APPS = (
   'webpack_loader',
   'raven.contrib.django.raven_compat',
   'rest_framework',
+  'debug_toolbar'
 )
