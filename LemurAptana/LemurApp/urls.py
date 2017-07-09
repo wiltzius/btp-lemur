@@ -31,7 +31,6 @@ urlpatterns = patterns(
 urlpatterns += patterns(
   '',
   url(r'^inmate/add/$', generic_views.InmateCreate.as_view(), name="inmate-add"),
-  url(r'^inmate/edit/(?P<pk>\d+)/$', generic_views.InmateUpdate.as_view(), name="inmate-edit"),
   url(r'^order/list/$', generic_views.OrderList.as_view(), name="order-list"),
   url(r'^order/cleanup/$', generic_views.OrderCleanupList.as_view(), name='order-cleanup'),
   url(r'^order/detail/(?P<pk>\d+)/$', generic_views.OrderDetail.as_view(), name="order-detail"),

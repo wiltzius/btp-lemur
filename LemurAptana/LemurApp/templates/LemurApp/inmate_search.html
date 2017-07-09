@@ -79,18 +79,19 @@
 
             <!-- Inmate data from Lemur -->
             <ul class="inmateDetails">
-              <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{ inmate.inmate_id }}</span></li>
+              <li><span class="resultLabel">Inmate ID:</span><span class="resultValue">{{ inmate.inmate_id }}</span>
+              </li>
               <li>
                 <span class="resultLabel">Facility:</span><span class="resultValue">{{ inmate.facility }}</span>
                 {% if inmate.facility.otherRestrictions %}
                   <span>({{ inmate.facility.otherRestrictions }})</span>
                 {% endif %}
               </li>
-            {% if inmate.address %}
-              <li>
-                <span class="resultLabel">Address:</span><span class="resultValue">{{ inmate.address }}</span>
-              </li>
-            {% endif %}
+              {% if inmate.address %}
+                <li>
+                  <span class="resultLabel">Address:</span><span class="resultValue">{{ inmate.address }}</span>
+                </li>
+              {% endif %}
             </ul>
             <ul class="inmateHistory">
               <li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>
@@ -99,7 +100,8 @@
                   {% for order in inmate.orders.all %}
                     <li>
                       <a href="javascript:$('#orderList{{ order.pk }}').toggle('fast')">Order #{{ order.pk }}</a>,
-                      (<span class="orderReopenLink" data-order-href="{% url 'order-reopen' order_pk=order.pk %}"></span>)
+                      (<span class="orderReopenLink"
+                             data-order-href="{% url 'order-reopen' order_pk=order.pk %}"></span>)
                       opened {{ order.date_opened|date:"M jS, Y" }}{% if order.status == 'SENT' %}, closed
                       {{ order.date_closed|date:"M jS, Y" }}{% if order.sender %} by {{ order.sender }}
                       {% endif %}{% endif %}
@@ -112,7 +114,7 @@
                   {% endfor %}
                 </ul>
               </li>
-              <li><a href="{% url 'inmate-edit' pk=inmate.pk %}">Edit Information</a></li>
+              <li><a href="{% url 'inmate-add' %}?inmate_pk={{ inmate.pk }}">Edit Information</a></li>
               <li><a href="{% url 'order-create' inmate_pk=inmate.pk %}" class="bold">Start a new order for this
                 inmate</a></li>
             </ul>

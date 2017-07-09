@@ -24,9 +24,22 @@ export default class InmateSearchProxy extends React.Component {
   componentDidMount() {
     // load the facilities list
     coreapi.client.action(coreapi.schema, ['facilities', 'list']).then(res => this.setState({facilities: res['results']}));
+    // if we're in edit mode, load the existing inmate
+    const params = new URLSearchParams(window.location.search);
+    const pk = params.get('inmate_pk');
+    if (pk) {
+      console.log('pk is', pk);
+      coreapi.client.action(coreapi.schema, ['inmates', 'read'], {id: pk}).then(res => {
+        console.log(res);
+        this.setState({model: res})
+      });
+      this.setState({
+        mode: 'edit'
+      });
+    }
   }
 
-  handleInputChange(event, reset_autocomplete=true) {
+  handleInputChange(event, reset_autocomplete = true) {
     const newModel = {...this.state.model, [event.target.name]: event.target.value};
     this.setState({
       model: newModel,
@@ -45,7 +58,7 @@ export default class InmateSearchProxy extends React.Component {
       last_name: doc_inmate.last_name,
       inmate_id: doc_inmate.inmate_id,
     };
-    if(doc_inmate.facility) {
+    if (doc_inmate.facility) {
       newModel.facility = doc_inmate.facility
     }
     this.setState({
@@ -56,9 +69,18 @@ export default class InmateSearchProxy extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    coreapi.client.action(schema, ['inmates', 'create'], this.state.model).then(resp => {
+    let p;
+    if (this.state.mode === 'edit') {
+      // the schema gets cranky if we give it something that has creation_date in it, so just skip it
+      const to_save = _.omit(this.state.model, 'creation_date');
+      p = coreapi.client.action(schema, ['inmates', 'update'], to_save);
+    }
+    else {
+      p = coreapi.client.action(schema, ['inmates', 'create'], this.state.model);
+    }
+    p.then(resp => {
       window.location.assign(`/lemur/inmate/search/?inmate_id=${resp.inmate_id}`);
-    })
+    });
   }
 
   render() {
@@ -121,11 +143,11 @@ export default class InmateSearchProxy extends React.Component {
         }
       </div>
       <div className="formfooter">
-        <input type="submit" value="Add New Record"/>
+        <input type="submit" value={this.state.mode === 'edit' ? "Save" : "Add New Record"}/>
       </div>
       <InmateDOCAutocomplete model={this.state.model}
                              selectedCallback={this.autocompleteSelected.bind(this)}
-                             skip={this.state.autocompleted} />
+                             skip={this.state.autocompleted}/>
     </form>
   }
 }
