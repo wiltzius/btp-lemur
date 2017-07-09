@@ -1,7 +1,4 @@
-from json import JSONDecodeError
-
 import requests
-from pydash import _
 
 
 def federal_search_proxy(inmate_id=None, first_name=None, last_name=None):
