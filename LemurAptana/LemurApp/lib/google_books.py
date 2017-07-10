@@ -4,7 +4,8 @@ from apiclient import discovery
 from django.conf import settings
 
 # just build this at import time I guess
-service = discovery.build('books', 'v1', developerKey=settings.GBOOKS_KEY)
+# TODO make this lazy, otherwise connecting blocks server startup
+# service = discovery.build('books', 'v1', developerKey=settings.GBOOKS_KEY)
 
 RESULTS_PER_PAGE = 10
 
