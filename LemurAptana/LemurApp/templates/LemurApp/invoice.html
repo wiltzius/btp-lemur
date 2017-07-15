@@ -32,8 +32,7 @@
     }
 
     .logo {
-      height: 1.5in;
-      width: 2in;
+      height: 1.25in;
     }
 
     #invoice {
@@ -43,6 +42,7 @@
 
     #invoice address {
       float: right;
+      margin-top: 0.15in;
     }
 
     #invoice .bold {
@@ -109,6 +109,7 @@
 
     #shipping-label address.return-address {
       float: right;
+      margin-top: 0.15in;
     }
 
     #shipping-label address.delivery-address {
@@ -133,10 +134,11 @@
 </head>
 <body>
 <div id="shipping-label">
-  <img class="logo"/>
+  <img class="logo" src="/static/images/mcquixote.jpeg"/>
   <address class="return-address">
-    City Lights Bookstore<br/>
-    San Francisco, CA 94107
+    1512 Portland Ave, Ste #1<br/>
+    Louisville, KY 40203<br/>
+    Phone: (502) 530-9658
   </address>
   <address class="delivery-address">
     {{ order.inmate.full_name }}<br/>
@@ -150,18 +152,18 @@
     {% endif %}
   </address>
   <div class="media-mail">
-    <span>Media Mail</span>
+    <span>Library Mail</span>
     <span>Books Enclosed</span>
     <span>Media</span>
   </div>
 </div>
 
 <div id="invoice">
-  <img class="logo"/>
+  <img class="logo" src="/static/images/mcquixote.jpeg"/>
   <address>
-    (415) 555-5555<br/>
-    City Lights Bookstore<br/>
-    San Francisco, CA 94107
+    1512 Portland Ave, Ste #1<br/>
+    Louisville, KY 40203<br/>
+    Phone: (502) 530-9658
   </address>
   <h1>Invoice</h1>
 
