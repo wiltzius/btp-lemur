@@ -2,6 +2,7 @@ LemurAptana/settings_secret.py
 *.pyc
 venv
 BTPENV
+BTPKYENV
 .idea
 books2pr_dev
 webpack-stats.json
