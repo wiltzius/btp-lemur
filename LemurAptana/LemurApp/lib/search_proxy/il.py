@@ -33,7 +33,7 @@ def parse_inmate_detail_page(inmate_id, html):
         .find_next_sibling('td')
         .stripped_strings
     )
-  except AttributeError:
+  except (AttributeError, StopIteration):
     results["projected_parole"] = None
 
   if results["projected_parole"] is None:
@@ -45,7 +45,7 @@ def parse_inmate_detail_page(inmate_id, html):
           .find_next_sibling('td')
           .stripped_strings
       )
-    except AttributeError:
+    except (AttributeError, StopIteration):
       results["paroled_date"] = None
 
   try:
@@ -56,7 +56,7 @@ def parse_inmate_detail_page(inmate_id, html):
         .find_next_sibling('td')
         .stripped_strings
     )
-  except AttributeError:
+  except (AttributeError, StopIteration):
     results["parent_institution"] = None
 
   # trim all result values

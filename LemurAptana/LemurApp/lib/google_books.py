@@ -23,7 +23,7 @@ def _tuple_result(result):
     return booktuple(title=volumeInfo['title'],
                      author=', '.join(volumeInfo.get('authors', [])),     # authors is a list, if it exists
                      isbn=_isbn13_from_industry_identifiers(volumeInfo['industryIdentifiers']))
-  except (KeyError, ValueError):
+  except (KeyError, ValueError, StopIteration):
     # Sometimes the Google API returns results missing some of the key fields; just skip them.
     return None
 

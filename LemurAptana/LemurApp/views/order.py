@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import logging
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseBadRequest, HttpResponse, Http404
 from django.shortcuts import redirect, get_object_or_404, render_to_response
@@ -67,8 +68,8 @@ def order_remove_book(request, book_pk):
     else:
       raise Exception("Tried to remove a book from the current order that wasn't in the current order")
   except KeyError:
-    print("Tried to remove a book from the current order, but there isn't a current order")
-    raise KeyError
+    logging.info("Tried to remove a book from the current order, but there isn't a current order")
+    raise
 
   return order_render_as_response(request)
 
@@ -85,7 +86,7 @@ def order_add_book_custom(request):
   else:
     # The title is empty, which is the one field we require. We fail
     # silently for now, but could do something here.
-    print('Tried to add a custom book with no title to the current order, failing silently')
+    logging.info('Tried to add a custom book with no title to the current order, failing silently')
   return order_render_as_response(request)
 
 
@@ -180,7 +181,6 @@ def order_build(request):
 
   context_dict['currentOrderHTML'] = order_get_snippet_html(request)
   context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
-  print(context_dict)
   return render_to_response('LemurApp/order_build.html', context_dict, context_instance=RequestContext(request))
 
 
