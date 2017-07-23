@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 
 from LemurAptana.LemurApp import forms
 from LemurAptana.LemurApp.lib import isbn, google_books
+from LemurAptana.LemurApp.lib.google_books import booktuple
 from LemurAptana.LemurApp.models import Inmate, Order, Book
 
 
@@ -166,14 +167,14 @@ def order_build(request):
       # There weren't any results from our Amazon query
       context_dict['errors'] += [
         "No books matching the title/author you entered were found, try double-checking your spelling."]
-      if request.GET.get('author', False) and request.GET.get('title', False):
+      if request.GET.get('author') and request.GET.get('title'):
         # If the user entered both an author and a title, create a new dummy book result to use instead of real
         # results with the entered form data
         context_dict['errors'] += [
           "If you're certain the title and author you entered are correct, you can manually add the book below."]
-        book = {'customBook': True,
-                'ItemAttributes': {'Title': request.GET['title'], 'Author': request.GET['author']}}
+        book = booktuple(title=request.GET['title'], author=request.GET['author'], isbn='')
         context_dict['books'] = [book]
+        context_dict['custom_book'] = True
       else:
         # If we're missing the author or title prompt the user to enter both before we try making a dummy book
         context_dict['errors'] += [

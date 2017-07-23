@@ -226,8 +226,8 @@
               <tr class="{% cycle 'odd' 'even' %}">
                 <td>{{book.title}}</td>
                 <td>{{book.author}}</td>
-                {% if book.customBook %}
-                  <td class="rightcolumn"><a href="javascript:addToOrderCustom({'Title': '{{book.ItemAttributes.Title.text}}', 'Author': '{{book.ItemAttributes.Author.text}}'})">add custom book to order</a></td>
+                {% if custom_book %}
+                  <td class="rightcolumn"><a href="javascript:addToOrderCustom({'Title': '{{book.title}}', 'Author': '{{book.author}}'})">add custom book to order</a></td>
                 {% else %}
                     <td class="rightcolumn"><a href="javascript:addToOrderISBN({'ISBN': '{{book.isbn | escapejs}}'});">add to order</a></td>
                 {% endif %}
