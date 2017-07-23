@@ -47,11 +47,10 @@ def search(q, page=0):
   results = []
   lastIndex = -1
   items = response.get('items', [])
-  while len(results) < RESULTS_PER_PAGE:
+  while len(items) and len(results) < RESULTS_PER_PAGE:
     # many of the results are irrelevant (ebooks and others missing ISBNs), so continue through the list until we have
     # enough to fill the page.
     r = _tuple_result(items.pop(0))
-    # we could theoretically get through all 40 results without filling up in which case the above would error, eh...
     if r:
       results.append(r)
     # Write down the index of the last book we used to fill the list, since that's where we should start the next page
