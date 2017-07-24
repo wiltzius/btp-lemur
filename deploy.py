@@ -9,7 +9,7 @@ def main():
   with SshMachine('cowville.net', user='tom', port=23) as remote:
     with remote.cwd('/home/books2pr/lemur'):
       print(remote['git']['pull']())
-      print(remote['./production_restart_il.sh']())
+      print(remote['sudo']['./production_restart_il.sh']())
 
 
 if __name__ == '__main__':
