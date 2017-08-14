@@ -141,7 +141,8 @@
     Phone: (502) 530-9658
   </address>
   <address class="delivery-address">
-    {{ order.inmate.full_name }}<br/>
+    {{ order.inmate.full_name }} {{ order.inmate.inmate_id }}<br/>
+    {{ order.inmate.facility }}<br/>
     {% if order.inmate.parsed_address %}
       {% with order.inmate.parsed_address.0 as address %}
         {{ address.address1 }}<br/>
@@ -170,7 +171,8 @@
   <section class="ship-to">
     <h2>Ship To:</h2>
     <p>
-      {{ order.inmate.full_name }}<br/>
+      {{ order.inmate.full_name }} {{ order.inmate.inmate_id }}<br/>
+      {{ order.inmate.facility }}<br/>
       {% if order.inmate.parsed_address %}
         {% with order.inmate.parsed_address.0 as address %}
           {{ address.address1 }}<br/>
