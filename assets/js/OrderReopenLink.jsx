@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -33,16 +32,16 @@ export default class OrderReopenLink extends React.Component {
   }
 
   navigate() {
-    window.location = this.props.orderHref;
+    window.location = `/order/reopen/${this.props.orderPk }/`;
   }
 
   render() {
     return <span>
       <a onClick={this.openModal}>reopen</a>
       <Modal
-          isOpen={this.state.modalIsOpen}
-          onRequestClose={this.closeModal}
-          style={customStyles}>
+        isOpen={this.state.modalIsOpen}
+        onRequestClose={this.closeModal}
+        style={customStyles}>
 
         <h3>Are you sure?</h3>
         <p>We don't typically reopen orders.</p>
