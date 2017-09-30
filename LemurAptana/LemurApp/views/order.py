@@ -188,23 +188,24 @@ def order_build(request):
 def order_send_out(request):
   """Display a page allowing the user to mark an order as sent out. Mark the
      current order as sent if the form is submitted."""
-  if request.method == 'POST':  # If the form has been submitted...
-    form = forms.SendOutForm(request.POST)  # A form bound to the POST data
-    if form.is_valid():  # All validation rules pass
-      currentOrder = request.session['order']
-      currentOrder.sender = form.cleaned_data['sender']
-      currentOrder.date_closed = datetime.now()
-      currentOrder.status = 'SENT'
-      currentOrder.save()
-      # now that we're sent, we can unset the current order
-      del request.session['order']
-      return redirect(currentOrder)
-  else:
-    if 'order' in request.session:
-      form = forms.SendOutForm(instance=request.session['order'])  # An unbound form
-    else:
-      form = None
-  return render_to_response('LemurApp/order_sendout.html', {'form': form}, context_instance=RequestContext(request))
+  # if request.method == 'POST':  # If the form has been submitted...
+  #   form = forms.SendOutForm(request.POST)  # A form bound to the POST data
+  #   if form.is_valid():  # All validation rules pass
+  #     currentOrder = request.session['order']
+  #     currentOrder.sender = form.cleaned_data['sender']
+  #     currentOrder.date_closed = datetime.now()
+  #     currentOrder.status = 'SENT'
+  #     currentOrder.save()
+  #     # now that we're sent, we can unset the current order
+  #     del request.session['order']
+  #     return redirect(currentOrder)
+  # else:
+  #   if 'order' in request.session:
+  #     form = forms.SendOutForm(instance=request.session['order'])  # An unbound form
+  #   else:
+  #     form = None
+  # return render_to_response('LemurApp/order_sendout.html', {'form': form}, context_instance=RequestContext(request))
+  return render_to_response('LemurApp/order_sendout.html', context_instance=RequestContext(request))
 
 
 def order_unset(request):

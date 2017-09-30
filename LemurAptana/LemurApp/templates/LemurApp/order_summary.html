@@ -1,6 +1,6 @@
 {% load lemur_extras %}
 
-{% if 'order' in request.session %}
+{% if 'order' in request.session and request.session.order %}
     {% with request.session.order as order %}
         <a href="{% url 'order-build' %}">Order #{{ order.pk }}</a>,
         for <a href="{% url 'inmate-detail' pk=order.inmate.pk %}">{{ order.inmate.full_name|truncchar:50 }}</a>,
