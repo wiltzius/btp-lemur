@@ -2,7 +2,7 @@
   <!-- Snippet to display the current order, or an error message if there isn't a current order -->
   <h5>Current Order</h5> 
   {% if not request.session.order %}
-    <p class="error">No current order, <a href="{% url 'inmate-search' %}">find an inmate</a> and add a new order for them or <a href="{% url 'order-list' %}">choose an open order</a>.</p>
+    <p class="error">No current order, <a href="{% url 'inmate-search' %}">find an inmate</a> and add a new order for them or <a href="{% url 'order-oldlist' %}">choose an open order</a>.</p>
   {% else %}
     {% with request.session.order as order %}
       <p class="label">Order #{{order.pk}} for {{order.inmate.last_name}}, {{order.inmate.first_name}} (Inmate #{{order.inmate.inmate_id}})</p> 

@@ -3,7 +3,7 @@ from datetime import datetime
 
 import logging
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseBadRequest, HttpResponse, Http404
+from django.http import HttpResponseBadRequest, HttpResponse, Http404, JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -211,7 +211,7 @@ def order_unset(request):
   """Unset the current order in session and redirect to the list of open
      orders where another can be selected."""
   request.session['order'] = None
-  return redirect(reverse('order-list'))
+  return redirect(reverse('order-oldlist'))
 
 
 def order_set(request, order_pk):
@@ -228,3 +228,10 @@ def order_reopen(request, order_pk):
   order.date_closed = None
   order.save()
   return order_set(request, order_pk)
+
+
+def order_current(request):
+  if request.session.get('order'):
+    return JsonResponse({'current_order_id': request.session['order'].pk})
+  else:
+    return JsonResponse({})
