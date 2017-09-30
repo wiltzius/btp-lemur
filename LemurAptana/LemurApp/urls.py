@@ -25,13 +25,14 @@ urlpatterns = patterns(
   url(r'^order/unset/$', 'order.order_unset', name='order-unset'),
   url(r'^order/set/(?P<order_pk>\d+)/$', 'order.order_set', name='order-set'),
   url(r'^order/reopen/(?P<order_pk>\d+)/$', 'order.order_reopen', name='order-reopen'),
+  url(r'^order/current/$', 'order.order_current', name='order-current'),
 )
 
 # Generic views
 urlpatterns += patterns(
   '',
   url(r'^inmate/add/$', generic_views.InmateCreate.as_view(), name="inmate-add"),
-  url(r'^order/list/$', generic_views.OrderList.as_view(), name="order-list"),
+  url(r'^order/list/$', generic_views.OrderList.as_view(), name="order-oldlist"),
   url(r'^order/cleanup/$', generic_views.OrderCleanupList.as_view(), name='order-cleanup'),
   url(r'^order/detail/(?P<pk>\d+)/$', generic_views.OrderDetail.as_view(), name="order-detail"),
   url(r'^order/invoice/(?P<pk>\d+)/$', generic_views.OrderInvoice.as_view(), name="order-invoice"),
