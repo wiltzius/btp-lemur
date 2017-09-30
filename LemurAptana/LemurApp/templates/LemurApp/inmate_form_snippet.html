@@ -1,51 +1,51 @@
-   
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $("#id_facility").change(function() {
-          if($("#id_facility option:selected").val() == 1) { // 1 is a magic number here -- it's the ID of the "other facility" option
-            console.log("non facility");
-            $("#addressWrapper").show();
-          } else {
-            console.log("got facility");
-            $("#addressWrapper").hide();
-          }
-        }).change();                
-      });
-      
-    </script>
-   
-    {% csrf_token %}
-    
-    <ul class="errorlist">
-      {% for error in form.non_field_errors %}
-        <li>{{error}}</li>
-      {% endfor %}
-      
-      {% for field in form.visible_fields %}      
-        {% if field.errors %}
-          <li>{{ field.label }}: {{ field.errors|join:", " }}</li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-    
-    <div id="searchBoxLeft">
-      <div class="fieldWrapper">
-        {{ form.first_name.label_tag }} {{ form.first_name }}
-        <p class="note">Do not use - or ' characters</p> 
-      </div>
-      <div class="fieldWrapper">
-        {{ form.last_name.label_tag }} {{ form.last_name }} 
-      </div>
-    </div>
-    <div id="searchBoxRight">
-      <div class="fieldWrapper">
-        {{ form.inmate_id.label_tag }} {{ form.inmate_id }}
-      </div>
-      <div class="fieldWrapper">
-        {{ form.facility.label_tag }} {{ form.facility }} 
-      </div>
-       <div class="fieldWrapper" id="addressWrapper"> 
-        {{ form.address.label_tag }} {{ form.address }}
-      </div>
-    </div>
-    
+{#   #}
+{#    <script type="text/javascript">#}
+{#      $(document).ready(function() {#}
+{#        $("#id_facility").change(function() {#}
+{#          if($("#id_facility option:selected").val() == 1) { // 1 is a magic number here -- it's the ID of the "other facility" option#}
+{#            console.log("non facility");#}
+{#            $("#addressWrapper").show();#}
+{#          } else {#}
+{#            console.log("got facility");#}
+{#            $("#addressWrapper").hide();#}
+{#          }#}
+{#        }).change();                #}
+{#      });#}
+{#      #}
+{#    </script>#}
+{#   #}
+{#    {% csrf_token %}#}
+{#    #}
+{#    <ul class="errorlist">#}
+{#      {% for error in form.non_field_errors %}#}
+{#        <li>{{error}}</li>#}
+{#      {% endfor %}#}
+{#      #}
+{#      {% for field in form.visible_fields %}      #}
+{#        {% if field.errors %}#}
+{#          <li>{{ field.label }}: {{ field.errors|join:", " }}</li>#}
+{#        {% endif %}#}
+{#      {% endfor %}#}
+{#    </ul>#}
+{#    #}
+{#    <div id="searchBoxLeft">#}
+{#      <div class="fieldWrapper">#}
+{#        {{ form.first_name.label_tag }} {{ form.first_name }}#}
+{#        <p class="note">Do not use - or ' characters</p> #}
+{#      </div>#}
+{#      <div class="fieldWrapper">#}
+{#        {{ form.last_name.label_tag }} {{ form.last_name }} #}
+{#      </div>#}
+{#    </div>#}
+{#    <div id="searchBoxRight">#}
+{#      <div class="fieldWrapper">#}
+{#        {{ form.inmate_id.label_tag }} {{ form.inmate_id }}#}
+{#      </div>#}
+{#      <div class="fieldWrapper">#}
+{#        {{ form.facility.label_tag }} {{ form.facility }} #}
+{#      </div>#}
+{#       <div class="fieldWrapper" id="addressWrapper"> #}
+{#        {{ form.address.label_tag }} {{ form.address }}#}
+{#      </div>#}
+{#    </div>#}
+{#    #}
