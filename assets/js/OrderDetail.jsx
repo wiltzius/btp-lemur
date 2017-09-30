@@ -1,6 +1,7 @@
 import React from 'react';
 import coreapi from './coreapi';
 import OrderSummarySnippet from "./OrderSummarySnippet";
+import OrderNotes from "./OrderNotes";
 
 export default class OrderDetail extends React.Component {
 
@@ -46,6 +47,7 @@ export default class OrderDetail extends React.Component {
         <h3>Order details</h3>
         {this.orderSentSnippet()}
         <OrderSummarySnippet order={this.state.order}/>
+        <OrderNotes order={this.state.order} />
       </div>
     }
   }
