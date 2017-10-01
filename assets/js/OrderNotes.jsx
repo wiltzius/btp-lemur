@@ -1,5 +1,5 @@
 import React from 'react';
-import coreapi from './coreapi';
+import coreapi from './lib/coreapi';
 
 export default class OrderNotes extends React.Component {
 

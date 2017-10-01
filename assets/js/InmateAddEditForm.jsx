@@ -1,5 +1,5 @@
 import React from 'react';
-import coreapi from './coreapi';
+import coreapi from './lib/coreapi';
 import InmateDOCAutocomplete from './InmateDOCAutocomplete';
 
 export default class InmateSearchProxy extends React.Component {

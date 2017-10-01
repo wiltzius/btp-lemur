@@ -1,6 +1,7 @@
 import React from 'react';
-import coreapi from './coreapi';
+import coreapi from './lib/coreapi';
 import OrderSummarySnippet from "./OrderSummarySnippet";
+import orderCache from "./lib/orderCache";
 
 export default class OrderCompleteForm extends React.Component {
 
@@ -13,20 +14,24 @@ export default class OrderCompleteForm extends React.Component {
   }
 
   componentDidMount() {
-    $.getJSON('/lemur/order/current/').then(resp => {
-      const order_id = resp.current_order_id;
-      if (order_id) {
-        return coreapi.client.action(coreapi.schema, ['orders', 'read'], {id: order_id}).then(res => {
-          this.setState({order: res});
-          this.setState({loading: false});
-        });
-      }
-      else {
-        this.setState({loading: false});
-      }
+    orderCache.getOrder().then(order => {
+      this.setState({order: order});
+      this.setState({loading: false});
     }).catch(err => {
-      console.log(err)
+      console.log(err);
     });
+    // $.getJSON('/lemur/order/current/').then(resp => {
+    //   const order_id = resp.current_order_id;
+    //   if (order_id) {
+    //     return coreapi.client.action(coreapi.schema, ['orders', 'read'], {id: order_id}).then(res => {
+    //     });
+    //   }
+    //   else {
+    //     this.setState({loading: false});
+    //   }
+    // }).catch(err => {
+    //   console.log(err)
+    // });
 
   }
 
