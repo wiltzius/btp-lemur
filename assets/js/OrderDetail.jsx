@@ -1,5 +1,5 @@
 import React from 'react';
-import coreapi from './coreapi';
+import coreapi from './lib/coreapi';
 import OrderSummarySnippet from "./OrderSummarySnippet";
 import OrderNotes from "./OrderNotes";
 
