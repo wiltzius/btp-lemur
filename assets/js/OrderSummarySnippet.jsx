@@ -1,6 +1,7 @@
 import React from 'react';
 
 export default class OrderSummarySnippet extends React.Component {
+  // TODO name this an OrderSummary differently
 
   render() {
     const order = this.props.order;
