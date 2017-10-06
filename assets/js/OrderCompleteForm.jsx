@@ -14,12 +14,18 @@ export default class OrderCompleteForm extends React.Component {
   }
 
   componentDidMount() {
-    orderCache.getOrder().then(order => {
+    // orderCache.sub(order => {
+    //   this.setState({order: order});
+    //   this.setState({loading: false});
+    // });
+    orderCache.observable().subscribe(order => {
       this.setState({order: order});
       this.setState({loading: false});
-    }).catch(err => {
-      console.log(err);
-    });
+    })
+    // orderCache.getOrder().then(order => {
+    // }).catch(err => {
+    //   console.log(err);
+    // });
     // $.getJSON('/lemur/order/current/').then(resp => {
     //   const order_id = resp.current_order_id;
     //   if (order_id) {

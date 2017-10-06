@@ -5,6 +5,7 @@ import OrderReopenLink from './OrderReopenLink.jsx';
 import InmateAddEditForm from './InmateAddEditForm';
 import OrderCompleteForm from './OrderCompleteForm';
 import OrderDetail from "./OrderDetail";
+import OrderSummary from "./OrderSummary";
 
 // bootstrap the React app by attaching InmateSearchProxy instance to their placeholders in the html template
 const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
@@ -32,4 +33,9 @@ Array.from(order_sendout).forEach((el) => {
 const order_detail = document.querySelectorAll('.orderDetail');
 Array.from(order_detail).forEach((el) => {
   ReactDOM.render(<OrderDetail/>, el);
+});
+
+const order_summary = document.querySelectorAll('.orderSummary');
+Array.from(order_summary).forEach((el) => {
+  ReactDOM.render(<OrderSummary/>, el);
 });

@@ -1,4 +1,5 @@
 from rest_framework import serializers, viewsets
+from rest_framework.fields import SerializerMethodField
 
 from LemurAptana.LemurApp.api.book import BookSerializer
 from LemurAptana.LemurApp.api.inmate import InmateSerializer
@@ -8,6 +9,10 @@ from LemurAptana.LemurApp.models import Order
 class OrderSerializer(serializers.ModelSerializer):
   books = BookSerializer(many=True, read_only=True)
   inmate = InmateSerializer(many=False, read_only=True)
+  warnings = SerializerMethodField()
+
+  def get_warnings(self, order):
+    return order.warnings()
 
   class Meta:
     model = Order

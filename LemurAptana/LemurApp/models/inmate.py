@@ -138,6 +138,7 @@ class Inmate(models.Model):
     else:
       return self.inmate_id
 
+  @property
   def full_name(self):
     return self.first_name + ' ' + self.last_name
 
