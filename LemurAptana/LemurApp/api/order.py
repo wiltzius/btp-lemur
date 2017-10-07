@@ -1,5 +1,6 @@
 from rest_framework import serializers, viewsets
 from rest_framework.fields import SerializerMethodField
+import django_filters.rest_framework
 
 from LemurAptana.LemurApp.api.book import BookSerializer
 from LemurAptana.LemurApp.api.inmate import InmateSerializer
@@ -22,6 +23,8 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderViewSet(viewsets.ModelViewSet):
   queryset = Order.objects.all()
   serializer_class = OrderSerializer
+  filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+  filter_fields = ('status',)
 
   def update(self, request, *args, **kwargs):
     # instance = self.get_object()

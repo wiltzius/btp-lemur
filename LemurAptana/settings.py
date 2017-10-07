@@ -138,5 +138,6 @@ INSTALLED_APPS = (
   'webpack_loader',
   'raven.contrib.django.raven_compat',
   'rest_framework',
-  'debug_toolbar'
+  'debug_toolbar',
+  'django_filters'
 )
