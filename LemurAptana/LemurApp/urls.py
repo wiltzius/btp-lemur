@@ -15,6 +15,7 @@ urlpatterns = patterns(
   url(r'^inmate_search_proxy/(?P<pk>\d+)/$', 'inmate.inmate_search_proxy', name='inmate-search-proxy'),
   url(r'^inmate/doc_autocomplete/$', 'inmate.inmate_doc_autocomplete', name='inmate-search-autocomplete'),
   url(r'^order/build/$', 'order.order_build', name='order-build'),
+  url(r'^order/booksearch/$', 'order.order_book_search', name='order-booksearch'),
   url(r'^order/create/(?P<inmate_pk>\d+)/$', 'order.order_create', name='order-create'),
   # url(r'^order/addbook/ASIN/$', 'order_add_book_asin', name='order-add-book-ASIN'),
   url(r'^order/addbook/ISBN/$', 'order.order_add_book_isbn', name='order-add-book-ISBN'),

@@ -7,6 +7,7 @@ import OrderCompleteForm from './OrderCompleteForm';
 import OrderDetail from "./OrderDetail";
 import OrderSummary from "./OrderSummary";
 import OrderList from "./OrderList";
+import OrderBuild from "./OrderBuild";
 
 // bootstrap the React app by attaching InmateSearchProxy instance to their placeholders in the html template
 const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
@@ -44,4 +45,9 @@ Array.from(order_summary).forEach((el) => {
 const order_list = document.querySelectorAll('.orderListComponent');
 Array.from(order_list).forEach((el) => {
   ReactDOM.render(<OrderList/>, el);
+});
+
+const order_build = document.querySelectorAll('.orderBuildComponent');
+Array.from(order_build).forEach((el) => {
+  ReactDOM.render(<OrderBuild/>, el);
 });

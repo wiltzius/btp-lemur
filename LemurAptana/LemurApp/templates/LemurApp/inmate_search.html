@@ -8,6 +8,7 @@
 {% block current_inmates %}current{% endblock %}
 
 {% block content %}
+  <div id="searchContainer">
   <div id="inmateSearch">
     <form action="{% url 'inmate-search' %}" method="get">
       {% csrf_token %}
@@ -29,6 +30,7 @@
         <input type="submit" name="submit" value="Search for Inmate"/>
       </div>
     </form>
+  </div>
   </div>
 
   <div id="searchResults">

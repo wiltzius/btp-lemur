@@ -115,6 +115,57 @@ def order_get_warnings_html(request):
   return render_to_string('LemurApp/order_warnings.html', context_instance=RequestContext(request))
 
 
+def order_book_search(request):
+  returnDict = {}
+
+  # construct Google power search
+  power = []
+  if request.GET.get('author', False):
+    power += ['inauthor:' + request.GET['author']]
+  if request.GET.get('title', False):
+    power += ['intitle:' + request.GET['title']]
+  if not power:
+    # If we wanted to do something special for searching with all fields empty we could here,
+    # but for now just let Google return whatever
+    pass
+
+  # Do the power search
+  try:
+    page = int(request.GET.get('page', '1'))
+  except ValueError:
+    # if for some reason 'page' is a GET parameter but not a valid number, just default to 1
+    page = 1
+  search_result = google_books.search(q=power, page=page)
+
+  if search_result.pages:
+    returnDict['books'] = []
+    returnDict['books'] = search_result.books
+    returnDict['totalPages'] = search_result.pages
+    if search_result.pages > 1:
+      returnDict['pagination'] = True
+    returnDict['currPage'] = page
+    returnDict['nextPage'] = page + 1
+    returnDict['prevPage'] = page - 1
+  else:
+    # There weren't any results from our Amazon query
+    returnDict['errors'] = [
+      "No books matching the title/author you entered were found, try double-checking your spelling."]
+    if request.GET.get('author') and request.GET.get('title'):
+      # If the user entered both an author and a title, create a new dummy book result to use instead of real
+      # results with the entered form data
+      returnDict['errors'] += [
+        "If you're certain the title and author you entered are correct, you can manually add the book below."]
+      # noinspection PyProtectedMember
+      book = booktuple(title=request.GET['title'], author=request.GET['author'], isbn='')._asdict()
+      returnDict['books'] = [book]
+      returnDict['custom_book'] = True
+    else:
+      # If we're missing the author or title prompt the user to enter both before we try making a dummy book
+      returnDict['errors'] += [
+        "If you enter both a title and an author in the search form you can manually enter the book."]
+  return JsonResponse(returnDict)
+
+
 def order_build(request):
   """Initial view for the order build page. Initializes all the forms for
      that page. This view also handles forms that submited back to the page,

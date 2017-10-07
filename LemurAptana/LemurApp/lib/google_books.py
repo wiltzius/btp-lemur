@@ -50,7 +50,8 @@ def search(q, page=0):
   while len(items) and len(results) < RESULTS_PER_PAGE:
     # many of the results are irrelevant (ebooks and others missing ISBNs), so continue through the list until we have
     # enough to fill the page.
-    r = _tuple_result(items.pop(0))
+    # noinspection PyProtectedMember
+    r = _tuple_result(items.pop(0))._asdict()
     if r:
       results.append(r)
     # Write down the index of the last book we used to fill the list, since that's where we should start the next page
