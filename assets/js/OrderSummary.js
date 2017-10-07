@@ -19,7 +19,7 @@ export default class OrderSummary extends React.Component {
 
   warnings() {
     if (this.state.order.warnings) {
-      return <span>&nbsp;&nbsp;<span class="error">(<a href="{% url 'order-build' %}">warnings</a>)</span></span>
+      return <span>&nbsp;&nbsp;<span className="error">(<a href="/lemur/order/build">warnings</a>)</span></span>
     }
   }
 
@@ -29,16 +29,16 @@ export default class OrderSummary extends React.Component {
     }
     else if (!this.state.order) {
       return <span>
-        Order: choose an <a href="{% url 'inmate-search' %}">inmate</a> or <a href="{% url 'order-oldlist' %}">order</a> first
+        Order: choose an <a href="/lemur/inmate/search">inmate</a> or <a href="/lemur/order/list">order</a> first
       </span>
 
     }
     else {
       const order = this.state.order;
       return <div>
-        <a href="{% url 'order-build' %}">Order #{order.id}</a>,
+        <a href="/lemur/order/build">Order #{order.id}</a>,
         {/*todo truncate inmate full name to 50 characters*/}
-        &nbsp;for <a href="{% url 'inmate-detail' pk=order.inmate.pk %}">{order.inmate.first_name} {order.inmate.last_name}</a>,
+        &nbsp;for <a href={"/lemur/inmate/search/" + order.inmate.id + "/"}>{order.inmate.first_name} {order.inmate.last_name}</a>,
         {/*todo make book(s) smart */}
         &nbsp;{order.books.length} book(s)
         {this.warnings()}
