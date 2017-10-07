@@ -40,7 +40,7 @@ urlpatterns += patterns(
 
 # API views
 urlpatterns += [
-  url(r'^api/', include(router.urls)),
+  url(r'^api/', include(router.urls, namespace="lemurapi")),
   url(r'^schema/$', get_schema_view(title='BTP API')),
   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
   url(r'^docs/', include_docs_urls(title='My API service'))
