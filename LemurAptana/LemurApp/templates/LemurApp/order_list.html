@@ -4,21 +4,6 @@
 {% block title %}Select an Order{% endblock %}
 {% block header_title %}Select an Order{% endblock %}
 
-{% block extra_head %}
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $("#cleanupLink").click(function(event) {
-        if(confirm("Are you sure you want to delete all the open orders? This can't be undone.")) {
-          return true;
-        }
-        else {
-          event.preventDefault();
-        }
-      });
-    });
-  </script>
-{% endblock %}
-
 {% block current_order_list %}current{% endblock %}
 
 {% block content %}
