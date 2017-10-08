@@ -2,6 +2,7 @@ import React from 'react';
 import orderCache from './lib/orderCache';
 
 export default class OrderSummary extends React.Component {
+  // Order summary for the top nav bar
 
   constructor(props) {
     super(props);
@@ -12,7 +13,6 @@ export default class OrderSummary extends React.Component {
 
   componentDidMount() {
     orderCache.sub(order => {
-      console.log('setting state');
       this.setState({order, loading: false});
     });
   }
@@ -37,13 +37,13 @@ export default class OrderSummary extends React.Component {
       const order = this.state.order;
       return <div>
         <a href="/lemur/order/build">Order #{order.id}</a>,
-        {/*todo truncate inmate full name to 50 characters*/}
-        &nbsp;for <a href={"/lemur/inmate/search/" + order.inmate.id + "/"}>{order.inmate.first_name} {order.inmate.last_name}</a>,
-        {/*todo make book(s) smart */}
+        {/* todo truncate inmate full name to 50 characters*/}
+        &nbsp;for <a
+        href={"/lemur/inmate/search/" + order.inmate.id + "/"}>{order.inmate.first_name} {order.inmate.last_name}</a>,
+        {/* todo make book(s) smart */}
         &nbsp;{order.books.length} book(s)
         {this.warnings()}
       </div>
-
     }
   }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
+import bookSearchService from "./lib/bookSearchService";
 
 export default class OrderBuildSearchForm extends React.Component {
 
@@ -10,7 +11,6 @@ export default class OrderBuildSearchForm extends React.Component {
       order: null,
       title: null,
       author: null,
-      page: 1
     };
   }
 
@@ -19,6 +19,11 @@ export default class OrderBuildSearchForm extends React.Component {
       this.setState({order: order});
       this.setState({loading: false});
     });
+    if(window.location.hash){
+      this.setState({title: window.location.hash.slice(1)}, () => {
+        this.search();
+      });
+    }
   }
 
   updateInput(event) {
@@ -27,17 +32,13 @@ export default class OrderBuildSearchForm extends React.Component {
     });
   }
 
+  search() {
+    bookSearchService.search(this.state.title, this.state.author);
+  }
+
   submit(event) {
     event.preventDefault();
-
-    $.get('/lemur/order/booksearch', {
-      author: this.state.author,
-      title: this.state.title,
-      page: this.page
-    }).then(resp => {
-      console.log(resp);
-      this.props.updateResults(resp);
-    });
+    this.search();
   }
 
   render() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import coreapi from './lib/coreapi';
-import OrderSummarySnippet from "./OrderSummarySnippet";
+import OrderCompleteSummarySnippet from "./OrderCompleteSummarySnippet";
 import orderCache from "./lib/orderCache";
 
 export default class OrderCompleteForm extends React.Component {
@@ -85,7 +85,7 @@ export default class OrderCompleteForm extends React.Component {
           <strong>Review the order below. If it's correct, click the Send It button. If you were looking for a different
             order, <a href="/lemur/order/list">click here</a>.</strong>
         </p>
-        <OrderSummarySnippet order={this.state.order}/>
+        <OrderCompleteSummarySnippet order={this.state.order}/>
         {this.submitForm()}
       </div>
     }

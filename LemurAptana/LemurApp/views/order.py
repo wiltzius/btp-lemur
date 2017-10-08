@@ -156,13 +156,15 @@ def order_book_search(request):
       returnDict['errors'] += [
         "If you're certain the title and author you entered are correct, you can manually add the book below."]
       # noinspection PyProtectedMember
-      book = booktuple(title=request.GET['title'], author=request.GET['author'], isbn='')._asdict()
+      book = booktuple(title=request.GET['title'], author=request.GET['author'], isbn='')
       returnDict['books'] = [book]
       returnDict['custom_book'] = True
     else:
       # If we're missing the author or title prompt the user to enter both before we try making a dummy book
       returnDict['errors'] += [
         "If you enter both a title and an author in the search form you can manually enter the book."]
+  if 'books' in returnDict:
+    returnDict['books'] = [b._asdict() for b in returnDict['books']]
   return JsonResponse(returnDict)
 
 

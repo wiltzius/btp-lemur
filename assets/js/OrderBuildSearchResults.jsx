@@ -1,37 +1,51 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
+import bookSearchService from "./lib/bookSearchService";
 
 export default class OrderBuildSearchResults extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      results: null
+    }
+  }
+
+  componentDidMount() {
+    bookSearchService.sub(results => {
+      this.setState({results})
+    })
+  }
+
   pagination(res) {
     return <div className="pagination">
-      Page {res.currPage} of {res.totalPages}:
+      <span>Page {res.currPage} of {res.totalPages}: </span>
       {res.prevPage > 0 ?
-        <a href="{% append_to_get page=prevPage %}">&lt; previous</a> : '< previous'}
-      |
+        <a onClick={evt => bookSearchService.searchPage(res.prevPage)}>&lt; previous</a>
+        : '< previous'}
+      <span> | </span>
       {res.nextPage <= res.totalPages ?
-        <a href="{% append_to_get page=nextPage %}">next &gt;</a> : 'next &gt;'}
+        <a onClick={evt => bookSearchService.searchPage(res.nextPage)}>next &gt;</a>
+        : 'next >'}
     </div>
   }
 
   errors() {
-    if (this.props.results.errors) {
+    if (this.state.results.errors) {
       return <div>
-        {this.props.results.errors.map(err => <p key={err} className="error">{err}</p>)}
+        {this.state.results.errors.map(err => <p key={err} className="error">{err}</p>)}
       </div>;
     }
     else {
-      return <div></div>
+      return <div/>
     }
   };
 
-
   render() {
-    console.log('rednering with results', this.props.results);
-    if (!this.props.results) {
+    if (!this.state.results) {
       return <div/>;
     }
-    const res = this.props.results;
+    const res = this.state.results;
     return <div>
       {this.errors()}
       <div>

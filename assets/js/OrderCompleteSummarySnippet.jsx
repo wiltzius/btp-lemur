@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class OrderSummarySnippet extends React.Component {
+export default class OrderCompleteSummarySnippet extends React.Component {
   // TODO name this an OrderSummary differently
 
   render() {
