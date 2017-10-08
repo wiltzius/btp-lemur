@@ -17,7 +17,6 @@ urlpatterns = patterns(
   url(r'^order/build/$', 'order.order_build', name='order-build'),
   url(r'^order/booksearch/$', 'order.order_book_search', name='order-booksearch'),
   url(r'^order/create/(?P<inmate_pk>\d+)/$', 'order.order_create', name='order-create'),
-  # url(r'^order/addbook/ASIN/$', 'order_add_book_asin', name='order-add-book-ASIN'),
   url(r'^order/addbook/ISBN/$', 'order.order_add_book_isbn', name='order-add-book-ISBN'),
   url(r'^order/addbook/custom/$', 'order.order_add_book_custom', name='order-add-book-custom'),
   url(r'^order/removebook/(?P<book_pk>\d+)/$',

@@ -1,7 +1,7 @@
 import React from 'react';
 import orderCache from './lib/orderCache';
 
-export default class OrderSummary extends React.Component {
+export default class OrderTopNavSummary extends React.Component {
   // Order summary for the top nav bar
 
   constructor(props) {

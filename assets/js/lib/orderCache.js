@@ -1,4 +1,5 @@
 import coreapi from "./coreapi";
+import $ from "jquery";
 
 class OrderCache {
 
@@ -39,7 +40,15 @@ class OrderCache {
     }).then(() => {
       this.refresh();
     }).catch(err => {
-      // todo real error handling
+      if(err.status === 400) {
+        return $.Deferred().reject("It looks like the ISBN you tried isn't a valid ISBN number (usually 10 or 13 " +
+          "digits, with a correct check digit), try re-typing it or try another method for adding the book to this " +
+          "order");
+      }
+      else if(err.status === 404) {
+        return $.Deferred().reject("No results found for the ISBN you entered, please verify that it was typed " +
+          "correctly, or try another method for adding the book to this order");
+      }
       console.log(err);
     });
   }
@@ -54,6 +63,16 @@ class OrderCache {
       // todo real error handling
       console.log(err);
     });
+  }
+
+  removeBook(book) {
+    $.get('/lemur/order/removebook/' + book.id + '/')
+      .then(() => {
+        this.refresh();
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
 }

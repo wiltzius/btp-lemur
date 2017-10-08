@@ -22,7 +22,10 @@ export default class OrderBuildISBNForm extends React.Component {
   submit(event) {
     event.preventDefault();
     // todo client side validation of ISBN formatting
-    orderCache.addBookISBN(this.state.isbn);
+    this.props.setError([]);
+    orderCache.addBookISBN(this.state.isbn).catch(err => {
+      this.props.setError(err);
+    });
   }
 
   setISBN(event) {

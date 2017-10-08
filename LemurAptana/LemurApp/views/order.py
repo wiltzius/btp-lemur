@@ -41,7 +41,7 @@ def order_add_book_isbn(request):
     if not book:
       raise Http404('No book with that ISBN found')
     order_add_book(request, book)
-    return order_render_as_response(request)
+    return JsonResponse({})
   else:
     # this ASIN isn't well-formatted, so return 400-bad-request error message
     return HttpResponseBadRequest()
@@ -72,7 +72,7 @@ def order_remove_book(request, book_pk):
     logging.info("Tried to remove a book from the current order, but there isn't a current order")
     raise
 
-  return order_render_as_response(request)
+  return JsonResponse({})
 
 
 def order_add_book_custom(request):
@@ -88,31 +88,7 @@ def order_add_book_custom(request):
     # The title is empty, which is the one field we require. We fail
     # silently for now, but could do something here.
     logging.info('Tried to add a custom book with no title to the current order, failing silently')
-  return order_render_as_response(request)
-
-
-def order_render_as_response(request):
-  """Wraps the current order snippet in an HTTP Response for return by view
-     functions (the AJAX ones; its a reponse for the client-side AJAX call)"""
-  return HttpResponse(json.dumps(
-    {'summary': order_get_summary_html(request),
-     'snippet': order_get_snippet_html(request),
-     'warnings': order_get_warnings_html(request), }))
-
-
-def order_get_snippet_html(request):
-  """Renders the current order as a snippet of HTML"""
-  return render_to_string('LemurApp/order_snippet.html', context_instance=RequestContext(request))
-
-
-def order_get_summary_html(request):
-  """Renders the current order summary as a snippet of HTML"""
-  return render_to_string('LemurApp/order_summary.html', context_instance=RequestContext(request))
-
-
-def order_get_warnings_html(request):
-  """Renders the current order's warnings in a list as a snippet of HMTL"""
-  return render_to_string('LemurApp/order_warnings.html', context_instance=RequestContext(request))
+  return JsonResponse({})
 
 
 def order_book_search(request):
@@ -233,31 +209,10 @@ def order_build(request):
         context_dict['errors'] += [
           "If you enter both a title and an author in the search form you can manually enter the book."]
 
-  context_dict['currentOrderHTML'] = order_get_snippet_html(request)
-  context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
   return render_to_response('LemurApp/order_build.html', context_dict, context_instance=RequestContext(request))
 
 
 def order_send_out(request):
-  """Display a page allowing the user to mark an order as sent out. Mark the
-     current order as sent if the form is submitted."""
-  # if request.method == 'POST':  # If the form has been submitted...
-  #   form = forms.SendOutForm(request.POST)  # A form bound to the POST data
-  #   if form.is_valid():  # All validation rules pass
-  #     currentOrder = request.session['order']
-  #     currentOrder.sender = form.cleaned_data['sender']
-  #     currentOrder.date_closed = datetime.now()
-  #     currentOrder.status = 'SENT'
-  #     currentOrder.save()
-  #     # now that we're sent, we can unset the current order
-  #     del request.session['order']
-  #     return redirect(currentOrder)
-  # else:
-  #   if 'order' in request.session:
-  #     form = forms.SendOutForm(instance=request.session['order'])  # An unbound form
-  #   else:
-  #     form = None
-  # return render_to_response('LemurApp/order_sendout.html', {'form': form}, context_instance=RequestContext(request))
   return render_to_response('LemurApp/order_sendout.html', context_instance=RequestContext(request))
 
 

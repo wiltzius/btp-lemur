@@ -1,6 +1,7 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
 import bookSearchService from "./lib/bookSearchService";
+import _ from 'lodash';
 
 export default class OrderBuildSearchResults extends React.Component {
 
@@ -79,7 +80,6 @@ export default class OrderBuildSearchResults extends React.Component {
                       <a onClick={evt => orderCache.addBookISBN(b.isbn)}>add to order</a>
                     </td>
                   }
-                  {/*{% endif %}*/}
                 </tr>
               )}
               </tbody>

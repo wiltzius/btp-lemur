@@ -4,6 +4,7 @@ import OrderBuildISBNForm from "./OrderBuildISBNForm";
 import OrderBuildCustomForm from "./OrderBuildCustomForm";
 import OrderBuildSearchForm from "./OrderBuildSearchForm";
 import OrderBuildSearchResults from "./OrderBuildSearchResults";
+import OrderBuildSummary from "./OrderBuildSummary";
 
 export default class OrderBuild extends React.Component {
 
@@ -11,7 +12,8 @@ export default class OrderBuild extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      order: null
+      order: null,
+      errors: []
     };
   }
 
@@ -24,14 +26,16 @@ export default class OrderBuild extends React.Component {
 
   orderWarnings() {
     return <div id="orderWarnings">
-      {/*todo*/}
-      {/*{{currentOrderWarningsHTML}}*/}
+      <ul className="errors">
+        {this.state.order.warnings.map(w => <li key={w}>{w}</li>)}
+      </ul>
     </div>
   }
 
   bookSearchErrors() {
-    //todo
-    return <ul id="ASINerrors" className="errors"></ul>
+    return <ul id="ASINerrors" className="errors">
+      {this.state.errors.map(err => <li key={err}>{err}</li>)}
+    </ul>
   }
 
   render() {
@@ -43,12 +47,12 @@ export default class OrderBuild extends React.Component {
         {this.orderWarnings()}
         {this.bookSearchErrors()}
         <div id="currentOrder">
-          {/*{{currentOrderHTML}}*/}
+          <OrderBuildSummary/>
         </div>
 
         <strong>Search By:</strong>
-        <OrderBuildISBNForm/>
-        <OrderBuildCustomForm/>
+        <OrderBuildISBNForm setError={err => this.setState({errors: [err]})}/>
+        <OrderBuildCustomForm setError={err => this.setState({errors: [err]})}/>
         <OrderBuildSearchForm updateResults={res => this.setState({searchResults: res})}/>
       </div>
 

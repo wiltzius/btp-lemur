@@ -5,9 +5,13 @@ import OrderReopenLink from './OrderReopenLink.jsx';
 import InmateAddEditForm from './InmateAddEditForm';
 import OrderCompleteForm from './OrderCompleteForm';
 import OrderDetail from "./OrderDetail";
-import OrderSummary from "./OrderSummary";
+import OrderTopNavSummary from "./OrderTopNavSummary";
 import OrderList from "./OrderList";
 import OrderBuild from "./OrderBuild";
+import configure from './lib/csrf-jquery-hack';
+
+configure();
+console.log('hello');
 
 // bootstrap the React app by attaching InmateSearchProxy instance to their placeholders in the html template
 const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
@@ -39,7 +43,7 @@ Array.from(order_detail).forEach((el) => {
 
 const order_summary = document.querySelectorAll('.orderSummary');
 Array.from(order_summary).forEach((el) => {
-  ReactDOM.render(<OrderSummary/>, el);
+  ReactDOM.render(<OrderTopNavSummary/>, el);
 });
 
 const order_list = document.querySelectorAll('.orderListComponent');
