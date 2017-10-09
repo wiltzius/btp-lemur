@@ -32,6 +32,7 @@ export default class InmateDOCAutocomplete extends React.Component {
     }
   }
 
+  // TODO change this to componentDidMount
   componentWillMount() {
     this.debouncedSearchProxy = _.debounce((first, last, inmate_id) => {
       this.searchProxies(first, last, inmate_id);

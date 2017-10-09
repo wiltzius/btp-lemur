@@ -28,8 +28,10 @@
     "webpack-bundle-tracker": "0.0.93"
   },
   "dependencies": {
+    "babel-core": "^6.5.2",
     "classnames": "^2.2.3",
-    "jquery": "^3.2.1",
+    "jquery": "3.2.1",
+    "jsx-control-statements": "^3.2.6",
     "lodash": "4.17.4",
     "react": "16.0.0",
     "react-dom": "16.0.0",

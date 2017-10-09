@@ -121,6 +121,7 @@ REST_FRAMEWORK = {
   'PAGE_SIZE': 10,
   'DEFAULT_AUTHENTICATION_CLASSES': [],
   'DEFAULT_PERMISSION_CLASSES': [],
+  # 'EXCEPTION_HANDLER': 'LemurAptana.LemurApp.exception_handler.custom'
 }
 
 INSTALLED_APPS = (

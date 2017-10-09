@@ -1,4 +1,4 @@
 {
-  "plugins": ["transform-object-rest-spread"],
+  "plugins": ["transform-object-rest-spread", "jsx-control-statements"],
   "presets": ["react"]
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import React from 'react';
 import InmateSearchProxy from './InmateSearchProxy.jsx';
 import OrderReopenLink from './OrderReopenLink.jsx';
 import InmateAddEditForm from './InmateAddEditForm';
@@ -12,6 +13,9 @@ import configure from './lib/csrf-jquery-hack';
 
 configure();
 console.log('hello');
+import InmateSearchDetails from "./InmateSearchDetails";
+import InmateSearch from "./InmateSearch";
+import InmateSearchForm from "./InmateSearchForm";
 
 // bootstrap the React app by attaching InmateSearchProxy instance to their placeholders in the html template
 const inmate_search_proxy_containers = document.querySelectorAll('.inmateSearchProxyContainer');
@@ -55,3 +59,14 @@ const order_build = document.querySelectorAll('.orderBuildComponent');
 Array.from(order_build).forEach((el) => {
   ReactDOM.render(<OrderBuild/>, el);
 });
+
+const inmate_search = document.querySelectorAll('.inmateSearch');
+Array.from(inmate_search).forEach((el) => {
+  // const inmate = el.attributes["data-inmate"].value;
+  ReactDOM.render(<InmateSearch />, el);
+});
+
+// const inmate_search = document.querySelectorAll('.inmateSearchForm');
+// Array.from(inmate_search).forEach((el) => {
+//   ReactDOM.render(<InmateSearchForm />, el);
+// });

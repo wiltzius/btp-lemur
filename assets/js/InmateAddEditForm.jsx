@@ -2,7 +2,7 @@ import React from 'react';
 import coreapi from './lib/coreapi';
 import InmateDOCAutocomplete from './InmateDOCAutocomplete';
 
-export default class InmateSearchProxy extends React.Component {
+export default class InmateAddEditForm extends React.Component {
 
   constructor(props) {
     super(props);
