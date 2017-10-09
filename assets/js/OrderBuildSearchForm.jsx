@@ -15,15 +15,19 @@ export default class OrderBuildSearchForm extends React.Component {
   }
 
   componentDidMount() {
-    orderCache.sub(order => {
+    this.orderUnsub = orderCache.sub(order => {
       this.setState({order: order});
       this.setState({loading: false});
     });
-    if(window.location.hash){
+    if (window.location.hash) {
       this.setState({title: window.location.hash.slice(1)}, () => {
         this.search();
       });
     }
+  }
+
+  componentWillUnmount() {
+    this.orderUnsub();
   }
 
   updateInput(event) {

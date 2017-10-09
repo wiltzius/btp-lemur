@@ -18,13 +18,20 @@ export default class OrderBuild extends React.Component {
   }
 
   componentDidMount() {
-    orderCache.sub(order => {
+    this.orderUnsub = orderCache.sub(order => {
       this.setState({order: order});
       this.setState({loading: false});
     });
   }
 
+  componentWillUnmount() {
+    this.orderUnsub();
+  }
+
   orderWarnings() {
+    if(!this.state.order) {
+      return null;
+    }
     return <div id="orderWarnings">
       <ul className="errors">
         {this.state.order.warnings.map(w => <li key={w}>{w}</li>)}

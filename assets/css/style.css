@@ -189,7 +189,7 @@ input[type="submit"], input[type="button"], button {
   background: #A58848;
 }
 
-#navlist a:link.current, #navlist a:visited.current {
+#navlist a:link.active, #navlist a:visited.active {
   background: #414256;
   color: #A59777;
 }

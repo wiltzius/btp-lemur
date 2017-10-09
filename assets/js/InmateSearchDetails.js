@@ -54,8 +54,12 @@ export default class InmateSearchDetails extends React.Component {
         </If>
       </ul>
       <ul className="inmateHistory">
+        {/* todo DOC lookup */}
         {/*<li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>*/}
         <InmateSearchOrderHistory inmate={inmate} />
+        <li><a href="{% url 'inmate-add' %}?inmate_pk={{ inmate.pk }}">Edit Information</a></li>
+        <li><a href="{% url 'order-create' inmate_pk=inmate.pk %}" className="bold">Start a new order for this
+          inmate</a></li>
       </ul>
     </div>
   }

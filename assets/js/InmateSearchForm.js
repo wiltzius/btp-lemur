@@ -1,8 +1,4 @@
-/**
- * Created by tom on 7/10/17.
- */
-
-import coreapi from './coreapi';
+import coreapi from './lib/coreapi';
 import * as React from "react";
 
 export default class InmateSearchResults extends React.Component {

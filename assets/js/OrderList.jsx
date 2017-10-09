@@ -14,7 +14,7 @@ export default class OrderList extends React.Component {
   }
 
   componentDidMount() {
-    orderCache.sub(order => {
+    this.orderUnsubscribe = orderCache.sub(order => {
       this.setState({order: order});
       this.setState({loading: false});
     });
@@ -22,6 +22,11 @@ export default class OrderList extends React.Component {
     return coreapi.client.action(coreapi.schema, ['orders', 'list'], {status: 'OPEN'}).then(resp => {
       this.setState({orders: resp.results});
     });
+  }
+
+  componentWillUnmount() {
+    console.log('unsubbing');
+    this.orderUnsubscribe();
   }
 
   cleaned() {
@@ -83,12 +88,14 @@ export default class OrderList extends React.Component {
     if (this.state.loading) {
       return <div>Loading...</div>
     }
-    return <div>
-      <h3>Open Orders</h3>
-      {this.cleaned()}
-      {this.orderMsg()}
-      <p>To begin a new order, first <a href="/lemur/inmate/search">find the order's inmate</a>.</p>
-      {this.state.orders.length === 0 ? this.noOpenOrders() : this.openOrderList()}
+    return <div id="searchContainer">
+      <div>
+        <h3>Open Orders</h3>
+        {this.cleaned()}
+        {this.orderMsg()}
+        <p>To begin a new order, first <a href="/lemur/inmate/search">find the order's inmate</a>.</p>
+        {this.state.orders.length === 0 ? this.noOpenOrders() : this.openOrderList()}
+      </div>
     </div>
   }
 }

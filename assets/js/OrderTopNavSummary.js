@@ -12,9 +12,13 @@ export default class OrderTopNavSummary extends React.Component {
   }
 
   componentDidMount() {
-    orderCache.sub(order => {
+    this.orderUnsub = orderCache.sub(order => {
       this.setState({order, loading: false});
     });
+  }
+
+  componentWillUnmount() {
+    this.orderUnsub();
   }
 
   warnings() {

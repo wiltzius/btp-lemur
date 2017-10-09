@@ -24,18 +24,12 @@ class OrderViewSet(viewsets.ModelViewSet):
   queryset = Order.objects.all()
   serializer_class = OrderSerializer
   filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
-  filter_fields = ('status',)
+  filter_fields = ('status', 'inmate')
 
   def update(self, request, *args, **kwargs):
-    # instance = self.get_object()
-    # old_state = instance.status
-    # print('old state was', old_state)
     sup = super(OrderViewSet, self).update(request, *args, **kwargs)
-    # import ipdb; ipdb.set_trace()
-    # print('new state is', instance.status)
     instance = self.get_object()
     if instance.status == 'SENT':
-      # del request.session['order']
       print('removing from session')
       print(request.session.items())
       request.session['order'] = None

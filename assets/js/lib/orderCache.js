@@ -1,5 +1,6 @@
 import coreapi from "./coreapi";
 import $ from "jquery";
+import _ from 'lodash';
 
 class OrderCache {
 
@@ -16,18 +17,24 @@ class OrderCache {
       }
       return null;
     }).then(order => {
-      _.each(this.subs, s => s(order))
+      _.each(this.subs, s => s ? s(order) : null);
     }).catch(err => {
       console.log(err);
     });
   }
 
   sub(fn) {
-    this.subs.push(fn);
+    const idx = this.subs.length;
+    this.subs[idx] = fn;
     if(this.order) {
       fn(this.order);
     }
     this._load();
+
+    // return an unsubscribe function
+    return () => {
+      delete this.subs[idx];
+    }
   }
 
   refresh() {

@@ -22,3 +22,8 @@ export function stringBook(book) {
     return book.title;
   }
 }
+
+
+export function dateFormat(stringDate) {
+  return new Date(stringDate).toLocaleDateString();
+}

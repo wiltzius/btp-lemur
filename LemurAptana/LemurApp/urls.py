@@ -45,3 +45,10 @@ urlpatterns += [
   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
   url(r'^docs/', include_docs_urls(title='My API service'))
 ]
+
+# default catch-all route
+# TODO get rid of all the routes that used to search specific HTML pages
+urlpatterns += patterns(
+  'LemurAptana.LemurApp.views',
+  url(r'^.*$', 'inmate.inmate_search', name='order-current'),
+)

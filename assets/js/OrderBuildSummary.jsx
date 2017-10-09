@@ -12,10 +12,14 @@ export default class OrderBuild extends React.Component {
   }
 
   componentDidMount() {
-    orderCache.sub(order => {
+    this.orderUnsub = orderCache.sub(order => {
       this.setState({order: order});
       this.setState({loading: false});
     });
+  }
+
+  componentWillUnmount() {
+    this.orderUnsub();
   }
 
   render() {

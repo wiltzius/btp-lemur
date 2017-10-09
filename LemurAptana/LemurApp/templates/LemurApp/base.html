@@ -17,7 +17,6 @@
   {% load staticfiles %}
   <script src="{% static 'rest_framework/js/coreapi-0.1.0.js' %}"></script>
   <script src="{% url 'api-docs:schema-js' %}"></script>
-  {% block extra_head %}{% endblock %}
 </head>
 
 <body>
@@ -25,41 +24,8 @@
 <div id="container">
   <!-- restricted books header -->
   <div id="restricted">{{ banner_message }}&nbsp;</div>
-  <div id="topOrderSummary"><div class="orderSummary"></div></div>
   <!-- container to pad everything in the main body of the page -->
-  <div id="containerpadding">
-    <!-- begin navbar/header -->
-    <h1>{% block header_title %}Books to Prisoners{% endblock %}</h1>
-    <ul id="navlist">
-      <li id="active">
-        <a href="{% url 'inmate-search' %}" class="{% block current_inmates %}notcurrent{% endblock %}">search
-          inmates</a>
-      </li>
-      <li>
-        <a href="{% url 'inmate-add' %}" class="{% block current_inmates_add %}notcurrent{% endblock %}">
-          {% block inmate_tab_name %}add inmate{% endblock %}</a>
-      </li>
-      <li>
-        <a href="{% url 'order-oldlist' %}" class="{% block current_order_list %}notcurrent{% endblock %}">select existing
-          order</a>
-      </li>
-      <li>
-        <a href="{% url 'order-build' %}" class="{% block current_build_order %}notcurrent{% endblock %}">build
-          order</a>
-      </li>
-      <li>
-        <a href="{% url 'order-send-out' %}" class="{% block current_order_sendout %}notcurrent{% endblock %}">send out
-          order</a>
-      </li>
-    </ul>
-    <div id="navsep">
-      &nbsp;
-    </div>
-    <!-- end nav bar/header -->
-
-    {% block content %}{% endblock %}
-
-  </div>
+  <div id="reactApp"></div>
   <!-- footer -->
   <div id="footer">
     BTP "Lemur" Inventory Manager &mdash; 2017

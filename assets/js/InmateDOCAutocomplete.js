@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import $ from 'jquery';
 
 export default class InmateDOCAutocomplete extends React.Component {
 
@@ -16,6 +17,8 @@ export default class InmateDOCAutocomplete extends React.Component {
       last_name: last,
       inmate_id: inmate_id
     }).then(resp => {
+      // todo if navigating fast its possible to leave the page before this returns, and when it returns setState
+      // complains because the component is unmounted...
       this.setState({loading: false});
       this.setState({
         proxy_search_results: resp.proxy_search_results

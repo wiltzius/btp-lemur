@@ -2,6 +2,7 @@ import React from 'react';
 import coreapi from './lib/coreapi';
 import OrderCompleteSummarySnippet from "./OrderCompleteSummarySnippet";
 import orderCache from "./lib/orderCache";
+import $ from 'jquery';
 
 export default class OrderCompleteForm extends React.Component {
 
@@ -14,10 +15,14 @@ export default class OrderCompleteForm extends React.Component {
   }
 
   componentDidMount() {
-    orderCache.sub(order => {
+    this.orderUnsub = orderCache.sub(order => {
       this.setState({order: order});
       this.setState({loading: false});
     });
+  }
+
+  componentWillUnmount() {
+    this.orderUnsub();
   }
 
   noOrderSnippet() {
@@ -25,10 +30,12 @@ export default class OrderCompleteForm extends React.Component {
       return null;
     }
     else {
-      return <p>
-        You aren't currently working on an order. <a href="/lemur/inmate/search">Find an inmate to start a new order</a>,
-        or <a href="/lemur/order/list">look at the list of currently open orders.</a>
-      </p>
+      return <div id="searchContainer">
+        <p>
+          You aren't currently working on an order. <a href="/lemur/inmate/search">Find an inmate to start a new
+          order</a>, or <a href="/lemur/order/list">look at the list of currently open orders.</a>
+        </p>
+      </div>
     }
   }
 
@@ -73,13 +80,13 @@ export default class OrderCompleteForm extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <div>Loading...</div>
+      return <div id="searchContainer">Loading...</div>
     }
     else if (!this.state.order) {
       return this.noOrderSnippet()
     }
     else {
-      return <div>
+      return <div id="searchContainer">
         <h3>Order details</h3>
         <p>
           <strong>Review the order below. If it's correct, click the Send It button. If you were looking for a different
