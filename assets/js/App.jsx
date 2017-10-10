@@ -38,7 +38,7 @@ export default class App extends React.Component {
           &nbsp;
         </div>
         <Route path="/inmate/search" component={InmateSearch}/>
-        <Route path="/inmate/add" component={InmateAddEditForm}/>
+        <Route path="/inmate/add/:inmate_id" component={InmateAddEditForm}/>
         <Route path="/order/list" component={OrderList}/>
         <Route path="/order/build" component={OrderBuild}/>
         <Route path="/order/complete" component={OrderCompleteForm}/>

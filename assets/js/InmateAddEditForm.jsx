@@ -24,9 +24,9 @@ export default class InmateAddEditForm extends React.Component {
   componentDidMount() {
     // load the facilities list
     coreapi.client.action(coreapi.schema, ['facilities', 'list']).then(res => this.setState({facilities: res['results']}));
+
     // if we're in edit mode, load the existing inmate
-    const params = new URLSearchParams(window.location.search);
-    const pk = params.get('inmate_pk');
+    const pk = this.props.match.params.inmate_id;
     if (pk) {
       console.log('pk is', pk);
       coreapi.client.action(coreapi.schema, ['inmates', 'read'], {id: pk}).then(res => {
@@ -84,6 +84,7 @@ export default class InmateAddEditForm extends React.Component {
   }
 
   render() {
+    console.log('got', this.props.match);
     return <div id="searchContainer">
       <form onSubmit={this.handleSubmit}>
         <div id="searchBoxLeft">

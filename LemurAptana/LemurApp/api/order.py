@@ -4,12 +4,13 @@ import django_filters.rest_framework
 
 from LemurAptana.LemurApp.api.book import BookSerializer
 from LemurAptana.LemurApp.api.inmate import InmateSerializer
-from LemurAptana.LemurApp.models import Order
+from LemurAptana.LemurApp.models import Order, Inmate
 
 
 class OrderSerializer(serializers.ModelSerializer):
   books = BookSerializer(many=True, read_only=True)
   inmate = InmateSerializer(many=False, read_only=True)
+  inmate_id = serializers.PrimaryKeyRelatedField(queryset=Inmate.objects.all(), source='inmate', write_only=True)
   warnings = SerializerMethodField()
 
   def get_warnings(self, order):
@@ -17,7 +18,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Order
-    fields = '__all__'
+    fields = ['books', 'inmate', 'warnings', 'date_opened', 'date_closed', 'notes', 'sender', 'status', 'id',
+              'inmate_id']
 
 
 class OrderViewSet(viewsets.ModelViewSet):

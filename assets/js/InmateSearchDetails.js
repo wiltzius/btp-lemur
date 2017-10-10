@@ -3,9 +3,11 @@ import React from 'react';
 import If from 'jsx-control-statements';
 import {stringBook, unorderedList} from "./util";
 import InmateSearchOrderHistory from "./InmateSearchOrderHistory";
+import {Link, withRouter} from "react-router-dom";
+import orderCache from "./lib/orderCache";
 // import InmateSearchProxy from "./InmateAddEditForm";
 
-export default class InmateSearchDetails extends React.Component {
+class InmateSearchDetails extends React.Component {
 
   dictWarning (inmate) {
     if (inmate.dictionaries.length === 1) {
@@ -57,12 +59,21 @@ export default class InmateSearchDetails extends React.Component {
         {/* todo DOC lookup */}
         {/*<li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>*/}
         <InmateSearchOrderHistory inmate={inmate} />
-        <li><a href="{% url 'inmate-add' %}?inmate_pk={{ inmate.pk }}">Edit Information</a></li>
-        <li><a href="{% url 'order-create' inmate_pk=inmate.pk %}" className="bold">Start a new order for this
-          inmate</a></li>
+        <li>
+          <Link to={"/inmate/add/" + inmate.id}>Edit Information</Link>
+        </li>
+        <li>
+          <a onClick={evt => this.newOrder(inmate.id)} className="bold">Start a new order for this inmate</a>
+        </li>
       </ul>
     </div>
   }
 
+  newOrder(inmate_id) {
+    orderCache.createAndSetOrder(inmate_id).then(() => {
+      this.props.history.push('/order/build');
+    });
+  }
 }
 
+export default withRouter(InmateSearchDetails)

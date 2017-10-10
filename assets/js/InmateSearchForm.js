@@ -1,7 +1,7 @@
 import coreapi from './lib/coreapi';
 import * as React from "react";
 
-export default class InmateSearchResults extends React.Component {
+export default class InmateSearchForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -32,7 +32,7 @@ export default class InmateSearchResults extends React.Component {
 
   makeInput(label, name) {
     return <label>
-      {label}
+      {label}&nbsp;
       <input type="text"
              name={name}
              value={this.state.model[name]}
@@ -42,10 +42,8 @@ export default class InmateSearchResults extends React.Component {
 
   render() {
     return <form onSubmit={this.search}>
-      {/*{% csrf_token %}*/}
       <div id="searchBoxLeft">
         <div className="fieldWrapper">
-          {/*{{ form.inmate_id.label_tag }} {{ form.inmate_id }}*/}
           {this.makeInput("Inmate ID", "inmate_id")}
           <p className="note">e.g. K12345</p>
         </div>

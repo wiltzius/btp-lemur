@@ -82,6 +82,21 @@ class OrderCache {
       })
   }
 
+  createOrder(inmate_id) {
+    return coreapi.client.action(coreapi.schema, ['orders', 'create'], {
+      inmate_id,
+      status: 'OPEN'
+    })
+  }
+
+  setOrder(order_id) {
+    // todo make order set just return the new order to avoid this round-trip... or just use from createOrder?
+    return $.get(`/lemur/order/set/${order_id}/`).then(() => this.refresh())
+  }
+
+  createAndSetOrder(inmate_id) {
+    return this.createOrder(inmate_id).then(new_order => this.setOrder(new_order.id))
+  }
 }
 
 export default new OrderCache();
