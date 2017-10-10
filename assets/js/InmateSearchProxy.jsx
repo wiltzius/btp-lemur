@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import $ from 'jquery';
 
 export default class InmateSearchProxy extends React.Component {
 
@@ -23,12 +24,13 @@ export default class InmateSearchProxy extends React.Component {
   }
 
   componentDidMount() {
-    $.get('/lemur/inmate_search_proxy/' + this.props.inmatePk, (results) => {
+    $.get(`/lemur/inmate_search_proxy/${this.props.inmatePk}/`, (results) => {
       this.setState({
         parole_single: results.parole_single || '--',
         parent_institution: results.parent_institution || "unknown"
       });
     }, "json");
+    // todo error handling here, otherwise it just says "loading" forever
   }
 
   render() {

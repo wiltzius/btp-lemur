@@ -32,7 +32,8 @@ export default class OrderReopenLink extends React.Component {
   }
 
   navigate() {
-    window.location = `/order/reopen/${this.props.orderPk }/`;
+    // todo make this AJAX and then a router navigate, not a hard navigate
+    window.location = `/lemur/order/reopen/${this.props.orderPk }/`;
   }
 
   render() {

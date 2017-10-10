@@ -5,29 +5,37 @@ import {stringBook, unorderedList} from "./util";
 import InmateSearchOrderHistory from "./InmateSearchOrderHistory";
 import {Link, withRouter} from "react-router-dom";
 import orderCache from "./lib/orderCache";
+import InmateSearchProxy from "./InmateSearchProxy";
+
 // import InmateSearchProxy from "./InmateAddEditForm";
 
 class InmateSearchDetails extends React.Component {
 
-  dictWarning (inmate) {
+  dictWarning(inmate) {
     if (inmate.dictionaries.length === 1) {
-      return <li>Patron already received dictionary ({inmate.dictionaries[0] })</li>
+      return <li>Patron already received dictionary ({inmate.dictionaries[0]})</li>
     }
-    else if(inmate.dictionaries.length > 1) {
+    else if (inmate.dictionaries.length > 1) {
       return <li>Patron has already received multiple dictionaries.
         <a href="javascript:$('#inmateResult{ inmate.pk } .dictionaries').toggle('fast');">Click to expand</a>
         <ul class="dictionaries" style="display:none;">
-          { unorderedList(inmate.dictionaries.map(d => stringBook(d))) }
+          {unorderedList(inmate.dictionaries.map(d => stringBook(d)))}
         </ul>
       </li>
     }
+  }
+
+  newOrder(inmate_id) {
+    orderCache.createAndSetOrder(inmate_id).then(() => {
+      this.props.history.push('/order/build');
+    });
   }
 
   render() {
     const inmate = this.props.inmate;
 
     return <div className="inmateResult" id="inmateResult{{ inmate.pk }}">
-      <h3>{ inmate.full_name }</h3>
+      <h3>{inmate.full_name}</h3>
 
       {/* -- dictionary and other warnings */}
       <ul className="inmateErrors error">
@@ -36,29 +44,29 @@ class InmateSearchDetails extends React.Component {
 
       {/* Inmate DOC details box */}
       {/*<div class="inmateSearchProxyContainer" data-inmate-id="{{ inmate.pk }}"></div>*/}
-      {/*<InmateSearchProxy inmate-id={inmate.pk} />*/}
+      <InmateSearchProxy inmatePk={inmate.id} />
 
-       {/*Inmate data from Lemur */}
+      {/*Inmate data from Lemur */}
       <ul className="inmateDetails">
-        <li><span className="resultLabel">Inmate ID:</span><span className="resultValue">{ inmate.inmate_id }</span>
+        <li><span className="resultLabel">Inmate ID:</span><span className="resultValue">{inmate.inmate_id}</span>
         </li>
         <li>
-          <span className="resultLabel">Facility:</span><span className="resultValue">{ inmate.facility.name }</span>
+          <span className="resultLabel">Facility:</span><span className="resultValue">{inmate.facility.name}</span>
           <If condition={inmate.facility.otherRestrictions}>
             <span>({inmate.facility.otherRestrictions})</span>
           </If>
         </li>
 
-        <If condition={ inmate.address }>
+        <If condition={inmate.address}>
           <li>
-            <span className="resultLabel">Address:</span><span className="resultValue">{inmate.address } </span>
+            <span className="resultLabel">Address:</span><span className="resultValue">{inmate.address} </span>
           </li>
         </If>
       </ul>
       <ul className="inmateHistory">
         {/* todo DOC lookup */}
         {/*<li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>*/}
-        <InmateSearchOrderHistory inmate={inmate} />
+        <InmateSearchOrderHistory inmate={inmate}/>
         <li>
           <Link to={"/inmate/add/" + inmate.id}>Edit Information</Link>
         </li>
@@ -67,12 +75,6 @@ class InmateSearchDetails extends React.Component {
         </li>
       </ul>
     </div>
-  }
-
-  newOrder(inmate_id) {
-    orderCache.createAndSetOrder(inmate_id).then(() => {
-      this.props.history.push('/order/build');
-    });
   }
 }
 

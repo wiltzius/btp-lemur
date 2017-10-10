@@ -16,6 +16,7 @@ export default class InmateSearchOrderHistory extends React.Component {
 
   componentDidMount() {
     // load the order history of this inmate
+    // TODO only do this if the thing is opened?
     coreapi.boundAction(['orders', 'list'], {'inmate': this.props.inmate.id}).then(results => {
       this.setState({results: results.results, loading: false});
     });
