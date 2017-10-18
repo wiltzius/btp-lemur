@@ -78,6 +78,13 @@ export default class OrderCompleteForm extends React.Component {
     else if (!this.state.order) {
       return this.noOrderSnippet()
     }
+    else if(!this.state.order.books.length) {
+      return <div>
+        <strong>
+          There are no books in this order. <a href="/lemur/order/build">Add some</a> before sending it out.
+        </strong>
+      </div>
+    }
     else {
       return <div>
         <h3>Order details</h3>
