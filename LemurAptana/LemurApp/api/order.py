@@ -24,18 +24,10 @@ class OrderViewSet(viewsets.ModelViewSet):
   serializer_class = OrderSerializer
 
   def update(self, request, *args, **kwargs):
-    # instance = self.get_object()
-    # old_state = instance.status
-    # print('old state was', old_state)
     sup = super(OrderViewSet, self).update(request, *args, **kwargs)
-    # import ipdb; ipdb.set_trace()
-    # print('new state is', instance.status)
+    # hax
     instance = self.get_object()
     if instance.status == 'SENT':
-      # del request.session['order']
-      print('removing from session')
-      print(request.session.items())
       request.session['order'] = None
-      print(request.session.items())
 
     return sup

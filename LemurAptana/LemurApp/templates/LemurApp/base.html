@@ -9,8 +9,8 @@
 <head>
   <title>BTP | {% block title %}Books to Prisoners{% endblock %}</title>
   <link rel="stylesheet" href="/static/css/style.css"/>
-{#  <script src="https://cdn.ravenjs.com/3.16.1/raven.min.js" crossorigin="anonymous"></script>#}
-{#  <script>Raven.config('{% sentry_public_dsn %}').install()</script>#}
+  <script src="https://cdn.ravenjs.com/3.16.1/raven.min.js" crossorigin="anonymous"></script>
+  <script>Raven.config('{% sentry_public_dsn %}').install()</script>
   <!-- TODO do we need these libraries loaded like this anymore, since we have webpack bundling now? -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="/static/js-vendor/csrf-jquery-hack.js"></script>
@@ -28,9 +28,6 @@
   <!-- restricted books header -->
   <div id="restricted">{{ banner_message }}&nbsp;</div>
   <!-- order summary -->
-  <!-- <div id="topOrderSummary">
--->
-{#  {% include "LemurApp/order_summary.html" %}</div>#}
   <div id="topOrderSummary"><div class="orderSummary"></div></div>
   <!-- container to pad everything in the main body of the page -->
   <div id="containerpadding">
