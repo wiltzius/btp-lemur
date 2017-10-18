@@ -99,17 +99,17 @@
                 <ul class="historyList" style="display:none;">
                   {% for order in inmate.orders.all %}
                     <li>
-                      <a href="javascript:$('#orderList{{ order.pk }}').toggle('fast')">Order #{{ order.pk }}</a>,
+                      <a href="{% url 'order-detail' pk=order.pk %}">Order #{{ order.pk }}</a>,
                       (<span class="orderReopenLink"
                              data-order-href="{% url 'order-reopen' order_pk=order.pk %}"></span>)
                       opened {{ order.date_opened|date:"M jS, Y" }}{% if order.status == 'SENT' %}, closed
                       {{ order.date_closed|date:"M jS, Y" }}{% if order.sender %} by {{ order.sender }}
                       {% endif %}{% endif %}
-                      <ul class="orderlist" id="orderList{{ order.pk }}" style="display:none;">
-                        {% for book in order.books.all %}
-                          <li>{{ book.title }}</li>
-                        {% endfor %}
-                      </ul>
+{#                      <ul class="orderlist" id="orderList{{ order.pk }}" style="display:none;">#}
+{#                        {% for book in order.books.all %}#}
+{#                          <li>{{ book.title }}</li>#}
+{#                        {% endfor %}#}
+{#                      </ul>#}
                     </li>
                   {% endfor %}
                 </ul>
