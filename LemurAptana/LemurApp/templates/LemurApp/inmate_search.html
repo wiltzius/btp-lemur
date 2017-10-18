@@ -105,11 +105,6 @@
                       opened {{ order.date_opened|date:"M jS, Y" }}{% if order.status == 'SENT' %}, closed
                       {{ order.date_closed|date:"M jS, Y" }}{% if order.sender %} by {{ order.sender }}
                       {% endif %}{% endif %}
-{#                      <ul class="orderlist" id="orderList{{ order.pk }}" style="display:none;">#}
-{#                        {% for book in order.books.all %}#}
-{#                          <li>{{ book.title }}</li>#}
-{#                        {% endfor %}#}
-{#                      </ul>#}
                     </li>
                   {% endfor %}
                 </ul>
