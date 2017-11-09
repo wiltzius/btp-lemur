@@ -3,6 +3,9 @@ import os
 
 from .settings_secret import *
 
+os.path.join(os.path.dirname(__file__), 'LemurApp')
+FORCE_SCRIPT_NAME = ''
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
