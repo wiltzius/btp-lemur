@@ -32,7 +32,7 @@ export default class InmateSearchOrderHistory extends React.Component {
   render() {
     return <li>
       <a onClick={this.toggleHidden.bind(this)}>History</a>
-      <If condition={this.state.hidden}>
+      <If condition={!this.state.hidden}>
         <ul className="historyList">
           <If condition={this.state.loading === false}>
             <For each="order"

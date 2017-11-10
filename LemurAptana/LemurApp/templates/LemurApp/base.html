@@ -1,19 +1,13 @@
-{% load render_bundle from webpack_loader %}
-{% load raven %}
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!DOCTYPE html>
+<html>
 <head>
   <title>BTP | {% block title %}Books to Prisoners{% endblock %}</title>
   <link rel="stylesheet" href="/static/css/style.css"/>
 
-{#  <script src="https://cdn.ravenjs.com/3.16.1/raven.min.js" crossorigin="anonymous"></script>#}
-{#  <script>Raven.config('{% sentry_public_dsn %}').install()</script>#}
+  {% load raven %}
+  {#  <script src="https://cdn.ravenjs.com/3.16.1/raven.min.js" crossorigin="anonymous"></script>#}
+  {#  <script>Raven.config('{% sentry_public_dsn %}').install()</script>#}
 
-  <!-- todo can probably get rid of static files soon -->
   {% load staticfiles %}
   <script src="{% static 'rest_framework/js/coreapi-0.1.0.js' %}"></script>
   <script src="{% url 'api-docs:schema-js' %}"></script>
@@ -32,6 +26,7 @@
   </div>
 </div>
 
+{% load render_bundle from webpack_loader %}
 {% render_bundle 'main' %}
 </body>
 </html>

@@ -1,13 +1,15 @@
 import React from 'react';
-import {BrowserRouter, Route, NavLink} from 'react-router-dom';
+import {Route, NavLink} from 'react-router-dom';
+import {withRouter} from 'react-router';
 import InmateSearch from "./InmateSearch";
 import InmateAddEditForm from "./InmateAddEditForm";
 import OrderBuild from "./OrderBuild";
 import OrderCompleteForm from "./OrderCompleteForm";
 import OrderList from "./OrderList";
 import OrderTopNavSummary from "./OrderTopNavSummary";
+import _ from 'lodash';
 
-export default class App extends React.Component {
+class App extends React.Component {
 
   render() {
     return <div>
@@ -15,23 +17,49 @@ export default class App extends React.Component {
         <OrderTopNavSummary/>
       </div>
       <div id="containerpadding">
-        <h1>TODO set title here and in browser window</h1>
+        {/*TODO set this title in the <title> of the page too*/}
+        <h1>{_.get(this.props.location.state, 'title')}</h1>
         <ul id="navlist">
           <li>
-            <NavLink to="/inmate/search">search inmates</NavLink>
+            <NavLink to={{
+              pathname: "/inmate/search",
+              state: {
+                title: "Search Inmates"
+              }
+            }}>search inmates</NavLink>
           </li>
           <li>
             {/*todo make this "edit inmate" if we're editing */}
-            <NavLink to="/inmate/add">add inmate</NavLink>
+            <NavLink to={{
+              pathname: "/inmate/add",
+              state: {
+                title: "Add Inmate"
+              }
+            }}>add inmate</NavLink>
           </li>
           <li>
-            <NavLink to="/order/list">select existing order</NavLink>
+            <NavLink to={{
+              pathname: "/order/list",
+              state: {
+                title: "Select Existing Order"
+              }
+            }}>select existing order</NavLink>
           </li>
           <li>
-            <NavLink to="/order/build">build order</NavLink>
+            <NavLink to={{
+              pathname: "/order/build",
+              state: {
+                title: "Build Order"
+              }
+            }}>build order</NavLink>
           </li>
           <li>
-            <NavLink to="/order/complete">send out order</NavLink>
+            <NavLink to={{
+              pathname: "/order/complete",
+              state: {
+                title: "Send Out Order"
+              }
+            }}>send out order</NavLink>
           </li>
         </ul>
         <div id="navsep">
@@ -45,4 +73,7 @@ export default class App extends React.Component {
       </div>
     </div>
   }
+
 }
+
+export default withRouter(App)
