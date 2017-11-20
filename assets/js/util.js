@@ -1,8 +1,4 @@
-/**
- * Created by tom on 7/10/17.
- */
-
-import * as React from "react";
+import React from "react";
 
 export function unorderedList(items) {
   return <ul>

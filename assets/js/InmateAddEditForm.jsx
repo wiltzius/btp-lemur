@@ -79,6 +79,7 @@ export default class InmateAddEditForm extends React.Component {
       p = coreapi.client.action(schema, ['inmates', 'create'], this.state.model);
     }
     p.then(resp => {
+      //TODO change
       window.location.assign(`/lemur/inmate/search/?inmate_id=${resp.inmate_id}`);
     });
   }

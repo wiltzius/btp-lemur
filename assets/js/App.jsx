@@ -9,7 +9,26 @@ import OrderList from "./OrderList";
 import OrderTopNavSummary from "./OrderTopNavSummary";
 import _ from 'lodash';
 
+const NAVSTATES = {
+  search: {
+    pathname: "/inmate/search",
+    state: {
+      title: "Search Inmates"
+    }
+  },
+
+};
+
 class App extends React.Component {
+
+  componentDidMount() {
+    // debugger
+  }
+
+  get title() {
+    if(this.props.match)
+    return _.get(this.props.location.state, 'title')
+  }
 
   render() {
     return <div>
@@ -18,15 +37,10 @@ class App extends React.Component {
       </div>
       <div id="containerpadding">
         {/*TODO set this title in the <title> of the page too*/}
-        <h1>{_.get(this.props.location.state, 'title')}</h1>
+        <h1>{this.title}</h1>
         <ul id="navlist">
           <li>
-            <NavLink to={{
-              pathname: "/inmate/search",
-              state: {
-                title: "Search Inmates"
-              }
-            }}>search inmates</NavLink>
+            <NavLink to={NAVSTATES.search}>{NAVSTATES.search.state.title.toLowerCase()}</NavLink>
           </li>
           <li>
             {/*todo make this "edit inmate" if we're editing */}
@@ -66,7 +80,7 @@ class App extends React.Component {
           &nbsp;
         </div>
         <Route path="/inmate/search" component={InmateSearch}/>
-        <Route path="/inmate/add/:inmate_id" component={InmateAddEditForm}/>
+        <Route path="/inmate/add/:inmate_id?" component={InmateAddEditForm}/>
         <Route path="/order/list" component={OrderList}/>
         <Route path="/order/build" component={OrderBuild}/>
         <Route path="/order/complete" component={OrderCompleteForm}/>
