@@ -7,25 +7,24 @@ class OrderCache {
   constructor() {
     this.subs = [];
     this.order = null;
+    this._cached_request = null;
   }
 
   _load() {
-    // todo cache outstanding api calls so we don't issue multiple
-    // todo throttle the reloading behavior so its at most once a second or something
-    $.getJSON('/lemur/order/current/')/*.then(order => {
-      const order_id = resp.current_order_id;
-      if(order_id) {
-        return coreapi.client.action(coreapi.schema, ['orders', 'read'], {id: order_id});
-      }
-      return null;
-    })*/.then(order => {
-      if(_.isEmpty(order)) {
-        order = null;
-      }
-      this._set(order);
-    }).catch(err => {
-      console.log(err);
-    });
+    // todo if we're hitting the server too often, debounce the reloading behavior to at most once a second or something
+    if (!this._cached_request) {
+      this._cached_request = $.getJSON('/lemur/order/current/')
+          .then(order => {
+            if (_.isEmpty(order)) {
+              order = null;
+            }
+            this._set(order);
+          }).catch(err => {
+            console.log(err);
+          }).then(() => {
+            this._cached_request = null;
+          });
+    }
   }
 
   _set(order) {
@@ -36,7 +35,7 @@ class OrderCache {
   sub(fn) {
     const idx = this.subs.length;
     this.subs[idx] = fn;
-    if(this.order) {
+    if (this.order) {
       fn(this.order);
     }
     this._load();
@@ -57,14 +56,14 @@ class OrderCache {
     }).then(() => {
       this.refresh();
     }).catch(err => {
-      if(err.status === 400) {
+      if (err.status === 400) {
         return $.Deferred().reject("It looks like the ISBN you tried isn't a valid ISBN number (usually 10 or 13 " +
-          "digits, with a correct check digit), try re-typing it or try another method for adding the book to this " +
-          "order");
+            "digits, with a correct check digit), try re-typing it or try another method for adding the book to this " +
+            "order");
       }
-      else if(err.status === 404) {
+      else if (err.status === 404) {
         return $.Deferred().reject("No results found for the ISBN you entered, please verify that it was typed " +
-          "correctly, or try another method for adding the book to this order");
+            "correctly, or try another method for adding the book to this order");
       }
       console.log(err);
     });
@@ -84,12 +83,12 @@ class OrderCache {
 
   removeBook(book) {
     $.get('/lemur/order/removebook/' + book.id + '/')
-      .then(() => {
-        this.refresh();
-      })
-      .catch(err => {
-        console.log(err);
-      })
+        .then(() => {
+          this.refresh();
+        })
+        .catch(err => {
+          console.log(err);
+        })
   }
 
   createOrder(inmate_id) {
