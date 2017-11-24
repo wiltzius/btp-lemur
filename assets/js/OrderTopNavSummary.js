@@ -1,5 +1,6 @@
 import React from 'react';
 import orderCache from './lib/orderCache';
+import _ from 'lodash';
 
 export default class OrderTopNavSummary extends React.Component {
   // Order summary for the top nav bar
@@ -22,7 +23,7 @@ export default class OrderTopNavSummary extends React.Component {
   }
 
   warnings() {
-    if (this.state.order.warnings) {
+    if (!_.isEmpty(this.state.order.warnings)) {
       return <span>&nbsp;&nbsp;<span className="error">(<a href="/lemur/order/build">warnings</a>)</span></span>
     }
   }

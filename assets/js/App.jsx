@@ -79,7 +79,7 @@ class App extends React.Component {
         <div id="navsep">
           &nbsp;
         </div>
-        <Route path="/inmate/search" component={InmateSearch}/>
+        <Route path="/inmate/search/:inmate_id?" component={InmateSearch}/>
         <Route path="/inmate/add/:inmate_id?" component={InmateAddEditForm}/>
         <Route path="/order/list" component={OrderList}/>
         <Route path="/order/build" component={OrderBuild}/>

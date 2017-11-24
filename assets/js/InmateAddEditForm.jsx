@@ -1,8 +1,9 @@
 import React from 'react';
 import coreapi from './lib/coreapi';
 import InmateDOCAutocomplete from './InmateDOCAutocomplete';
+import { withRouter } from 'react-router-dom';
 
-export default class InmateAddEditForm extends React.Component {
+export default withRouter(class InmateAddEditForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -28,9 +29,7 @@ export default class InmateAddEditForm extends React.Component {
     // if we're in edit mode, load the existing inmate
     const pk = this.props.match.params.inmate_id;
     if (pk) {
-      console.log('pk is', pk);
       coreapi.client.action(coreapi.schema, ['inmates', 'read'], {id: pk}).then(res => {
-        console.log(res);
         this.setState({model: res})
       });
       this.setState({
@@ -59,7 +58,7 @@ export default class InmateAddEditForm extends React.Component {
       inmate_id: doc_inmate.inmate_id,
     };
     if (doc_inmate.facility) {
-      // todo
+      // FIXME needs to deal with ids now
       newModel.facility = doc_inmate.facility
     }
     this.setState({
@@ -81,13 +80,12 @@ export default class InmateAddEditForm extends React.Component {
       p = coreapi.client.action(schema, ['inmates', 'create'], this.state.model);
     }
     p.then(resp => {
-      //TODO change
-      window.location.assign(`/lemur/inmate/search/?inmate_id=${resp.inmate_id}`);
+      this.props.history.push(`/inmate/search/${resp.inmate_id}`);
+      // window.location.assign(`/lemur/inmate/search/?inmate_id=${resp.inmate_id}`);
     });
   }
 
   render() {
-    console.log('got', this.props.match);
     // noinspection EqualityComparisonWithCoercionJS
     return <div id="searchContainer">
       <form onSubmit={this.handleSubmit}>
@@ -157,4 +155,4 @@ export default class InmateAddEditForm extends React.Component {
       </form>
     </div>
   }
-}
+})

@@ -1,17 +1,35 @@
 import coreapi from './lib/coreapi';
 import * as React from "react";
+import {withRouter} from 'react-router-dom';
 
-export default class InmateSearchForm extends React.Component {
+export default withRouter(class InmateSearchForm extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      model: {}
+      model: {
+        inmate_id: '',
+        first_name: '',
+        last_name: ''
+      }
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.search = this.search.bind(this);
+  }
+
+  componentDidMount() {
+    const inmate_id_param = this.props.match.params.inmate_id;
+    if (inmate_id_param) {
+      this.setState({
+        model: {
+          ...this.state.model,
+          inmate_id: inmate_id_param
+        }
+      //  FIXME this api call is reloading the page once???
+      }, () => this.searchApi())
+    }
   }
 
   handleInputChange(event) {
@@ -24,8 +42,11 @@ export default class InmateSearchForm extends React.Component {
 
   search(event) {
     event.preventDefault();
+    this.searchApi();
+  }
+
+  searchApi() {
     coreapi.boundAction(['inmates', 'list'], {'search': _.values(this.state.model).join(' ')}).then(res => {
-      console.log(res);
       this.props.onResultsChange(res.results);
     });
   }
@@ -36,7 +57,7 @@ export default class InmateSearchForm extends React.Component {
       <input type="text"
              name={name}
              value={this.state.model[name]}
-             onChange={this.handleInputChange}/>
+             onChange={this.handleInputChange.bind(this)}/>
     </label>
   }
 
@@ -63,4 +84,4 @@ export default class InmateSearchForm extends React.Component {
 
   }
 
-}
+})
