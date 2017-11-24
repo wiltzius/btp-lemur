@@ -9,8 +9,8 @@ from django.conf.urls import *
 urlpatterns = patterns(
   'LemurAptana.LemurApp.views',
   url(r'^$', 'inmate.inmate_search', name='index'),
-  url(r'^inmate/search/$', 'inmate.inmate_search', name='inmate-search'),
-  url(r'^inmate/search/(?P<pk>\d+)/$', 'inmate.inmate_search', name='inmate-detail'),
+  # url(r'^inmate/search/$', 'inmate.inmate_search', name='inmate-search'),
+  # url(r'^inmate/search/(?P<pk>\d+)/$', 'inmate.inmate_search', name='inmate-detail'),
   url(r'^inmate/add/searched/$', 'inmate.inmate_add_searched', name='inmate-add-searched'),
   url(r'^inmate_search_proxy/(?P<pk>\d+)/$', 'inmate.inmate_search_proxy', name='inmate-search-proxy'),
   url(r'^inmate/doc_autocomplete/$', 'inmate.inmate_doc_autocomplete', name='inmate-search-autocomplete'),

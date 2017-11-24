@@ -3,11 +3,12 @@ from rest_framework import serializers, viewsets
 from rest_framework.filters import SearchFilter
 
 from LemurAptana.LemurApp.api.facility import FacilitySerializer
-from LemurAptana.LemurApp.models import Inmate
+from LemurAptana.LemurApp.models import Inmate, Facility
 
 
 class InmateSerializer(serializers.ModelSerializer, QueryFieldsMixin):
-  facility = FacilitySerializer()
+  facility = FacilitySerializer(read_only=True)
+  facility_id = serializers.PrimaryKeyRelatedField(queryset=Facility.objects.all(), source='facility')
   # orders = OrderSerializer(many=True)
 
   class Meta:
@@ -20,6 +21,7 @@ class InmateSerializer(serializers.ModelSerializer, QueryFieldsMixin):
               'full_name',
               'address',
               'facility',
+              'facility_id',
               # 'orders',
               'creation_date',
               'warnings']

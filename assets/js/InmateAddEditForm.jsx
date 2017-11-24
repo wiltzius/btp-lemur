@@ -12,7 +12,7 @@ export default class InmateAddEditForm extends React.Component {
         last_name: '',
         address: '',
         inmate_id: '',
-        facility: '1',
+        facility_id: '1',
       },
       facilities: []
     };
@@ -59,6 +59,7 @@ export default class InmateAddEditForm extends React.Component {
       inmate_id: doc_inmate.inmate_id,
     };
     if (doc_inmate.facility) {
+      // todo
       newModel.facility = doc_inmate.facility
     }
     this.setState({
@@ -71,8 +72,9 @@ export default class InmateAddEditForm extends React.Component {
     event.preventDefault();
     let p;
     if (this.state.mode === 'edit') {
-      // the schema gets cranky if we give it something that has creation_date in it, so just skip it
-      const to_save = _.omit(this.state.model, 'creation_date');
+      // only save the fields that are actually visible on the form
+      const to_save = _.pick(this.state.model,
+          ['first_name', 'last_name', 'inmate_id', 'id', 'facility_id', 'address']);
       p = coreapi.client.action(schema, ['inmates', 'update'], to_save);
     }
     else {
@@ -86,6 +88,7 @@ export default class InmateAddEditForm extends React.Component {
 
   render() {
     console.log('got', this.props.match);
+    // noinspection EqualityComparisonWithCoercionJS
     return <div id="searchContainer">
       <form onSubmit={this.handleSubmit}>
         <div id="searchBoxLeft">
@@ -120,8 +123,8 @@ export default class InmateAddEditForm extends React.Component {
             <label>
               Facility:
               <select type="text"
-                      name="facility"
-                      value={this.state.model.facility}
+                      name="facility_id"
+                      value={this.state.model.facility_id}
                       onChange={this.handleInputChangeNoAutocomplete}>
                 {
                   this.state.facilities.map(facility =>
@@ -132,7 +135,7 @@ export default class InmateAddEditForm extends React.Component {
             </label>
           </div>
           {
-            this.state.model.facility !== "1" ?
+            this.state.model.facility_id != "1" ?
               ''
               :
               <div className="fieldWrapper" id="addressWrapper">
