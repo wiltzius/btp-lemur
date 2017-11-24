@@ -137,3 +137,7 @@ def inmate_doc_autocomplete(request):
       final_results += results_with_facilities[:10]   # take at most 10 valid entries from each source
 
   return JsonResponse({"proxy_search_results": final_results})
+
+
+def foo(request):
+  return render_to_response("LemurApp/foo.html")

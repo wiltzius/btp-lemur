@@ -50,5 +50,6 @@ urlpatterns += [
 # TODO get rid of all the routes that used to search specific HTML pages
 urlpatterns += patterns(
   'LemurAptana.LemurApp.views',
+  url(r'^semantic/$', 'inmate.foo', name='foo'),
   url(r'^.*$', 'inmate.inmate_search', name='order-current'),
 )

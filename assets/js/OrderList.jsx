@@ -1,7 +1,8 @@
 import React from 'react';
 import coreapi from './lib/coreapi';
 import orderCache from "./lib/orderCache";
-import { withRouter } from "react-router-dom";
+import {withRouter, Link} from "react-router-dom";
+import {dateFormat} from "./lib/util";
 
 export default withRouter(class OrderList extends React.Component {
 
@@ -20,6 +21,7 @@ export default withRouter(class OrderList extends React.Component {
       this.setState({loading: false});
     });
 
+    // todo cache this, make subscribable like order list. how to do this generically for all api calls?
     return coreapi.client.action(coreapi.schema, ['orders', 'list'], {status: 'OPEN'}).then(resp => {
       this.setState({orders: resp.results});
     });
@@ -60,9 +62,10 @@ export default withRouter(class OrderList extends React.Component {
       <a onClick={() => $("#order" + order.id).toggle('fast')}>
         Order #{order.id}
       </a>
-      , opened {order.date_opened} for {order.inmate.first_name} {order.inmate.last_name}
+      , opened {dateFormat(order.date_opened)} for {order.inmate.first_name} {order.inmate.last_name}
       <span> [<a onClick={this.setOrder.bind(this, order.id)}>select this order</a>]</span>
-      <ul id={"order" + order.id} style={{display: 'none'}}>
+      <ul id={"order" + order.id}
+          style={{display: 'none'}}>
         {order.books.map(b => <li key={b.id}>{b.title}{b.author ? "by " + b.author : ''}</li>)}
       </ul>
     </li>
@@ -70,7 +73,7 @@ export default withRouter(class OrderList extends React.Component {
 
   onCleanupClick(event) {
     if (window.confirm("Are you sure you want to delete all the open orders? This can't be undone.")) {
-      // FIXME make the cleanup ajax style here, otherwise it dead ends
+      // FIXME make the cleanup ajax style here, otherwise it navigates then dead ends
       return true;
     }
     else {
@@ -80,8 +83,13 @@ export default withRouter(class OrderList extends React.Component {
 
   openOrderList() {
     return <div>
-      <p><a id="cleanupLink" href="/lemur/order/cleanup/" onClick={this.onCleanupClick}>Cleanup Open
-        Orders</a>&nbsp;&nbsp;&nbsp;<em>Automatically cancels any empty orders and sends all orders currently in process
+      <p>
+        <a id="cleanupLink"
+           href="/lemur/order/cleanup/"
+           onClick={this.onCleanupClick}>
+          Cleanup Open Orders
+        </a>
+        <br/><em>Automatically cancels any empty orders and sends all orders currently in process
         (if nobody else is currently working on an order and this list is super long, it's probably time to click this
         link).</em></p>
       <p>Pick an order below</p>
@@ -90,7 +98,6 @@ export default withRouter(class OrderList extends React.Component {
       </ul>
     </div>
   }
-
 
   render() {
     if (this.state.loading) {
@@ -101,7 +108,7 @@ export default withRouter(class OrderList extends React.Component {
         <h3>Open Orders</h3>
         {this.cleaned()}
         {this.orderMsg()}
-        <p>To begin a new order, first <a href="/lemur/inmate/search">find the order's inmate</a>.</p>
+        <p>To begin a new order, first <Link to="/inmate/search">find the order's inmate</Link>.</p>
         {this.state.orders.length === 0 ? this.noOpenOrders() : this.openOrderList()}
       </div>
     </div>

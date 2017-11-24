@@ -82,6 +82,7 @@ class OrderCache {
   }
 
   removeBook(book) {
+    // todo use the REST api for this
     $.get('/lemur/order/removebook/' + book.id + '/')
         .then(() => {
           this.refresh();
