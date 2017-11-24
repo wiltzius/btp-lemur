@@ -12,6 +12,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -54,7 +56,7 @@ STATIC_URL = '/static/'
 
 # Initial data loading directory
 FIXTURE_DIRS = (
-  base_project_directory + 'fixtures/',
+  os.path.join(BASE_DIR, 'fixtures'),
 )
 
 # List of callables that know how to import templates from various sources.
@@ -102,7 +104,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATICFILES_DIRS = (
   # We do this so that django's collectstatic copies our bundles and other files to the STATIC_ROOT
@@ -119,8 +120,8 @@ WEBPACK_LOADER = {
 REST_FRAMEWORK = {
   'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
   'PAGE_SIZE': 10,
-  'DEFAULT_AUTHENTICATION_CLASSES': [],
-  'DEFAULT_PERMISSION_CLASSES': [],
+  # 'DEFAULT_AUTHENTICATION_CLASSES': [],
+  # 'DEFAULT_PERMISSION_CLASSES': [],
   # 'EXCEPTION_HANDLER': 'LemurAptana.LemurApp.exception_handler.custom'
 }
 

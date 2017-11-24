@@ -1,6 +1,6 @@
 import React from 'react';
 import If from 'jsx-control-statements';
-import {dateFormat} from "./util";
+import {dateFormat} from "./lib/util";
 import OrderReopenLink from "./OrderReopenLink";
 import coreapi from './lib/coreapi';
 

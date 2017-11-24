@@ -1,7 +1,7 @@
 // import './InmateSearchProxy';
 import React from 'react';
 import If from 'jsx-control-statements';
-import {stringBook, unorderedList} from "./util";
+import {stringBook, unorderedList} from "./lib/util";
 import InmateSearchOrderHistory from "./InmateSearchOrderHistory";
 import {Link, withRouter} from "react-router-dom";
 import orderCache from "./lib/orderCache";
