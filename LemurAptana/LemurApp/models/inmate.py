@@ -17,6 +17,7 @@ class InmateIDField(models.CharField):
 
   def validate(self, value, model_instance):
     """Validates and formats an inmate ID"""
+    # FIXME this doesn't return errors as JSON, so need to do better to display an error on the client
 
     error_format_message = '''
             Inmate IDs must be a letter followed by 5 numbers (for Illinois DOC inmates), 8 numbers (for Federal 

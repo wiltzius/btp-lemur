@@ -1,7 +1,7 @@
 import React from 'react';
 import coreapi from './lib/coreapi';
 import InmateDOCAutocomplete from './InmateDOCAutocomplete';
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 export default withRouter(class InmateAddEditForm extends React.Component {
 
@@ -86,6 +86,7 @@ export default withRouter(class InmateAddEditForm extends React.Component {
   }
 
   render() {
+    //FIXME need to display errors somewhere
     // noinspection EqualityComparisonWithCoercionJS
     return <div id="searchContainer">
       <form onSubmit={this.handleSubmit}>
@@ -126,7 +127,8 @@ export default withRouter(class InmateAddEditForm extends React.Component {
                       onChange={this.handleInputChangeNoAutocomplete}>
                 {
                   this.state.facilities.map(facility =>
-                    <option key={facility.id} value={facility.id}>{facility.name}</option>
+                      <option key={facility.id}
+                              value={facility.id}>{facility.name}</option>
                   )
                 }
               </select>
@@ -134,20 +136,22 @@ export default withRouter(class InmateAddEditForm extends React.Component {
           </div>
           {
             this.state.model.facility_id != "1" ?
-              ''
-              :
-              <div className="fieldWrapper" id="addressWrapper">
-                <label>
-                  Address: <input type="text"
-                                  name="address"
-                                  value={this.state.model.address}
-                                  onChange={this.handleInputChange}/>
-                </label>
-              </div>
+                ''
+                :
+                <div className="fieldWrapper"
+                     id="addressWrapper">
+                  <label>
+                    Address: <input type="text"
+                                    name="address"
+                                    value={this.state.model.address}
+                                    onChange={this.handleInputChange}/>
+                  </label>
+                </div>
           }
         </div>
         <div className="formfooter">
-          <input type="submit" value={this.state.mode === 'edit' ? "Save" : "Add New Record"}/>
+          <input type="submit"
+                 value={this.state.mode === 'edit' ? "Save" : "Add New Record"}/>
         </div>
         <InmateDOCAutocomplete model={this.state.model}
                                selectedCallback={this.autocompleteSelected.bind(this)}

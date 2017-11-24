@@ -1,8 +1,9 @@
 import React from 'react';
 import coreapi from './lib/coreapi';
 import orderCache from "./lib/orderCache";
+import { withRouter } from "react-router-dom";
 
-export default class OrderList extends React.Component {
+export default withRouter(class OrderList extends React.Component {
 
   constructor(props) {
     super(props);
@@ -48,13 +49,19 @@ export default class OrderList extends React.Component {
     return <p>There are currently no open orders to resume.</p>
   }
 
+  setOrder(order_id) {
+    orderCache.setOrder(order_id).then(() => {
+      this.props.history.push('/order/build');
+    });
+  }
+
   openOrder(order) {
     return <li key={order.id}>
       <a onClick={() => $("#order" + order.id).toggle('fast')}>
         Order #{order.id}
       </a>
       , opened {order.date_opened} for {order.inmate.first_name} {order.inmate.last_name}
-      <span> [<a href={"/lemur/order/set/" + order.id}>select this order</a>]</span>
+      <span> [<a onClick={this.setOrder.bind(this, order.id)}>select this order</a>]</span>
       <ul id={"order" + order.id} style={{display: 'none'}}>
         {order.books.map(b => <li key={b.id}>{b.title}{b.author ? "by " + b.author : ''}</li>)}
       </ul>
@@ -63,6 +70,7 @@ export default class OrderList extends React.Component {
 
   onCleanupClick(event) {
     if (window.confirm("Are you sure you want to delete all the open orders? This can't be undone.")) {
+      // FIXME make the cleanup ajax style here, otherwise it dead ends
       return true;
     }
     else {
@@ -98,4 +106,4 @@ export default class OrderList extends React.Component {
       </div>
     </div>
   }
-}
+})

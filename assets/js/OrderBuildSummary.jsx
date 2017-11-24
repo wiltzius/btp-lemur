@@ -45,7 +45,7 @@ export default class OrderBuild extends React.Component {
           {order.books.map(b => <li key={b.id}>{b.title} <a onClick={evt => orderCache.removeBook(b)}>remove</a></li>)}
         </ul>
       }
-      <a href="/lemur/order/sendout">send this order</a> | <a href="/lemur/order/unset">save it for later</a>
+      <a href="/lemur/order/sendout">send this order</a> | <a onClick={orderCache.unsetOrder.bind(orderCache)}>save it for later</a>
     </div>
   }
 }

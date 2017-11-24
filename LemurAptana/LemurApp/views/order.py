@@ -9,6 +9,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from LemurAptana.LemurApp import forms
+from LemurAptana.LemurApp.api.order import OrderSerializer
 from LemurAptana.LemurApp.lib import isbn, google_books
 from LemurAptana.LemurApp.lib.google_books import booktuple
 from LemurAptana.LemurApp.models import Inmate, Order, Book
@@ -220,7 +221,7 @@ def order_unset(request):
   """Unset the current order in session and redirect to the list of open
      orders where another can be selected."""
   request.session['order'] = None
-  return redirect(reverse('order-oldlist'))
+  return HttpResponse('ok')
 
 
 def order_set(request, order_pk):
@@ -228,7 +229,7 @@ def order_set(request, order_pk):
      redirect to the order_build page."""
   request.session['order'] = get_object_or_404(Order, pk=order_pk)
   print('setting order')
-  return redirect(reverse('order-build'))
+  return JsonResponse(OrderSerializer(request.session['order']).data)
 
 
 def order_reopen(request, order_pk):
@@ -242,6 +243,6 @@ def order_reopen(request, order_pk):
 
 def order_current(request):
   if request.session.get('order'):
-    return JsonResponse({'current_order_id': request.session['order'].pk})
+    return JsonResponse(OrderSerializer(request.session['order']).data)
   else:
     return JsonResponse({})

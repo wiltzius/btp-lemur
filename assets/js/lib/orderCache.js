@@ -10,17 +10,27 @@ class OrderCache {
   }
 
   _load() {
-    $.getJSON('/lemur/order/current/').then(resp => {
+    // todo cache outstanding api calls so we don't issue multiple
+    // todo throttle the reloading behavior so its at most once a second or something
+    $.getJSON('/lemur/order/current/')/*.then(order => {
       const order_id = resp.current_order_id;
       if(order_id) {
         return coreapi.client.action(coreapi.schema, ['orders', 'read'], {id: order_id});
       }
       return null;
-    }).then(order => {
-      _.each(this.subs, s => s ? s(order) : null);
+    })*/.then(order => {
+      if(_.isEmpty(order)) {
+        order = null;
+      }
+      this._set(order);
     }).catch(err => {
       console.log(err);
     });
+  }
+
+  _set(order) {
+    this.order = order;
+    _.each(this.subs, s => s ? s(order) : null);
   }
 
   sub(fn) {
@@ -90,8 +100,13 @@ class OrderCache {
   }
 
   setOrder(order_id) {
-    // todo make order set just return the new order to avoid this round-trip... or just use from createOrder?
+    // todo make order set just return the new order to avoid this round-trip... or just use from createOrder, in that case
     return $.get(`/lemur/order/set/${order_id}/`).then(() => this.refresh())
+  }
+
+  unsetOrder() {
+    // todo make order set just return the new order to avoid this round-trip... or just use from createOrder, in that case
+    return $.get(`/lemur/order/unset/`).then(() => this._set(null))
   }
 
   createAndSetOrder(inmate_id) {
