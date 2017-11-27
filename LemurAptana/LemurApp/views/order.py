@@ -124,7 +124,7 @@ def order_book_search(request):
     returnDict['nextPage'] = page + 1
     returnDict['prevPage'] = page - 1
   else:
-    # There weren't any results from our Amazon query
+    # There weren't any results from our Google query
     returnDict['errors'] = [
       "No books matching the title/author you entered were found, try double-checking your spelling."]
     if request.GET.get('author') and request.GET.get('title'):

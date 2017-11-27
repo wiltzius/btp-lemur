@@ -15,7 +15,7 @@ urlpatterns = patterns(
   url(r'^inmate_search_proxy/(?P<pk>\d+)/$', 'inmate.inmate_search_proxy', name='inmate-search-proxy'),
   url(r'^inmate/doc_autocomplete/$', 'inmate.inmate_doc_autocomplete', name='inmate-search-autocomplete'),
   # url(r'^order/build/$', 'order.order_build', name='order-build'),
-  # url(r'^order/booksearch/$', 'order.order_book_search', name='order-booksearch'),
+  url(r'^order/booksearch/$', 'order.order_book_search', name='order-booksearch'),
   # url(r'^order/create/(?P<inmate_pk>\d+)/$', 'order.order_create', name='order-create'),
   url(r'^order/addbook/ISBN/$', 'order.order_add_book_isbn', name='order-add-book-ISBN'),
   url(r'^order/addbook/custom/$', 'order.order_add_book_custom', name='order-add-book-custom'),
@@ -50,6 +50,6 @@ urlpatterns += [
 # TODO get rid of all the routes that used to search specific HTML pages
 urlpatterns += patterns(
   'LemurAptana.LemurApp.views',
-  url(r'^semantic/$', 'inmate.foo', name='foo'),
+  # url(r'^semantic/$', 'inmate.foo', name='foo'),
   url(r'^.*$', 'inmate.inmate_search', name='order-current'),
 )

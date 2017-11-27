@@ -17,7 +17,7 @@ class BookSearchService {
     if(!this._params.title && !this._params.author) {
       return;
     }
-    $.get('/lemur/order/booksearch', {
+    $.get('/lemur/order/booksearch/', {
       author: this._params.author,
       title: this._params.title,
       page: this._params.page
