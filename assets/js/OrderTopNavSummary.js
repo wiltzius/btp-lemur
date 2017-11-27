@@ -30,7 +30,7 @@ export default class OrderTopNavSummary extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return <span></span>;
+      return <span/>;
     }
     else if (!this.state.order) {
       return <span>

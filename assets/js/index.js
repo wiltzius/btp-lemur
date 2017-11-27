@@ -7,7 +7,6 @@ import App from "./App";
 // import {SemanticTest} from './Semantic';
 
 configure();
-console.log('hello');
 
 ReactDOM.render((
   <BrowserRouter basename="/lemur">

@@ -5,7 +5,7 @@ import _ from 'lodash';
 class OrderCache {
 
   constructor() {
-    this.subs = [];
+    this.subs = new Set();
     this.order = null;
     this._cached_request = null;
   }
@@ -29,12 +29,12 @@ class OrderCache {
 
   _set(order) {
     this.order = order;
-    _.each(this.subs, s => s ? s(order) : null);
+    this.subs.forEach(s => s(order));
   }
 
   sub(fn) {
     const idx = this.subs.length;
-    this.subs[idx] = fn;
+    this.subs.add(fn);
     if (this.order) {
       fn(this.order);
     }
@@ -42,7 +42,7 @@ class OrderCache {
 
     // return an unsubscribe function
     return () => {
-      delete this.subs[idx];
+      this.subs.delete(fn);
     }
   }
 

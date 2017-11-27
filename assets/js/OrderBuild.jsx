@@ -19,8 +19,8 @@ export default class OrderBuild extends React.Component {
 
   componentDidMount() {
     this.orderUnsub = orderCache.sub(order => {
-      this.setState({order: order});
-      this.setState({loading: false});
+      console.log('ok', order)
+      this.setState({order: order, loading: false});
     });
   }
 

@@ -44,8 +44,9 @@ const NAVSTATES = [
     component: OrderCompleteForm
   },
   {
+    pathname: "/order/detail",
     title: "Order Detail",
-    path: "/order/detail/:order_id",
+    path: "/order/detail/:order_id?",
     component: OrderDetail
   }
 ];
@@ -71,12 +72,7 @@ class App extends React.Component {
           <For each="navstate"
                of={NAVSTATES}>
             <li key={navstate.path}>
-              <If condition={navstate.pathname}>
-                <NavLink to={navstate.pathname}>{navstate.title.toLowerCase()}</NavLink>
-              </If>
-              <If condition={!navstate.pathname}>
-                <a href="">{navstate.title.toLowerCase()}</a>
-              </If>
+              <NavLink to={navstate.pathname}>{navstate.title.toLowerCase()}</NavLink>
             </li>
           </For>
         </ul>

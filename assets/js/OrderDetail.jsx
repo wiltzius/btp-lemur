@@ -3,6 +3,7 @@ import coreapi from './lib/coreapi';
 import OrderCompleteSummarySnippet from "./OrderCompleteSummarySnippet";
 import OrderNotes from "./OrderNotes";
 import {withRouter} from 'react-router';
+import {Link} from 'react-router-dom';
 
 export default withRouter(class OrderDetail extends React.Component {
 
@@ -20,14 +21,17 @@ export default withRouter(class OrderDetail extends React.Component {
     // const order_id = matches[1];
 
     const order_id = this.props.match.params.order_id;
-    console.log('found order id', order_id);
-
-    coreapi.client.action(coreapi.schema, ['orders', 'read'], {id: order_id}).then(res => {
-      this.setState({order: res});
+    if (!order_id) {
       this.setState({loading: false});
-    }).catch(err => {
-      console.log(err)
-    });
+    }
+    else {
+      coreapi.client.action(coreapi.schema, ['orders', 'read'], {id: order_id}).then(res => {
+        this.setState({order: res, loading: false});
+      }).catch(err => {
+        console.log(err)
+      });
+    }
+
 
   }
 
@@ -36,21 +40,29 @@ export default withRouter(class OrderDetail extends React.Component {
       return <div>
         <p><strong><span className="orderHeader">Order #{this.state.order.id}</span> marked as sent, please ensure it is
           delivered to the packing station.</strong></p>
-        <p><a href={"/lemur/order/invoice/" + this.state.order.id} target="_blank">Print Invoice</a></p>
+        <p><a href={"/lemur/order/invoice/" + this.state.order.id}
+              target="_blank">Print Invoice</a></p>
       </div>
     }
   }
 
   render() {
-    if (this.state.loading) {
+    if (this.state.loading === true) {
       return <div>Loading...</div>
     }
+    else if (this.state.order === null) {
+      return <div id="searchContainer">
+        <p>
+          This page shows a historical order's details (not the current order). To see an old order's details,&nbsp;
+          <Link to="/inmate/search">find the inmate</Link> and then click on the order in their history.</p>
+      </div>
+    }
     else {
-      return <div>
+      return <div id="searchContainer">
         <h3>Order details</h3>
         {this.orderSentSnippet()}
         <OrderCompleteSummarySnippet order={this.state.order}/>
-        <OrderNotes order={this.state.order} />
+        <OrderNotes order={this.state.order}/>
       </div>
     }
   }
