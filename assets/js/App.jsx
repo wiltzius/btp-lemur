@@ -1,33 +1,73 @@
+import _ from 'lodash';
 import React from 'react';
-import {Route, NavLink} from 'react-router-dom';
-import {withRouter} from 'react-router';
+import {NavLink, Route} from 'react-router-dom';
+import {withRouter, matchPath} from 'react-router';
 import InmateSearch from "./InmateSearch";
 import InmateAddEditForm from "./InmateAddEditForm";
 import OrderBuild from "./OrderBuild";
 import OrderCompleteForm from "./OrderCompleteForm";
 import OrderList from "./OrderList";
 import OrderTopNavSummary from "./OrderTopNavSummary";
-import _ from 'lodash';
+import OrderDetail from "./OrderDetail";
 
-const NAVSTATES = {
-  search: {
+import {For} from 'jsx-control-statements';
+
+const NAVSTATES = [
+  {
     pathname: "/inmate/search",
-    state: {
-      title: "Search Inmates"
-    }
+    path: "/inmate/search/:inmate_id?",
+    title(match) {
+      return "Search Inmates"
+    },
+    component: InmateSearch,
   },
-
-};
+  {
+    pathname: "/inmate/add",
+    title(match) {
+      // debugger
+      if (match.params.inmate_id) {
+        return "Edit Inmate"
+      }
+      else {
+        return "Add Inmate"
+      }
+    },
+    path: "/inmate/add/:inmate_id?",
+    component: InmateAddEditForm
+  },
+  {
+    pathname: "/order/list",
+    title() {
+      return "Select Existing Order"
+    },
+    path: "/order/list",
+    component: OrderList
+  },
+  {
+    pathname: "/order/build",
+    title() {
+      return "Build Order"
+    },
+    path: "/order/build",
+    component: OrderBuild
+  },
+  {
+    pathname: "/order/complete",
+    title() {
+      return "Send Out Order"
+    },
+    path: "/order/complete",
+    component: OrderCompleteForm
+  }
+];
 
 class App extends React.Component {
 
-  componentDidMount() {
-    // debugger
-  }
-
   get title() {
-    if(this.props.match)
-    return _.get(this.props.location.state, 'title')
+    const route = _.find(NAVSTATES, n => matchPath(this.props.location.pathname, {path: n.path}));
+    if (route) {
+      return route.title(this.props.match);
+    }
   }
 
   render() {
@@ -39,51 +79,25 @@ class App extends React.Component {
         {/*TODO set this title in the <title> of the page too*/}
         <h1>{this.title}</h1>
         <ul id="navlist">
-          <li>
-            <NavLink to={NAVSTATES.search}>{NAVSTATES.search.state.title.toLowerCase()}</NavLink>
-          </li>
-          <li>
-            {/*todo make this "edit inmate" if we're editing */}
-            <NavLink to={{
-              pathname: "/inmate/add",
-              state: {
-                title: "Add Inmate"
-              }
-            }}>add inmate</NavLink>
-          </li>
-          <li>
-            <NavLink to={{
-              pathname: "/order/list",
-              state: {
-                title: "Select Existing Order"
-              }
-            }}>select existing order</NavLink>
-          </li>
-          <li>
-            <NavLink to={{
-              pathname: "/order/build",
-              state: {
-                title: "Build Order"
-              }
-            }}>build order</NavLink>
-          </li>
-          <li>
-            <NavLink to={{
-              pathname: "/order/complete",
-              state: {
-                title: "Send Out Order"
-              }
-            }}>send out order</NavLink>
-          </li>
+          <For each="navstate"
+               of={NAVSTATES}>
+            <li key={navstate.pathname}>
+              <NavLink to={navstate.pathname}>{navstate.title(this.props.match).toLowerCase()}</NavLink>
+            </li>
+          </For>
         </ul>
         <div id="navsep">
           &nbsp;
         </div>
-        <Route path="/inmate/search/:inmate_id?" component={InmateSearch}/>
-        <Route path="/inmate/add/:inmate_id?" component={InmateAddEditForm}/>
-        <Route path="/order/list" component={OrderList}/>
-        <Route path="/order/build" component={OrderBuild}/>
-        <Route path="/order/complete" component={OrderCompleteForm}/>
+        <For each="route"
+             of={NAVSTATES}>
+          <Route key={route.path}
+                 path={route.path}
+                 component={route.component}/>
+        </For>
+        {/*bonus routes*/}
+        {/*<Route path=""*/}
+               {/*component={OrderDetail}/>*/}
       </div>
     </div>
   }

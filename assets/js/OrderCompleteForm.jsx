@@ -3,6 +3,7 @@ import coreapi from './lib/coreapi';
 import OrderCompleteSummarySnippet from "./OrderCompleteSummarySnippet";
 import orderCache from "./lib/orderCache";
 import $ from 'jquery';
+import {Link} from 'react-router-dom';
 
 export default class OrderCompleteForm extends React.Component {
 
@@ -32,8 +33,8 @@ export default class OrderCompleteForm extends React.Component {
     else {
       return <div id="searchContainer">
         <p>
-          You aren't currently working on an order. <a href="/lemur/inmate/search">Find an inmate to start a new
-          order</a>, or <a href="/lemur/order/list">look at the list of currently open orders.</a>
+          You aren't currently working on an order. <Link to="/inmate/search">Find an inmate to start a new
+          order</Link>, or <Link to="/order/list">look at the list of currently open orders.</Link>
         </p>
       </div>
     }
@@ -69,7 +70,7 @@ export default class OrderCompleteForm extends React.Component {
     return <div>
       <strong>Look good?</strong>
       <form onSubmit={this.sendOrder.bind(this)}>
-        <label>Sender: <input name="sender" value={this.state.order.sender} type="text"
+        <label>Sender: <input name="sender" value={this.state.order.sender || ''} type="text"
                               onChange={this.onSenderChange.bind(this)}/></label>
         <div>
           <input name="save" value="Send it." type="submit"/>
@@ -90,7 +91,7 @@ export default class OrderCompleteForm extends React.Component {
         <h3>Order details</h3>
         <p>
           <strong>Review the order below. If it's correct, click the Send It button. If you were looking for a different
-            order, <a href="/lemur/order/list">click here</a>.</strong>
+            order, <Link to="/order/list">click here</Link>.</strong>
         </p>
         <OrderCompleteSummarySnippet order={this.state.order}/>
         {this.submitForm()}

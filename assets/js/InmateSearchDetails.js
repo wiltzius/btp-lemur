@@ -43,7 +43,6 @@ class InmateSearchDetails extends React.Component {
       </ul>
 
       {/* Inmate DOC details box */}
-      {/*<div class="inmateSearchProxyContainer" data-inmate-id="{{ inmate.pk }}"></div>*/}
       <InmateSearchProxy inmatePk={inmate.id} />
 
       {/*Inmate data from Lemur */}
@@ -64,7 +63,7 @@ class InmateSearchDetails extends React.Component {
         </If>
       </ul>
       <ul className="inmateHistory">
-        {/* todo DOC lookup */}
+        {/* FIXME DOC lookup */}
         {/*<li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>*/}
         <InmateSearchOrderHistory inmate={inmate}/>
         <li>

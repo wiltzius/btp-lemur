@@ -1,5 +1,6 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
+import {Link} from 'react-router-dom';
 
 export default class OrderBuild extends React.Component {
 
@@ -45,7 +46,7 @@ export default class OrderBuild extends React.Component {
           {order.books.map(b => <li key={b.id}>{b.title} <a onClick={evt => orderCache.removeBook(b)}>remove</a></li>)}
         </ul>
       }
-      <a href="/lemur/order/sendout">send this order</a> | <a onClick={orderCache.unsetOrder.bind(orderCache)}>save it for later</a>
+      <Link to="/order/complete">send this order</Link> | <a onClick={orderCache.unsetOrder.bind(orderCache)}>save it for later</a>
     </div>
   }
 }

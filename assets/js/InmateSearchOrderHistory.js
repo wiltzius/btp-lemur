@@ -1,8 +1,9 @@
 import React from 'react';
-import If from 'jsx-control-statements';
+import {If, For} from 'jsx-control-statements';
 import {dateFormat} from "./lib/util";
 import OrderReopenLink from "./OrderReopenLink";
 import coreapi from './lib/coreapi';
+import {Link} from 'react-router-dom';
 
 export default class InmateSearchOrderHistory extends React.Component {
 
@@ -38,7 +39,7 @@ export default class InmateSearchOrderHistory extends React.Component {
             <For each="order"
                  of={this.state.results}>
               <li key={order.id}>
-                <a>Order #{order.id}</a>, (<OrderReopenLink orderPk={order.id}/>)
+                <Link to={'/order/detail/' + order.id}>Order #{order.id}</Link>, (<OrderReopenLink orderPk={order.id}/>)
                 opened {dateFormat(order.date_opened)}
                 <If condition={order.status === 'SENT'}>
                   , closed {dateFormat(order.date_closed)}

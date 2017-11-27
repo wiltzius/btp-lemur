@@ -31,10 +31,10 @@ urlpatterns = patterns(
 # Generic views
 urlpatterns += patterns(
   '',
-  url(r'^inmate/add/$', generic_views.InmateCreate.as_view(), name="inmate-add"),
-  url(r'^order/list/$', generic_views.OrderList.as_view(), name="order-oldlist"),
+  # url(r'^inmate/add/$', generic_views.InmateCreate.as_view(), name="inmate-add"),
+  # url(r'^order/list/$', generic_views.OrderList.as_view(), name="order-oldlist"),
   url(r'^order/cleanup/$', generic_views.OrderCleanupList.as_view(), name='order-cleanup'),
-  url(r'^order/detail/(?P<pk>\d+)/$', generic_views.OrderDetail.as_view(), name="order-detail"),
+  # url(r'^order/detail/(?P<pk>\d+)/$', generic_views.OrderDetail.as_view(), name="order-detail"),
   url(r'^order/invoice/(?P<pk>\d+)/$', generic_views.OrderInvoice.as_view(), name="order-invoice"),
 )
 
@@ -51,5 +51,5 @@ urlpatterns += [
 urlpatterns += patterns(
   'LemurAptana.LemurApp.views',
   # url(r'^semantic/$', 'inmate.foo', name='foo'),
-  url(r'^.*$', 'inmate.inmate_search', name='order-current'),
+  url(r'^.*/$', 'inmate.inmate_search', name='order-current'),
 )
