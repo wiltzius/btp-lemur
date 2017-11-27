@@ -19,7 +19,7 @@ export default withRouter(class OrderDetail extends React.Component {
     // const matches = /lemur\/order\/detail\/([0-9]+)/.exec(window.location.pathname);
     // const order_id = matches[1];
 
-    const order_id = this.match.params.order_id;
+    const order_id = this.props.match.params.order_id;
     console.log('found order id', order_id);
 
     coreapi.client.action(coreapi.schema, ['orders', 'read'], {id: order_id}).then(res => {

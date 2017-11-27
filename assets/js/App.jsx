@@ -16,48 +16,37 @@ const NAVSTATES = [
   {
     pathname: "/inmate/search",
     path: "/inmate/search/:inmate_id?",
-    title(match) {
-      return "Search Inmates"
-    },
+    title: "Search Inmates",
     component: InmateSearch,
   },
   {
     pathname: "/inmate/add",
-    title(match) {
-      // debugger
-      if (match.params.inmate_id) {
-        return "Edit Inmate"
-      }
-      else {
-        return "Add Inmate"
-      }
-    },
+    title: "Add/Edit Inmate",
     path: "/inmate/add/:inmate_id?",
     component: InmateAddEditForm
   },
   {
     pathname: "/order/list",
-    title() {
-      return "Select Existing Order"
-    },
+    title: "Select Existing Order",
     path: "/order/list",
     component: OrderList
   },
   {
     pathname: "/order/build",
-    title() {
-      return "Build Order"
-    },
+    title: "Build Order",
     path: "/order/build",
     component: OrderBuild
   },
   {
     pathname: "/order/complete",
-    title() {
-      return "Send Out Order"
-    },
+    title: "Send Out Order",
     path: "/order/complete",
     component: OrderCompleteForm
+  },
+  {
+    title: "Order Detail",
+    path: "/order/detail/:order_id",
+    component: OrderDetail
   }
 ];
 
@@ -66,7 +55,7 @@ class App extends React.Component {
   get title() {
     const route = _.find(NAVSTATES, n => matchPath(this.props.location.pathname, {path: n.path}));
     if (route) {
-      return route.title(this.props.match);
+      return route.title;
     }
   }
 
@@ -81,8 +70,13 @@ class App extends React.Component {
         <ul id="navlist">
           <For each="navstate"
                of={NAVSTATES}>
-            <li key={navstate.pathname}>
-              <NavLink to={navstate.pathname}>{navstate.title(this.props.match).toLowerCase()}</NavLink>
+            <li key={navstate.path}>
+              <If condition={navstate.pathname}>
+                <NavLink to={navstate.pathname}>{navstate.title.toLowerCase()}</NavLink>
+              </If>
+              <If condition={!navstate.pathname}>
+                <a href="">{navstate.title.toLowerCase()}</a>
+              </If>
             </li>
           </For>
         </ul>
@@ -95,9 +89,6 @@ class App extends React.Component {
                  path={route.path}
                  component={route.component}/>
         </For>
-        {/*bonus routes*/}
-        {/*<Route path=""*/}
-               {/*component={OrderDetail}/>*/}
       </div>
     </div>
   }
