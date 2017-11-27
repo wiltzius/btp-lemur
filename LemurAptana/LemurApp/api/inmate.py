@@ -15,7 +15,9 @@ class InmateSerializer(serializers.ModelSerializer, QueryFieldsMixin):
     model = Inmate
     fields = ['id',
               'inmate_id',
-              # 'inmate_doc_id',
+              'inmate_doc_id',
+              'inmate_type',
+              'inmate_id_formatted',
               'first_name',
               'last_name',
               'full_name',

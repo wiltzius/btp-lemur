@@ -6,6 +6,7 @@ import InmateSearchOrderHistory from "./InmateSearchOrderHistory";
 import {Link, withRouter} from "react-router-dom";
 import orderCache from "./lib/orderCache";
 import InmateSearchProxy from "./InmateSearchProxy";
+import InmateDOCLink from "./InmateDOCLink";
 
 // import InmateSearchProxy from "./InmateAddEditForm";
 
@@ -63,8 +64,7 @@ class InmateSearchDetails extends React.Component {
         </If>
       </ul>
       <ul className="inmateHistory">
-        {/* FIXME DOC lookup */}
-        {/*<li>{% inmate_doc_link inmate.pk "Inmate DOC lookup" %}</li>*/}
+        <li><InmateDOCLink linkText="Inmate DOC lookup" inmate={inmate}/></li>
         <InmateSearchOrderHistory inmate={inmate}/>
         <li>
           <Link to={"/inmate/add/" + inmate.id}>Edit Information</Link>
