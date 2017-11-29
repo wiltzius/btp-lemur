@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BTP | {% block title %}Books to Prisoners{% endblock %}</title>
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
+
+</head>
+
+<body>
+
+<div id="reactApp"></div>
+
+{% load render_bundle from webpack_loader %}
+{% render_bundle 'main' %}
+</body>
+</html>

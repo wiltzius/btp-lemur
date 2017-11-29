@@ -139,5 +139,5 @@ def inmate_doc_autocomplete(request):
   return JsonResponse({"proxy_search_results": final_results})
 
 
-def foo(request):
-  return render_to_response("LemurApp/foo.html")
+def semantic(request):
+  return render_to_response("LemurApp/semantic.html")
