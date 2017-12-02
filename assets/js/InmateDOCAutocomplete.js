@@ -35,11 +35,16 @@ export default class InmateDOCAutocomplete extends React.Component {
     }
   }
 
-  // TODO change this to componentDidMount
-  componentWillMount() {
+  componentDidMount() {
     this.debouncedSearchProxy = _.debounce((first, last, inmate_id) => {
-      this.searchProxies(first, last, inmate_id);
-    }, 400, {leading: true, trailing: true})
+      this.outstandingXHR = this.searchProxies(first, last, inmate_id);
+    }, 400, {leading: true, trailing: true});
+  }
+
+  componentWillUnmount() {
+    if (this.outstandingXHR) {
+      this.outstandingXHR.abort();
+    }
   }
 
   render() {
@@ -49,18 +54,19 @@ export default class InmateDOCAutocomplete extends React.Component {
     return <div>
       {this.state.loading ? <div>Loading...</div> : ''}
       {this.state.proxy_search_results === null || this.state.proxy_search_results.length === 0 ? '' :
-        <div className="inmateAutocomplete">
-          {
-            (this.state.proxy_search_results || [])
-              .map((res, idx) =>
-                <div key={idx} onClick={() => this.props.selectedCallback(res)}>
+          <div className="inmateAutocomplete">
+            {
+              (this.state.proxy_search_results || [])
+                  .map((res, idx) =>
+                          <div key={idx}
+                               onClick={() => this.props.selectedCallback(res)}>
                   <span className="autocompleteResult">
                     {res.first_name} {res.last_name} (#{res.inmate_id}), {res.parent_institution}
                     </span>
-                </div>
-              )
-          }
-        </div>
+                          </div>
+                  )
+            }
+          </div>
       }
     </div>
   }

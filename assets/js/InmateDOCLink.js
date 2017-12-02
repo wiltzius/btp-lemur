@@ -4,7 +4,7 @@ import {INMATE_TYPES} from "./lib/inmate";
 // Arguments :
 //  verb : 'GET'|'POST'
 //  target : an optional opening target (a name, or "_blank"), defaults to "_self"
-const postPpen = function (verb, url, data, target) {
+const postOpen = function (verb, url, data, target) {
   var form = document.createElement("form");
   form.action = url;
   form.method = verb;
@@ -25,11 +25,8 @@ const postPpen = function (verb, url, data, target) {
 class FederalLink extends React.PureComponent {
   render() {
     return <span>
-      No DOC link for Federal inmates; manually search
-      <a target="_blank"
-         href="https://www.bop.gov/inmateloc/">here</a>
+      No DOC link for Federal inmates; manually search <a target="_blank" href="https://www.bop.gov/inmateloc/">here</a>
     </span>
-
   }
 
 }
@@ -37,7 +34,7 @@ class FederalLink extends React.PureComponent {
 class IllinoisLink extends React.PureComponent {
 
   click() {
-    return postPpen('POST', "http://www.idoc.state.il.us/subsections/search/ISinms2.asp", {
+    return postOpen('POST', "http://www.idoc.state.il.us/subsections/search/ISinms2.asp", {
       selectlist1: "selected",
       idoc: this.props.inmate.inmate_id_formatted
     }, "_blank");
