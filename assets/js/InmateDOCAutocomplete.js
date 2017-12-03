@@ -12,11 +12,16 @@ export default class InmateDOCAutocomplete extends React.Component {
   }
 
   searchProxies(first, last, inmate_id) {
-    $.post('/lemur/inmate/doc_autocomplete/', {
+    if(this.outstandingXHR) {
+      this.outstandingXHR.abort();
+    }
+    this.outstandingXHR = $.post('/lemur/inmate/doc_autocomplete/', {
       first_name: first,
       last_name: last,
       inmate_id: inmate_id
-    }).then(resp => {
+    });
+    this.outstandingXHR.then(resp => {
+      console.log('in hte handler');
       // todo if navigating fast its possible to leave the page before this returns, and when it returns setState
       // complains because the component is unmounted...
       this.setState({loading: false});
@@ -37,12 +42,14 @@ export default class InmateDOCAutocomplete extends React.Component {
 
   componentDidMount() {
     this.debouncedSearchProxy = _.debounce((first, last, inmate_id) => {
-      this.outstandingXHR = this.searchProxies(first, last, inmate_id);
+      this.searchProxies(first, last, inmate_id);
     }, 400, {leading: true, trailing: true});
   }
 
   componentWillUnmount() {
+    this.debouncedSearchProxy.cancel();
     if (this.outstandingXHR) {
+      console.log('aborting');
       this.outstandingXHR.abort();
     }
   }

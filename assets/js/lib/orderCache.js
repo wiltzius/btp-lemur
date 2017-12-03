@@ -105,7 +105,6 @@ class OrderCache {
   }
 
   unsetOrder() {
-    // todo make order set just return the new order to avoid this round-trip... or just use from createOrder, in that case
     return $.get(`/lemur/order/unset/`).then(() => this._set(null))
   }
 

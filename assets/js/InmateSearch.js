@@ -15,6 +15,7 @@ export default class InmateSearch extends React.Component {
   render() {
     return <div id="inmateSearch">
       <InmateSearchForm onResultsChange={res => this.setState({results: res})}/>
+      {/* TODO pagination */}
       <div id="searchResults">
         {this.state.results.map(res => <InmateSearchDetails key={res.id} inmate={res}/>)}
       </div>

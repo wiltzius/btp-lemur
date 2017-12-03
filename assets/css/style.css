@@ -22,6 +22,7 @@ a {
   text-decoration: none;
   color: #7C8390;
   border-bottom: 1px dotted #7C8390;
+  cursor: pointer;
 }
 
 .error, .message {

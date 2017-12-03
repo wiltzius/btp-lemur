@@ -2,16 +2,15 @@ import * as React from "react";
 import {INMATE_TYPES} from "./lib/inmate";
 
 // Arguments :
-//  verb : 'GET'|'POST'
 //  target : an optional opening target (a name, or "_blank"), defaults to "_self"
-const postOpen = function (verb, url, data, target) {
-  var form = document.createElement("form");
+const postOpen = function (url, data, target) {
+  const form = document.createElement("form");
   form.action = url;
-  form.method = verb;
+  form.method = 'POST';
   form.target = target || "_self";
   if (data) {
-    for (var key in data) {
-      var input = document.createElement("textarea");
+    for (const key in data) {
+      const input = document.createElement("textarea");
       input.name = key;
       input.value = typeof data[key] === "object" ? JSON.stringify(data[key]) : data[key];
       form.appendChild(input);
@@ -25,7 +24,8 @@ const postOpen = function (verb, url, data, target) {
 class FederalLink extends React.PureComponent {
   render() {
     return <span>
-      No DOC link for Federal inmates; manually search <a target="_blank" href="https://www.bop.gov/inmateloc/">here</a>
+      No DOC link for Federal inmates; manually search <a target="_blank"
+                                                          href="https://www.bop.gov/inmateloc/">here</a>
     </span>
   }
 
@@ -34,7 +34,7 @@ class FederalLink extends React.PureComponent {
 class IllinoisLink extends React.PureComponent {
 
   click() {
-    return postOpen('POST', "http://www.idoc.state.il.us/subsections/search/ISinms2.asp", {
+    return postOpen("http://www.idoc.state.il.us/subsections/search/ISinms2.asp", {
       selectlist1: "selected",
       idoc: this.props.inmate.inmate_id_formatted
     }, "_blank");
@@ -49,7 +49,23 @@ class IllinoisLink extends React.PureComponent {
 class KentuckyLink extends React.PureComponent {
   render() {
     return <a target="_blank"
-              href={"http://kool.corrections.ky.gov/KOOL/Details/" + this.props.inmate.inmate_doc_id}>this.props.linkText</a>
+              href={"http://kool.corrections.ky.gov/KOOL/Details/" + this.props.inmate.inmate_doc_id}>{this.props.linkText}</a>
+  }
+}
+
+
+class VirginiaLink extends React.PureComponent {
+
+  click() {
+    return postOpen("https://vadoc.virginia.gov/offenders/locator/results.aspx", {
+      txtOffenderId: this.props.inmate.inmate_id,
+      txtFirstName: '',
+      txtLastName: ''
+    }, "_blank");
+  }
+
+  render() {
+    return <a onClick={this.click.bind(this)}>{this.props.linkText}</a>
   }
 }
 
@@ -63,6 +79,10 @@ export default class InmateDOCLink extends React.Component {
         return <FederalLink {...this.props}/>;
       case INMATE_TYPES.ILLINOIS:
         return <IllinoisLink {...this.props} />;
+      case INMATE_TYPES.KENTUCKY:
+        return <KentuckyLink {...this.props} />;
+      case INMATE_TYPES.VIRGINIA:
+        return <VirginiaLink {...this.props} />;
     }
     return <span></span>
   }
