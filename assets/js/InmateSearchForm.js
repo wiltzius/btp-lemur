@@ -21,6 +21,8 @@ export default withRouter(class InmateSearchForm extends React.Component {
   }
 
   componentDidMount() {
+    //todo this shit needs to happen even if oyu're already on the inmate search page and someone hits the inmate name
+    // in the order summary above -- param is filled it but not seen here... onWillReceiveProps for the props.match???
     const inmate_id_param = this.props.match.params.inmate_id;
     if (inmate_id_param) {
       this.setState({

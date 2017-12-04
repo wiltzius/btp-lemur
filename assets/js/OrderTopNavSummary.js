@@ -2,6 +2,7 @@ import React from 'react';
 import orderCache from './lib/orderCache';
 import _ from 'lodash';
 import {Menu} from 'semantic-ui-react';
+import {Link} from 'react-router-dom';
 
 export default class OrderTopNavSummary extends React.Component {
   // Order summary for the top nav bar
@@ -9,7 +10,8 @@ export default class OrderTopNavSummary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true
+      loading: true,
+      order: null
     };
   }
 
@@ -25,11 +27,12 @@ export default class OrderTopNavSummary extends React.Component {
 
   warnings() {
     if (!_.isEmpty(this.state.order.warnings)) {
-      return <span>&nbsp;&nbsp;<span className="error">(<a href="/lemur/order/build">warnings</a>)</span></span>
+      return <span key="why does this need a key???">&nbsp;&nbsp;<span className="error">(<Link to="/order/build">warnings</Link>)</span></span>
     }
   }
 
   render() {
+    const order = this.state.order;
     return <Menu color="blue" borderless>
       <Menu.Item>
         Banner msg here
@@ -40,15 +43,15 @@ export default class OrderTopNavSummary extends React.Component {
         </If>
         <If condition={!this.state.loading && !this.state.order}>
           <span>
-            Order: choose an <a href="/lemur/inmate/search">inmate</a> or <a href="/lemur/order/list">order</a> first
+            Order: choose an <Link to="/inmate/search">inmate</Link> or <Link to="/order/list">order</Link> first
           </span>
         </If>
         <If condition={this.state.order}>
           {/*<a href="/lemur/order/build">Order #{order.id}</a>,*/}
           <Link to="/order/build">Order #{order.id}</Link>
           {/* todo truncate inmate full name to 50 characters*/}
-          &nbsp;for <a
-            href={"/lemur/inmate/search/" + order.inmate.id + "/"}>{order.inmate.first_name} {order.inmate.last_name}</a>,
+          &nbsp;for&nbsp;<Link
+            to={"/inmate/search/" + order.inmate.id + "/"}>{order.inmate.first_name} {order.inmate.last_name}</Link>,
           {/* todo make book(s) smart */}
           &nbsp;{order.books.length} book(s)
           {this.warnings()}

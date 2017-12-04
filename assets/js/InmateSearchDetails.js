@@ -34,14 +34,11 @@ class InmateSearchDetails extends React.PureComponent {
   render() {
     const inmate = this.props.inmate;
 
-    return <Item
-        id="inmateResult{{ inmate.pk }}">
+    return <Item>
       <Item.Content>
+        {/* todo maybe inmate images? */}
         <Item.Header>{inmate.full_name}</Item.Header>
 
-        {/* -- dictionary and other warnings */}
-        {/*<Message error*/}
-        {/*list={inmate.warnings}/>*/}
 
         {/* Inmate DOC details box */}
         {/*<InmateSearchProxy inmatePk={inmate.id}/>*/}
@@ -52,12 +49,18 @@ class InmateSearchDetails extends React.PureComponent {
           <InmateDOCLink linkText="Inmate DOC lookup"
                          inmate={inmate}/>
         </Item.Meta>
+
+
         <Item.Extra>
           {_.map(inmate.warnings, w => <Label key={w}
+                                              basic
                                               color="red">{w}</Label>)}
         </Item.Extra>
 
         <Item.Description>
+          {/* -- dictionary and other warnings */}
+          {/*<Message error*/}
+          {/*list={inmate.warnings}/>*/}
           <List>
             <List.Item>
               <span className="resultLabel">Inmate ID:</span> <span className="resultValue">{inmate.inmate_id}</span>
@@ -74,9 +77,6 @@ class InmateSearchDetails extends React.PureComponent {
               </List.Item>
             </If>
           </List>
-          <li>
-          </li>
-
           {/*<li>*/}
           {/*<Link to={"/inmate/add/" + inmate.id}>Edit Information</Link>*/}
           {/*</li>*/}
@@ -84,14 +84,15 @@ class InmateSearchDetails extends React.PureComponent {
           {/*<a onClick={evt => this.newOrder(inmate.id)}*/}
           {/*className="bold">Start a new order for this inmate</a>*/}
           {/*</li>*/}
-        </Item.Description>
-        <Item.Description>
+          {/*</Item.Description>*/}
+          {/*<Item.Description>*/}
           <InmateSearchOrderHistory inmate={inmate}/>
         </Item.Description>
         <Item.Extra>
           <Button primary
-                  floated="right">Start a new order</Button>
-          <Button floated="right">Edit Information</Button>
+                  floated="right"
+                  onClick={evt => this.newOrder(inmate.id)}>Start a new order</Button>
+          <Button floated="right" as={Link} to={"/inmate/add/" + inmate.id}>Edit Information</Button>
         </Item.Extra>
       </Item.Content>
     </Item>
