@@ -14,7 +14,6 @@ export default class OrderBuildISBNForm extends React.Component {
 
   componentDidMount() {
     this.orderUnsub = orderCache.sub(order => {
-      console.log('hello', order)
       this.setState({order: order, loading: false});
       // this.setState({loading: false});
     });

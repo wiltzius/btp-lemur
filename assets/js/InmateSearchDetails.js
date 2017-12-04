@@ -1,4 +1,3 @@
-// import './InmateSearchProxy';
 import React from 'react';
 import If from 'jsx-control-statements';
 import {stringBook, unorderedList} from "./lib/util";
@@ -8,9 +7,7 @@ import orderCache from "./lib/orderCache";
 import InmateSearchProxy from "./InmateSearchProxy";
 import InmateDOCLink from "./InmateDOCLink";
 
-// import InmateSearchProxy from "./InmateAddEditForm";
-
-class InmateSearchDetails extends React.Component {
+class InmateSearchDetails extends React.PureComponent {
 
   dictWarning(inmate) {
     if (inmate.dictionaries.length === 1) {
@@ -19,7 +16,8 @@ class InmateSearchDetails extends React.Component {
     else if (inmate.dictionaries.length > 1) {
       return <li>Patron has already received multiple dictionaries.
         <a href="javascript:$('#inmateResult{ inmate.pk } .dictionaries').toggle('fast');">Click to expand</a>
-        <ul class="dictionaries" style="display:none;">
+        <ul class="dictionaries"
+            style="display:none;">
           {unorderedList(inmate.dictionaries.map(d => stringBook(d)))}
         </ul>
       </li>
@@ -35,7 +33,8 @@ class InmateSearchDetails extends React.Component {
   render() {
     const inmate = this.props.inmate;
 
-    return <div className="inmateResult" id="inmateResult{{ inmate.pk }}">
+    return <div className="inmateResult"
+                id="inmateResult{{ inmate.pk }}">
       <h3>{inmate.full_name}</h3>
 
       {/* -- dictionary and other warnings */}
@@ -44,7 +43,7 @@ class InmateSearchDetails extends React.Component {
       </ul>
 
       {/* Inmate DOC details box */}
-      <InmateSearchProxy inmatePk={inmate.id} />
+      <InmateSearchProxy inmatePk={inmate.id}/>
 
       {/*Inmate data from Lemur */}
       <ul className="inmateDetails">
@@ -64,13 +63,15 @@ class InmateSearchDetails extends React.Component {
         </If>
       </ul>
       <ul className="inmateHistory">
-        <li><InmateDOCLink linkText="Inmate DOC lookup" inmate={inmate}/></li>
+        <li><InmateDOCLink linkText="Inmate DOC lookup"
+                           inmate={inmate}/></li>
         <InmateSearchOrderHistory inmate={inmate}/>
         <li>
           <Link to={"/inmate/add/" + inmate.id}>Edit Information</Link>
         </li>
         <li>
-          <a onClick={evt => this.newOrder(inmate.id)} className="bold">Start a new order for this inmate</a>
+          <a onClick={evt => this.newOrder(inmate.id)}
+             className="bold">Start a new order for this inmate</a>
         </li>
       </ul>
     </div>

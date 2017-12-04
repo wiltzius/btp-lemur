@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class OrderCompleteSummarySnippet extends React.Component {
+export default class OrderCompleteSummarySnippet extends React.PureComponent {
 
   render() {
     const order = this.props.order;

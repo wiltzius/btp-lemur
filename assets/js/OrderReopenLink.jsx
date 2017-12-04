@@ -1,5 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
+import OrderCache from './lib/orderCache';
+import {withRouter} from 'react-router-dom';
 
 const customStyles = {
   content: {
@@ -11,7 +13,7 @@ const customStyles = {
   }
 };
 
-export default class OrderReopenLink extends React.Component {
+export default withRouter(class OrderReopenLink extends React.Component {
 
   constructor() {
     super();
@@ -33,7 +35,10 @@ export default class OrderReopenLink extends React.Component {
 
   navigate() {
     // todo make this AJAX and then a router navigate, not a hard navigate
-    window.location = `/lemur/order/reopen/${this.props.orderPk }/`;
+    // window.location = `/lemur/order/reopen/${this.props.orderPk }/`;
+    OrderCache.reopenOrder(this.props.orderPk).then(() => {
+      this.props.history.push('/order/build');
+    });
   }
 
   render() {
@@ -51,4 +56,4 @@ export default class OrderReopenLink extends React.Component {
       </Modal>
       </span>
   }
-}
+});

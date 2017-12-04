@@ -36,8 +36,7 @@ export default class OrderBuild extends React.Component {
     const order = this.state.order;
     return <div>
       <h5>Current Order</h5>
-      <p className="label">Order #{order.id} for {order.inmate.last_name}, {order.inmate.first_name}
-        (Inmate #{order.inmate.inmate_id})</p>
+      <p className="label">Order #{order.id} for {order.inmate.last_name}, {order.inmate.first_name} (Inmate #{order.inmate.inmate_id})</p>
       {/*todo fix book pluralization below*/}
       <p><strong>{order.books.length} Book(s):</strong></p>
       {order.books.length === 0

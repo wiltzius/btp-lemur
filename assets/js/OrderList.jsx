@@ -3,6 +3,7 @@ import coreapi from './lib/coreapi';
 import orderCache from "./lib/orderCache";
 import {withRouter, Link} from "react-router-dom";
 import {dateFormat} from "./lib/util";
+import $ from 'jquery';
 
 export default withRouter(class OrderList extends React.Component {
 
@@ -11,7 +12,8 @@ export default withRouter(class OrderList extends React.Component {
     this.state = {
       loading: true,
       order: null,
-      orders: []
+      orders: [],
+      cleaned: false
     };
   }
 
@@ -21,14 +23,16 @@ export default withRouter(class OrderList extends React.Component {
       this.setState({loading: false});
     });
 
-    // todo cache this, make subscribable like order list. how to do this generically for all api calls?
+    this.loadOrderList();
+  }
+
+  loadOrderList() {
     return coreapi.client.action(coreapi.schema, ['orders', 'list'], {status: 'OPEN'}).then(resp => {
       this.setState({orders: resp.results});
     });
   }
 
   componentWillUnmount() {
-    console.log('unsubbing');
     this.orderUnsubscribe();
   }
 
@@ -73,7 +77,13 @@ export default withRouter(class OrderList extends React.Component {
 
   onCleanupClick(event) {
     if (window.confirm("Are you sure you want to delete all the open orders? This can't be undone.")) {
-      // FIXME make the cleanup ajax style here, otherwise it navigates then dead ends
+      $.get('/lemur/order/cleanup/').then(() => {
+        orderCache.refresh();
+        this.loadOrderList();
+        this.setState({
+          cleaned: true
+        })
+      });
       return true;
     }
     else {
@@ -85,8 +95,7 @@ export default withRouter(class OrderList extends React.Component {
     return <div>
       <p>
         <a id="cleanupLink"
-           href="/lemur/order/cleanup/"
-           onClick={this.onCleanupClick}>
+           onClick={this.onCleanupClick.bind(this)}>
           Cleanup Open Orders
         </a>
         <br/><em>Automatically cancels any empty orders and sends all orders currently in process

@@ -101,11 +101,15 @@ class OrderCache {
 
   setOrder(order_id) {
     // todo make order set just return the new order to avoid this round-trip... or just use from createOrder, in that case
-    return $.get(`/lemur/order/set/${order_id}/`).then(() => this.refresh())
+    return $.get(`/lemur/order/set/${order_id}/`).then(new_order => this._set(new_order))
   }
 
   unsetOrder() {
     return $.get(`/lemur/order/unset/`).then(() => this._set(null))
+  }
+
+  reopenOrder(order_id) {
+    return $.get(`/lemur/order/reopen/${order_id}/`).then(new_order => this.refresh(new_order))
   }
 
   createAndSetOrder(inmate_id) {

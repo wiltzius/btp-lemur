@@ -228,7 +228,6 @@ def order_set(request, order_pk):
   """Select the given order and set it as the current order in session, then
      redirect to the order_build page."""
   request.session['order'] = get_object_or_404(Order, pk=order_pk)
-  print('setting order')
   return JsonResponse(OrderSerializer(request.session['order']).data)
 
 
