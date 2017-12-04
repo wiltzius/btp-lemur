@@ -3,9 +3,9 @@ import coreapi from './lib/coreapi';
 import OrderCompleteSummarySnippet from "./OrderCompleteSummarySnippet";
 import orderCache from "./lib/orderCache";
 import $ from 'jquery';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
-export default class OrderCompleteForm extends React.Component {
+export default withRouter(class OrderCompleteForm extends React.Component {
 
   constructor(props) {
     super(props);
@@ -57,11 +57,11 @@ export default class OrderCompleteForm extends React.Component {
       sender: this.state.order.sender,
       date_closed: (new Date).toISOString(),
       status: 'SENT'
-    }).then(resp => {
-      // hacky way to unset the session order, just store this in a cookie or local storage instead -- can be all client side
-      $.get('/lemur/order/unset').then(() => {
-        console.log('done unsetting')
-        window.location.href = '/lemur/order/detail/' + this.state.order.id;
+    }).then(() => {
+      // save off the order id, since after orderCache.unsetOrder this.state.order will be null
+      const orderId = this.state.order.id;
+      orderCache.unsetOrder().then(() => {
+        this.props.history.push('/order/detail/' + orderId);
       });
     })
   }
@@ -98,4 +98,4 @@ export default class OrderCompleteForm extends React.Component {
       </div>
     }
   }
-}
+});
