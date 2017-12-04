@@ -52,7 +52,7 @@ class InmateSearchDetails extends React.PureComponent {
         <li>
           <span className="resultLabel">Facility:</span><span className="resultValue">{inmate.facility.name}</span>
           <If condition={inmate.facility.otherRestrictions}>
-            <span>({inmate.facility.otherRestrictions})</span>
+            <span> ({inmate.facility.otherRestrictions})</span>
           </If>
         </li>
 

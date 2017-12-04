@@ -27,7 +27,6 @@ export default withRouter(class InmateSearchForm extends React.Component {
           ...this.state.model,
           inmate_id: inmate_id_param
         }
-      //  FIXME this api call is reloading the page once???
       }, () => this.searchApi())
     }
   }
