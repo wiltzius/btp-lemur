@@ -63,30 +63,33 @@ class App extends React.Component {
 
   render() {
     return <Container style={{paddingTop: '1.5em'}}>
-      <div id="topOrderSummary">
-        <OrderTopNavSummary/>
-      </div>
-      <div id="containerpadding">
-        {/*TODO set this title in the <title> of the page too*/}
-        <Header as="h2" style={{paddingTop: '1em'}}>{this.title}</Header>
-        <Menu pointing>
-          <For each="navstate"
-               of={NAVSTATES}>
-            <Menu.Item key={navstate.path} as={NavLink} to={navstate.pathname}>
-              {navstate.title.toLowerCase()}
-            </Menu.Item>
-          </For>
-        </Menu>
-        <For each="route"
+      <OrderTopNavSummary/>
+      {/*TODO set this title in the <title> of the page too*/}
+      <Header as="h2"
+              style={{paddingTop: '1em'}}>{this.title}</Header>
+      <Menu pointing>
+        <For each="navstate"
              of={NAVSTATES}>
-          <Route path={route.path}
-                 key={route.pathname}
-                 render={() => {
-                   return <Segment padded><route.component /></Segment>
-                 }}/>
+          <Menu.Item key={navstate.path}
+                     as={NavLink}
+                     to={navstate.pathname}>
+            {navstate.title.toLowerCase()}
+          </Menu.Item>
         </For>
-      </div>
-      <Segment textAlign="center" size="small" basic>
+      </Menu>
+      <For each="route"
+           of={NAVSTATES}>
+        <Route path={route.path}
+               key={route.pathname}
+               render={() => {
+                 return <Segment padded>
+                   <route.component/>
+                 </Segment>
+               }}/>
+      </For>
+      <Segment textAlign="center"
+               size="small"
+               basic>
         BTP "Lemur" Inventory Manager &mdash; 2017
       </Segment>
     </Container>

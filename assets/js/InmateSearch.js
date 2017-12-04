@@ -1,6 +1,7 @@
 import * as React from "react";
 import InmateSearchForm from "./InmateSearchForm";
 import InmateSearchDetails from "./InmateSearchDetails";
+import {Item} from 'semantic-ui-react';
 
 export default class InmateSearch extends React.Component {
 
@@ -13,12 +14,12 @@ export default class InmateSearch extends React.Component {
   }
 
   render() {
-    return <div id="inmateSearch">
+    return <div>
       <InmateSearchForm onResultsChange={res => this.setState({results: res})}/>
       {/* TODO pagination */}
-      <div id="searchResults">
+      <Item.Group divided>
         {this.state.results.map(res => <InmateSearchDetails key={res.id} inmate={res}/>)}
-      </div>
+      </Item.Group>
     </div>
   }
 

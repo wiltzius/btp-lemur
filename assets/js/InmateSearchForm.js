@@ -1,6 +1,7 @@
 import coreapi from './lib/coreapi';
 import * as React from "react";
 import {withRouter} from 'react-router-dom';
+import {Form, Input, Button} from 'semantic-ui-react';
 
 export default withRouter(class InmateSearchForm extends React.Component {
 
@@ -51,36 +52,25 @@ export default withRouter(class InmateSearchForm extends React.Component {
   }
 
   makeInput(label, name) {
-    return <label>
-      {label}&nbsp;
-      <input type="text"
+    return <Form.Field>
+      <label>{label}</label>
+      <Input type="text"
              name={name}
              value={this.state.model[name]}
              onChange={this.handleInputChange.bind(this)}/>
-    </label>
+    </Form.Field>
   }
 
   render() {
-    return <form onSubmit={this.search}>
-      <div id="searchBoxLeft">
-        <div className="fieldWrapper">
-          {this.makeInput("Inmate ID", "inmate_id")}
-          <p className="note">e.g. K12345</p>
-        </div>
-      </div>
-      <div id="searchBoxRight">
-        <div className="fieldWrapper">
-          {this.makeInput("First name", "first_name")}
-        </div>
-        <div className="fieldWrapper">
-          {this.makeInput("Last name", "last_name")}
-        </div>
-      </div>
-      <div className="formfooter">
-        <input type="submit" name="submit" value="Search for Inmate"/>
-      </div>
-    </form>
+    return <Form onSubmit={this.search}>
+      <Form.Group widths="equal">
+        {this.makeInput("Inmate ID", "inmate_id")}
+        {this.makeInput("First Name", "first_name")}
+        {this.makeInput("Last Name", "last_name")}
+      </Form.Group>
+      <Button type="submit">Search for Inmate</Button>
+    </Form>
 
   }
 
-})
+});

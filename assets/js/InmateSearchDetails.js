@@ -6,6 +6,7 @@ import {Link, withRouter} from "react-router-dom";
 import orderCache from "./lib/orderCache";
 import InmateSearchProxy from "./InmateSearchProxy";
 import InmateDOCLink from "./InmateDOCLink";
+import {Label, List, Item, Message, Button} from 'semantic-ui-react';
 
 class InmateSearchDetails extends React.PureComponent {
 
@@ -33,48 +34,67 @@ class InmateSearchDetails extends React.PureComponent {
   render() {
     const inmate = this.props.inmate;
 
-    return <div className="inmateResult"
-                id="inmateResult{{ inmate.pk }}">
-      <h3>{inmate.full_name}</h3>
+    return <Item
+        id="inmateResult{{ inmate.pk }}">
+      <Item.Content>
+        <Item.Header>{inmate.full_name}</Item.Header>
 
-      {/* -- dictionary and other warnings */}
-      <ul className="inmateErrors error">
-        {unorderedList(inmate.warnings)}
-      </ul>
+        {/* -- dictionary and other warnings */}
+        {/*<Message error*/}
+        {/*list={inmate.warnings}/>*/}
 
-      {/* Inmate DOC details box */}
-      <InmateSearchProxy inmatePk={inmate.id}/>
+        {/* Inmate DOC details box */}
+        {/*<InmateSearchProxy inmatePk={inmate.id}/>*/}
 
-      {/*Inmate data from Lemur */}
-      <ul className="inmateDetails">
-        <li><span className="resultLabel">Inmate ID:</span><span className="resultValue">{inmate.inmate_id}</span>
-        </li>
-        <li>
-          <span className="resultLabel">Facility:</span><span className="resultValue">{inmate.facility.name}</span>
-          <If condition={inmate.facility.otherRestrictions}>
-            <span> ({inmate.facility.otherRestrictions})</span>
-          </If>
-        </li>
+        {/*Inmate data from Lemur */}
+        <Item.Meta>
+          Latest DOC info goes here.
+          <InmateDOCLink linkText="Inmate DOC lookup"
+                         inmate={inmate}/>
+        </Item.Meta>
+        <Item.Extra>
+          {_.map(inmate.warnings, w => <Label key={w}
+                                              color="red">{w}</Label>)}
+        </Item.Extra>
 
-        <If condition={inmate.address}>
+        <Item.Description>
+          <List>
+            <List.Item>
+              <span className="resultLabel">Inmate ID:</span> <span className="resultValue">{inmate.inmate_id}</span>
+            </List.Item>
+            <List.Item>
+              <span className="resultLabel">Facility:</span> <span className="resultValue">{inmate.facility.name}</span>
+              <If condition={inmate.facility.otherRestrictions}>
+                <span> ({inmate.facility.otherRestrictions})</span>
+              </If>
+            </List.Item>
+            <If condition={inmate.address}>
+              <List.Item>
+                <span className="resultLabel">Address:</span><span className="resultValue">{inmate.address} </span>
+              </List.Item>
+            </If>
+          </List>
           <li>
-            <span className="resultLabel">Address:</span><span className="resultValue">{inmate.address} </span>
           </li>
-        </If>
-      </ul>
-      <ul className="inmateHistory">
-        <li><InmateDOCLink linkText="Inmate DOC lookup"
-                           inmate={inmate}/></li>
-        <InmateSearchOrderHistory inmate={inmate}/>
-        <li>
-          <Link to={"/inmate/add/" + inmate.id}>Edit Information</Link>
-        </li>
-        <li>
-          <a onClick={evt => this.newOrder(inmate.id)}
-             className="bold">Start a new order for this inmate</a>
-        </li>
-      </ul>
-    </div>
+
+          {/*<li>*/}
+          {/*<Link to={"/inmate/add/" + inmate.id}>Edit Information</Link>*/}
+          {/*</li>*/}
+          {/*<li>*/}
+          {/*<a onClick={evt => this.newOrder(inmate.id)}*/}
+          {/*className="bold">Start a new order for this inmate</a>*/}
+          {/*</li>*/}
+        </Item.Description>
+        <Item.Description>
+          <InmateSearchOrderHistory inmate={inmate}/>
+        </Item.Description>
+        <Item.Extra>
+          <Button primary
+                  floated="right">Start a new order</Button>
+          <Button floated="right">Edit Information</Button>
+        </Item.Extra>
+      </Item.Content>
+    </Item>
   }
 }
 
