@@ -2,11 +2,13 @@
 <html>
 <head>
   <title>BTP | {% block title %}Books to Prisoners{% endblock %}</title>
-  <link rel="stylesheet" href="/static/css/style.css"/>
+{#  <link rel="stylesheet" href="/static/css/style.css"/>#}
 
   {% load raven %}
   {#  <script src="https://cdn.ravenjs.com/3.16.1/raven.min.js" crossorigin="anonymous"></script>#}
   {#  <script>Raven.config('{% sentry_public_dsn %}').install()</script>#}
+  <link rel="stylesheet"
+        href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"/>
 
   {% load staticfiles %}
   <script src="{% static 'rest_framework/js/coreapi-0.1.0.js' %}"></script>
@@ -17,16 +19,12 @@
 {# we read the CSRF token out of a cookie Django sets, but it won't set the cookie unless this template tag is present... #}
 {% csrf_token %}
 
-<div id="container">
+{#<div id="container">#}
   <!-- restricted books header -->
-  <div id="restricted">{{ banner_message }}&nbsp;</div>
+{#  <div id="restricted">{{ banner_message }}&nbsp;</div>#}
   <!-- container to pad everything in the main body of the page -->
   <div id="reactApp"></div>
-  <!-- footer -->
-  <div id="footer">
-    BTP "Lemur" Inventory Manager &mdash; 2017
-  </div>
-</div>
+{#</div>#}
 
 {% load render_bundle from webpack_loader %}
 {% render_bundle 'main' %}
