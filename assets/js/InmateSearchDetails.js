@@ -4,9 +4,8 @@ import {stringBook, unorderedList} from "./lib/util";
 import InmateSearchOrderHistory from "./InmateSearchOrderHistory";
 import {Link, withRouter} from "react-router-dom";
 import orderCache from "./lib/orderCache";
-import InmateSearchProxy from "./InmateSearchProxy";
 import InmateDOCLink from "./InmateDOCLink";
-import {Label, List, Item, Message, Button} from 'semantic-ui-react';
+import {Button, Item, Label, List, Message} from 'semantic-ui-react';
 
 class InmateSearchDetails extends React.PureComponent {
 

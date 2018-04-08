@@ -20,11 +20,12 @@ export default withRouter(class InmateSearchForm extends React.Component {
     this.search = this.search.bind(this);
   }
 
-  componentDidMount() {
-    //todo this shit needs to happen even if oyu're already on the inmate search page and someone hits the inmate name
-    // in the order summary above -- param is filled it but not seen here... onWillReceiveProps for the props.match???
+  handleProps() {
+    // Whenever we get a new prop for the inmate_id route param, trigger a search for it
     const inmate_id_param = this.props.match.params.inmate_id;
-    if (inmate_id_param) {
+    console.log('receiving props');
+    if (inmate_id_param && this.state.model.inmate_id !== inmate_id_param) {
+      console.log('hello')
       this.setState({
         model: {
           ...this.state.model,
@@ -32,6 +33,14 @@ export default withRouter(class InmateSearchForm extends React.Component {
         }
       }, () => this.searchApi())
     }
+  }
+
+  componentDidMount() {
+    this.handleProps();
+  }
+
+  componentWillReceiveProps() {
+    this.handleProps();
   }
 
   handleInputChange(event) {
