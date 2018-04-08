@@ -90,7 +90,7 @@ class App extends React.Component {
       <Segment textAlign="center"
                size="small"
                basic>
-        BTP "Lemur" Inventory Manager &mdash; 2017
+        BTP "Lemur" Inventory Manager &mdash; 2018
       </Segment>
     </Container>
   }

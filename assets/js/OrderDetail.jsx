@@ -16,10 +16,6 @@ export default withRouter(class OrderDetail extends React.Component {
   }
 
   componentDidMount() {
-    // parse the order ID out of the url, todo obviously want to use a router for this instead
-    // const matches = /lemur\/order\/detail\/([0-9]+)/.exec(window.location.pathname);
-    // const order_id = matches[1];
-
     const order_id = this.props.match.params.order_id;
     if (!order_id) {
       this.setState({loading: false});

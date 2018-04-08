@@ -21,7 +21,6 @@ export default class InmateDOCAutocomplete extends React.Component {
       inmate_id: inmate_id
     });
     this.outstandingXHR.then(resp => {
-      console.log('in hte handler');
       // todo if navigating fast its possible to leave the page before this returns, and when it returns setState
       // complains because the component is unmounted...
       this.setState({loading: false});

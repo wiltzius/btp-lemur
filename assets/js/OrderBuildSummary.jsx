@@ -1,6 +1,7 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
 import {Link} from 'react-router-dom';
+import {bookCount} from "./lib/util";
 
 export default class OrderBuild extends React.Component {
 
@@ -36,16 +37,18 @@ export default class OrderBuild extends React.Component {
     const order = this.state.order;
     return <div>
       <h5>Current Order</h5>
-      <p className="label">Order #{order.id} for {order.inmate.last_name}, {order.inmate.first_name} (Inmate #{order.inmate.inmate_id})</p>
-      {/*todo fix book pluralization below*/}
-      <p><strong>{order.books.length} Book(s):</strong></p>
+      <p className="label">Order #{order.id} for {order.inmate.last_name}, {order.inmate.first_name} (Inmate
+        #{order.inmate.inmate_id})</p>
+      <p><strong>{bookCount(order.books.length)}</strong></p>
       {order.books.length === 0
-        ? <p>No books in order yet</p>
-        : <ul id="orderBookList">
-          {order.books.map(b => <li key={b.id}>{b.title} <a onClick={evt => orderCache.removeBook(b)}>remove</a></li>)}
-        </ul>
+          ? <p>No books in order yet</p>
+          : <ul id="orderBookList">
+            {order.books.map(b => <li key={b.id}>{b.title} <a onClick={evt => orderCache.removeBook(b)}>remove</a>
+            </li>)}
+          </ul>
       }
-      <Link to="/order/complete">send this order</Link> | <a onClick={orderCache.unsetOrder.bind(orderCache)}>save it for later</a>
+      <Link to="/order/complete">send this order</Link> | <a onClick={orderCache.unsetOrder.bind(orderCache)}>save it
+      for later</a>
     </div>
   }
 }

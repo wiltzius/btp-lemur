@@ -3,6 +3,7 @@ import orderCache from './lib/orderCache';
 import _ from 'lodash';
 import {Menu} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
+import {bookCount} from "./lib/util";
 
 export default class OrderTopNavSummary extends React.Component {
   // Order summary for the top nav bar
@@ -51,9 +52,8 @@ export default class OrderTopNavSummary extends React.Component {
           <Link to="/order/build">Order #{order.id}</Link>
           {/* todo truncate inmate full name to 50 characters*/}
           &nbsp;for&nbsp;<Link
-            to={"/inmate/search/" + order.inmate.id + "/"}>{order.inmate.first_name} {order.inmate.last_name}</Link>,
-          {/* todo make book(s) smart */}
-          &nbsp;{order.books.length} book(s)
+            to={"/inmate/search/" + order.inmate.id}>{order.inmate.first_name} {order.inmate.last_name}</Link>,
+          &nbsp;{bookCount(order.books.length)}
           {this.warnings()}
         </If>
       </Menu.Item>

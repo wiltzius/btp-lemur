@@ -23,9 +23,7 @@ export default withRouter(class InmateSearchForm extends React.Component {
   handleProps() {
     // Whenever we get a new prop for the inmate_id route param, trigger a search for it
     const inmate_id_param = this.props.match.params.inmate_id;
-    console.log('receiving props');
     if (inmate_id_param && this.state.model.inmate_id !== inmate_id_param) {
-      console.log('hello')
       this.setState({
         model: {
           ...this.state.model,
@@ -39,13 +37,13 @@ export default withRouter(class InmateSearchForm extends React.Component {
     this.handleProps();
   }
 
-  componentWillReceiveProps() {
-    this.handleProps();
-  }
+  // componentWillReceiveProps() {
+  //   console.log('got props')
+  //   this.handleProps();
+  // }
 
   handleInputChange(event) {
     const newModel = {...this.state.model, [event.target.name]: event.target.value};
-    // TODO store the values in the hash or something so they aren't lost on reload
     this.setState({
       model: newModel,
     });
@@ -53,6 +51,7 @@ export default withRouter(class InmateSearchForm extends React.Component {
 
   search(event) {
     event.preventDefault();
+    // TODO store the values in the hash or something so they aren't lost on reload. Also update the inmate_id route param
     this.searchApi();
   }
 
