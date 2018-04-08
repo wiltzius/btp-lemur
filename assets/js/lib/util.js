@@ -27,7 +27,7 @@ export function dateFormat(stringDate) {
 export function bookCount(count, capitalize=false) {
   const base = capitalize ? 'Book' : 'book';
   if (count === 0) {
-    return `No ${base}s`;
+    return `${capitalize ? 'N' : 'n'}o ${base}s`;
   }
   else if(count === 1) {
     return `1 ${base}`;

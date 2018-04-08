@@ -34,8 +34,6 @@ export default withRouter(class OrderReopenLink extends React.Component {
   }
 
   navigate() {
-    // todo make this AJAX and then a router navigate, not a hard navigate
-    // window.location = `/lemur/order/reopen/${this.props.orderPk }/`;
     OrderCache.reopenOrder(this.props.orderPk).then(() => {
       this.props.history.push('/order/build');
     });

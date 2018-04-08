@@ -39,7 +39,7 @@ export default class OrderBuild extends React.Component {
       <h5>Current Order</h5>
       <p className="label">Order #{order.id} for {order.inmate.last_name}, {order.inmate.first_name} (Inmate
         #{order.inmate.inmate_id})</p>
-      <p><strong>{bookCount(order.books.length)}</strong></p>
+      <p><strong>{bookCount(order.books.length, true)}</strong></p>
       {order.books.length === 0
           ? <p>No books in order yet</p>
           : <ul id="orderBookList">
