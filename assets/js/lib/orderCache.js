@@ -51,28 +51,37 @@ class OrderCache {
   }
 
   addBookISBN(isbn) {
-    return $.post('/lemur/order/addbook/ISBN/', {
-      ISBN: isbn
+    return coreapi.boundAction(['book_create_isbn', 'create'], {
+      asin: isbn,
+      order_id: this.order.id
     }).then(() => {
-      this.refresh();
+      this.refresh()
     }).catch(err => {
-      if (err.status === 400) {
-        return $.Deferred().reject("It looks like the ISBN you tried isn't a valid ISBN number (usually 10 or 13 " +
-            "digits, with a correct check digit), try re-typing it or try another method for adding the book to this " +
-            "order");
-      }
-      else if (err.status === 404) {
-        return $.Deferred().reject("No results found for the ISBN you entered, please verify that it was typed " +
-            "correctly, or try another method for adding the book to this order");
-      }
-      console.log(err);
-    });
+      console.error(err);
+    })
+    // return $.post('/lemur/order/addbook/ISBN/', {
+    //   ISBN: isbn
+    // }).then(() => {
+    //   this.refresh();
+    // }).catch(err => {
+    //   if (err.status === 400) {
+    //     return $.Deferred().reject("It looks like the ISBN you tried isn't a valid ISBN number (usually 10 or 13 " +
+    //         "digits, with a correct check digit), try re-typing it or try another method for adding the book to this " +
+    //         "order");
+    //   }
+    //   else if (err.status === 404) {
+    //     return $.Deferred().reject("No results found for the ISBN you entered, please verify that it was typed " +
+    //         "correctly, or try another method for adding the book to this order");
+    //   }
+    //   console.log(err);
+    // });
   }
 
   addBookCustom(title, author) {
-    return $.post('/lemur/order/addbook/custom/', {
-      Title: title,
-      Author: author
+    coreapi.boundAction(['books', 'create'], {
+      title,
+      author,
+      order_id: this.order.id
     }).then(() => {
       this.refresh();
     }).catch(err => {
@@ -82,8 +91,14 @@ class OrderCache {
   }
 
   removeBook(book) {
-    // todo use the REST api for this
-    $.get('/lemur/order/removebook/' + book.id + '/')
+    coreapi.boundAction(['books', 'delete'], {id: book.id})
+        .catch(err => {
+          // the coreapi library throws a TypeError on deletes because the server doesn't return a content-header, just ignore
+          if(err.name === 'TypeError') {
+            return;
+          }
+          return Promise.reject(err);
+        })
         .then(() => {
           this.refresh();
         })

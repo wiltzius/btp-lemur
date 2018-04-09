@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 
 from LemurAptana.LemurApp.lib import google_books
+from LemurAptana.LemurApp.lib.google_books import booktuple as booktuple_
 
 
 class Book(models.Model):
@@ -41,7 +42,10 @@ class Book(models.Model):
     Raises InvalidParameterValue (from the item_lookup call) if the ISBN isn't found
     """
     try:
-      booktuple = google_books.search_isbn(isnb_)
+      # TODO undo this
+      # booktuple = google_books.search_isbn(isnb_)
+      booktuple = booktuple_(title='foo', author='bar', isbn='123456789')
+
       if not booktuple:
         return
       book = Book()
