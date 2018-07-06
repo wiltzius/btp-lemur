@@ -36,6 +36,8 @@
     "react-dom": "16.0.0",
     "react-modal": "3.0.0",
     "react-router-dom": "4.2.2",
+    "semantic-ui-css": "~2.2.0",
     "semantic-ui-react": "^0.76.0",
+    "style-loader": "^0.21.0"
   }
 }

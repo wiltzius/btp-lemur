@@ -5,6 +5,8 @@ import {BrowserRouter} from 'react-router-dom';
 import configure from './lib/csrf-jquery-hack';
 import App from "./App";
 // import {SemanticTest} from './Semantic';
+import 'semantic-ui-css/semantic.min.css';
+
 
 configure();
 
