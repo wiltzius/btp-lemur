@@ -26,6 +26,7 @@ urlpatterns = patterns(
   url(r'^order/set/(?P<order_pk>\d+)/$', 'order.order_set', name='order-set'),
   url(r'^order/reopen/(?P<order_pk>\d+)/$', 'order.order_reopen', name='order-reopen'),
   url(r'^order/current/$', 'order.order_current', name='order-current'),
+  url(r'^data_export/$', 'export.data_export', name='data-export'),
 )
 
 # Generic views
