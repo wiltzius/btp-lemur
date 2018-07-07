@@ -36,10 +36,19 @@ module.exports = {
         loader: 'babel-loader',
       },
       {
-        test: /\.css?$/,
-        // exclude: /node_modules/,
-        loader: ['css-loader', 'style-loader'],
-      }
+        test: /\.(css)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+          },
+        },
+      },
+      // {
+      //   test: /\.css?$/,
+      //   // exclude: /node_modules/,
+      //   loader: ['style-loader', 'css-loader'],
+      // }
     ]
   },
 
