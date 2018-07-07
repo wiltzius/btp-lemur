@@ -23,9 +23,10 @@
     "babel-preset-react": "6.5.0",
     "babelify": "7.2.0",
     "css-loader": "^1.0.0",
+    "file-loader": "^1.1.11",
     "uglifyjs-webpack-plugin": "1.0.0-beta.2",
     "url-loader": "^1.0.1",
-    "webpack": "2.5.1",
+    "webpack": "^3.12.0",
     "webpack-bundle-tracker": "0.0.93"
   },
   "dependencies": {

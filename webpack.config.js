@@ -36,7 +36,7 @@ module.exports = {
         loader: 'babel-loader',
       },
       {
-        test: /\.(css)$/,
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
         use: {
           loader: 'url-loader',
           options: {
@@ -44,11 +44,10 @@ module.exports = {
           },
         },
       },
-      // {
-      //   test: /\.css?$/,
-      //   // exclude: /node_modules/,
-      //   loader: ['style-loader', 'css-loader'],
-      // }
+      {
+        test: /\.css?$/,
+        loader: ['style-loader', 'css-loader'],
+      }
     ]
   },
 
