@@ -2,12 +2,14 @@ import React from 'react';
 import coreapi from './lib/coreapi';
 import InmateDOCAutocomplete from './InmateDOCAutocomplete';
 import {withRouter} from 'react-router-dom';
-import {Form, Input, Button, Select} from 'semantic-ui-react';
+import {Form, Input, Button, Select, Message} from 'semantic-ui-react';
+import {coreAPIErrorToList} from "./lib/coreapi-error";
 
 export default withRouter(class InmateAddEditForm extends React.Component {
 
   constructor(props) {
     super(props);
+    this.labelMap = null;
     this.state = {
       model: {
         first_name: '',
@@ -16,7 +18,9 @@ export default withRouter(class InmateAddEditForm extends React.Component {
         inmate_id: '',
         facility_id: '1',
       },
-      facilities: []
+      facilities: [],
+      sending: false,
+      errorDisplay: null
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -71,6 +75,7 @@ export default withRouter(class InmateAddEditForm extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     let p;
+    this.setState({sending: true});
     if (this.state.mode === 'edit') {
       // only save the fields that are actually visible on the form
       const to_save = _.pick(this.state.model,
@@ -84,12 +89,14 @@ export default withRouter(class InmateAddEditForm extends React.Component {
       console.log('hello');
       this.props.history.push(`/inmate/search/${resp.inmate_id}`);
     }).catch(err => {
-      debugger
-      console.log(err);
+      this.setState({errorDisplay: coreAPIErrorToList(err, this.labelMap)});
+    }).finally(() => {
+      this.setState({sending: false});
     });
   }
 
   makeInput(label, name) {
+    this.labelMap[name] = label;
     return <Form.Field>
       <label>{label}</label>
       <Input type="text"
@@ -100,7 +107,7 @@ export default withRouter(class InmateAddEditForm extends React.Component {
   }
 
   render() {
-    //FIXME need to display errors somewhere
+    this.labelMap = {facility_id: 'Facility'};
     // noinspection EqualityComparisonWithCoercionJS
     return <Form onSubmit={this.handleSubmit}>
 
@@ -196,6 +203,12 @@ export default withRouter(class InmateAddEditForm extends React.Component {
         {/*value={this.state.mode === 'edit' ? "Save" : "Add New Record"}/>*/}
         {/*</div>*/}
       </Form.Group>
+      <If condition={this.state.errorDisplay}>
+        <Message negative>
+          <Message.Header>Error in submission</Message.Header>
+          <Message.List items={this.state.errorDisplay}/>
+        </Message>
+      </If>
       <InmateDOCAutocomplete model={this.state.model}
                              selectedCallback={this.autocompleteSelected.bind(this)}
                              skip={this.state.autocompleted}/>
