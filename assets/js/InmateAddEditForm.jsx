@@ -3,7 +3,7 @@ import coreapi from './lib/coreapi';
 import InmateDOCAutocomplete from './InmateDOCAutocomplete';
 import {withRouter} from 'react-router-dom';
 import {Form, Input, Button, Select, Message} from 'semantic-ui-react';
-import {coreAPIErrorToList} from "./lib/coreapi-error";
+import {coreAPIErrorToUniqueList} from "./lib/coreapi-error";
 
 export default withRouter(class InmateAddEditForm extends React.Component {
 
@@ -27,9 +27,22 @@ export default withRouter(class InmateAddEditForm extends React.Component {
     this.handleInputChangeNoAutocomplete = this.handleInputChangeNoAutocomplete.bind(this);
   }
 
+  facilityListDropdownFormat(facilityList) {
+    return facilityList.map(f => {
+      return {text: f.name, value: f.id}
+    });
+  }
+
   componentDidMount() {
     // load the facilities list
-    coreapi.client.action(coreapi.schema, ['facilities', 'list']).then(res => this.setState({facilities: res['results']}));
+    coreapi
+        .client
+        .action(coreapi.schema, ['facilities', 'list'])
+        .then(res => {
+          this.setState({
+            facilities: this.facilityListDropdownFormat(res['results'])
+          })
+        });
 
     // if we're in edit mode, load the existing inmate
     const pk = this.props.match.params.inmate_id;
@@ -52,7 +65,17 @@ export default withRouter(class InmateAddEditForm extends React.Component {
   }
 
   handleInputChangeNoAutocomplete(event) {
+    debugger
     this.handleInputChange(event, false);
+  }
+
+  handleFacilityChange(_event, selected) {
+    this.setState({
+      model: {
+        ...this.state.model,
+        facility_id: selected.value
+      }
+    })
   }
 
   autocompleteSelected(doc_inmate) {
@@ -85,29 +108,37 @@ export default withRouter(class InmateAddEditForm extends React.Component {
     else {
       p = coreapi.client.action(schema, ['inmates', 'create'], this.state.model);
     }
+    // What to do if the component is navigated away from before the callbacks fire? Calling setState triggers a React
+    // warning.
     p.then(resp => {
-      console.log('hello');
+      this.setState({sending: false});
       this.props.history.push(`/inmate/search/${resp.inmate_id}`);
     }).catch(err => {
-      this.setState({errorDisplay: coreAPIErrorToList(err, this.labelMap)});
-    }).finally(() => {
-      this.setState({sending: false});
+      // must ensure error list is unique or React will throw key uniqueness errors
+      this.setState({
+        sending: false,
+        errorDisplay: coreAPIErrorToUniqueList(err, this.labelMap)
+      });
     });
   }
 
-  makeInput(label, name) {
+  makeInput(label, name, inputProps={}) {
     this.labelMap[name] = label;
     return <Form.Field>
       <label>{label}</label>
       <Input type="text"
              name={name}
              value={this.state.model[name]}
-             onChange={this.handleInputChange.bind(this)}/>
+             onChange={this.handleInputChange.bind(this)}
+             {...inputProps}/>
     </Form.Field>
   }
 
   render() {
+    // build a label map up (here and through makeInput calls) for later reference; inefficient to do every render but
+    // o well
     this.labelMap = {facility_id: 'Facility'};
+
     // noinspection EqualityComparisonWithCoercionJS
     return <Form onSubmit={this.handleSubmit}>
 
@@ -115,100 +146,39 @@ export default withRouter(class InmateAddEditForm extends React.Component {
         {this.makeInput('First Name', 'first_name')}
         {this.makeInput('Last Name', 'last_name')}
       </Form.Group>
+
       <Form.Group widths="equal">
         <Form.Field>
           <label>Facility</label>
           <Select name='facility_id'
                   value={this.state.model.facility_id}
-                  options={[]}
-                  onChange={this.handleInputChangeNoAutocomplete}
+                  options={this.state.facilities}
+                  onChange={this.handleFacilityChange.bind(this)}
           />
         </Form.Field>
         {this.makeInput('Inmate ID', 'inmate_id')}
       </Form.Group>
-      <Form.Group>
-        {
-          this.state.model.facility_id !== "1" ? '' : this.makeInput('Address', 'address')
-        }
-      </Form.Group>
-      <Form.Group>
-        <Button type="submit">
-          {this.state.mode === 'edit' ? "Save" : "Add New Record"}
-        </Button>
-      </Form.Group>
-      <Form.Group>
 
 
-        {/*<div id="searchBoxLeft">*/}
-        {/*<div className="fieldWrapper">*/}
-        {/*<label>*/}
-        {/*First name: <input type="text"*/}
-        {/*name="first_name"*/}
-        {/*value={this.state.model.first_name}*/}
-        {/*onChange={this.handleInputChange}/>*/}
-        {/*</label>*/}
-        {/*<p className="note">Do not use - or ' characters</p>*/}
-        {/*</div>*/}
-        {/*<div className="fieldWrapper">*/}
-        {/*<label>*/}
-        {/*Last name: <input type="text"*/}
-        {/*name="last_name"*/}
-        {/*value={this.state.model.last_name}*/}
-        {/*onChange={this.handleInputChange}/>*/}
-        {/*</label>*/}
-        {/*</div>*/}
-        {/*</div>*/}
-        {/*<div id="searchBoxRight">*/}
-        {/*<div className="fieldWrapper">*/}
-        {/*<label>*/}
-        {/*Inmate ID: <input type="text"*/}
-        {/*name="inmate_id"*/}
-        {/*value={this.state.model.inmate_id}*/}
-        {/*onChange={this.handleInputChange}/>*/}
-        {/*</label>*/}
-        {/*</div>*/}
-        {/*<div className="fieldWrapper">*/}
-        {/*<label>*/}
-        {/*Facility:*/}
-        {/*<select type="text"*/}
-        {/*name="facility_id"*/}
-        {/*value={this.state.model.facility_id}*/}
-        {/*>*/}
-        {/*{*/}
-        {/*this.state.facilities.map(facility =>*/}
-        {/*<option key={facility.id}*/}
-        {/*value={facility.id}>{facility.name}</option>*/}
-        {/*)*/}
-        {/*}*/}
-        {/*</select>*/}
-        {/*</label>*/}
-        {/*</div>*/}
-        {/*{*/}
-        {/*this.state.model.facility_id != "1" ?*/}
-        {/*''*/}
-        {/*:*/}
-        {/*<div className="fieldWrapper"*/}
-        {/*id="addressWrapper">*/}
-        {/*<label>*/}
-        {/*Address: <input type="text"*/}
-        {/*name="address"*/}
-        {/*value={this.state.model.address}*/}
-        {/*onChange={this.handleInputChange}/>*/}
-        {/*</label>*/}
-        {/*</div>*/}
-        {/*}*/}
-        {/*</div>*/}
-        {/*<div className="formfooter">*/}
-        {/*<input type="submit"*/}
-        {/*value={this.state.mode === 'edit' ? "Save" : "Add New Record"}/>*/}
-        {/*</div>*/}
+      <Form.Group widths="equal">
+        {this.makeInput('Address', 'address', {disabled: this.state.model.facility_id != "1"})}
+        <Form.Field>
+          {/*todo dumb alignment hack*/}
+          <label>&nbsp;</label>
+          <Button type="submit">
+            {this.state.mode === 'edit' ? "Save" : "Add New Record"}
+          </Button>
+        </Form.Field>
       </Form.Group>
+
       <If condition={this.state.errorDisplay}>
         <Message negative>
           <Message.Header>Error in submission</Message.Header>
           <Message.List items={this.state.errorDisplay}/>
         </Message>
       </If>
+
+      {/* TODO always pad the Form so it doesn't change height when this blips in and out */}
       <InmateDOCAutocomplete model={this.state.model}
                              selectedCallback={this.autocompleteSelected.bind(this)}
                              skip={this.state.autocompleted}/>

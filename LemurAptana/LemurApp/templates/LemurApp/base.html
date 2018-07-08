@@ -2,8 +2,6 @@
 <html>
 <head>
   <title>BTP | {% block title %}Books to Prisoners{% endblock %}</title>
-{#  <link rel="stylesheet" href="/static/css/style.css"/>#}
-{#    <link rel="stylesheet" href="{% static  %}"/>#}
 
   {% load raven %}
   {#  <script src="https://cdn.ravenjs.com/3.16.1/raven.min.js" crossorigin="anonymous"></script>#}
@@ -20,12 +18,7 @@
 {# we read the CSRF token out of a cookie Django sets, but it won't set the cookie unless this template tag is present... #}
 {% csrf_token %}
 
-{#<div id="container">#}
-  <!-- restricted books header -->
-{#  <div id="restricted">{{ banner_message }}&nbsp;</div>#}
-  <!-- container to pad everything in the main body of the page -->
-  <div id="reactApp"></div>
-{#</div>#}
+<div id="reactApp"></div>
 
 {% load render_bundle from webpack_loader %}
 {% render_bundle 'main' %}

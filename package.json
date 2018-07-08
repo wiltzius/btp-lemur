@@ -24,6 +24,7 @@
     "babelify": "7.2.0",
     "css-loader": "^1.0.0",
     "file-loader": "^1.1.11",
+    "less-loader": "^4.1.0",
     "uglifyjs-webpack-plugin": "1.0.0-beta.2",
     "url-loader": "^1.0.1",
     "webpack": "^3.12.0",

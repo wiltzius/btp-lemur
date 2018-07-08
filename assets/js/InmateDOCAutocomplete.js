@@ -48,7 +48,6 @@ export default class InmateDOCAutocomplete extends React.Component {
   componentWillUnmount() {
     this.debouncedSearchProxy.cancel();
     if (this.outstandingXHR) {
-      console.log('aborting');
       this.outstandingXHR.abort();
     }
   }
