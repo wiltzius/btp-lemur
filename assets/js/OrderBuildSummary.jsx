@@ -1,54 +1,43 @@
 import React from 'react';
+import {Card, Button, List, Icon, Label} from 'semantic-ui-react';
 import orderCache from "./lib/orderCache";
 import {Link} from 'react-router-dom';
 import {bookCount} from "./lib/util";
 
-export default class OrderBuild extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      order: null
-    };
-  }
-
-  componentDidMount() {
-    this.orderUnsub = orderCache.sub(order => {
-      this.setState({order: order});
-      this.setState({loading: false});
-    });
-  }
-
-  componentWillUnmount() {
-    this.orderUnsub();
-  }
+export default class OrderBuild extends React.PureComponent {
 
   render() {
-    if (this.state.loading) {
-      return <div>Loading...</div>
-    }
-    else if (!this.state.order) {
-      return <p className="error">
-        No current order, <a href="/lemur/inmate/search">find an inmate</a> and add a new order for them
-        or <a href="/lemur/order/list">choose an open order</a>.
-      </p>
-    }
-    const order = this.state.order;
-    return <div>
-      <h5>Current Order</h5>
-      <p className="label">Order #{order.id} for {order.inmate.last_name}, {order.inmate.first_name} (Inmate
-        #{order.inmate.inmate_id})</p>
-      <p><strong>{bookCount(order.books.length, true)}</strong></p>
-      {order.books.length === 0
-          ? <p>No books in order yet</p>
-          : <ul id="orderBookList">
-            {order.books.map(b => <li key={b.id}>{b.title} <a onClick={evt => orderCache.removeBook(b)}>remove</a>
-            </li>)}
-          </ul>
-      }
-      <Link to="/order/complete">send this order</Link> | <a onClick={orderCache.unsetOrder.bind(orderCache)}>save it
-      for later</a>
-    </div>
+    const order = this.props.order;
+    return <Card>
+      <Card.Content>
+        <Card.Header>Order #{order.id} <em>for</em> {order.inmate.last_name}, {order.inmate.first_name}</Card.Header>
+        <Card.Meta>Inmate #{order.inmate.inmate_id}</Card.Meta>
+        <Card.Meta>{bookCount(order.books.length, true)}</Card.Meta>
+
+        <Card.Description>
+          <If condition={order.books.length > 0}>
+            <List>
+              {
+                order.books.map(b => <List.Item key={b.id}>
+                  <Label onRemove={evt => orderCache.removeBook(b)}
+                         content={b.title}
+                         color="teal"/>
+                </List.Item>)
+              }
+            </List>
+          </If>
+          <Button color="blue"
+                  size="tiny"
+                  icon="send"
+                  content="Send order"
+                  as={Link}
+                  to="/order/complete"/>
+          <Button size="tiny"
+                  content="Save for later"
+                  icon="save"
+                  onClick={orderCache.unsetOrder.bind(orderCache)}/>
+        </Card.Description>
+      </Card.Content>
+    </Card>
   }
 }

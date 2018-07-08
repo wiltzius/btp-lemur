@@ -59,22 +59,6 @@ class OrderCache {
     }).catch(err => {
       console.error(err);
     })
-    // return $.post('/lemur/order/addbook/ISBN/', {
-    //   ISBN: isbn
-    // }).then(() => {
-    //   this.refresh();
-    // }).catch(err => {
-    //   if (err.status === 400) {
-    //     return $.Deferred().reject("It looks like the ISBN you tried isn't a valid ISBN number (usually 10 or 13 " +
-    //         "digits, with a correct check digit), try re-typing it or try another method for adding the book to this " +
-    //         "order");
-    //   }
-    //   else if (err.status === 404) {
-    //     return $.Deferred().reject("No results found for the ISBN you entered, please verify that it was typed " +
-    //         "correctly, or try another method for adding the book to this order");
-    //   }
-    //   console.log(err);
-    // });
   }
 
   addBookCustom(title, author) {

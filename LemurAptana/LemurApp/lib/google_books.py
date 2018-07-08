@@ -37,6 +37,9 @@ def _tuple_result(result):
 
 
 def search(q, page=0):
+  return searchresult(pages=1,
+                      lastResultIndex=1,
+                      books=[booktuple(title="Foo", author="bar", isbn="123456679")])
   request = service.volumes().list(q=q,
                                    startIndex=page * RESULTS_PER_PAGE,
                                    maxResults=40,     # overfetch because many of the results will be irrelevant

@@ -1,10 +1,12 @@
 import React from 'react';
+import {Message, Grid} from 'semantic-ui-react';
+
 import orderCache from "./lib/orderCache";
 import OrderBuildISBNForm from "./OrderBuildISBNForm";
 import OrderBuildCustomForm from "./OrderBuildCustomForm";
 import OrderBuildSearchForm from "./OrderBuildSearchForm";
-import OrderBuildSearchResults from "./OrderBuildSearchResults";
 import OrderBuildSummary from "./OrderBuildSummary";
+
 
 export default class OrderBuild extends React.Component {
 
@@ -28,18 +30,17 @@ export default class OrderBuild extends React.Component {
   }
 
   orderWarnings() {
-    if(!this.state.order) {
+    if (!this.state.order) {
       return null;
     }
-    return <div id="orderWarnings">
-      <ul className="errors">
-        {this.state.order.warnings.map(w => <li key={w}>{w}</li>)}
-      </ul>
-    </div>
+    return <Message negative>
+      <Message.List items={this.state.order.warnings.map(w => <li key={w}>{w}</li>)}/>
+    </Message>
   }
 
   bookSearchErrors() {
-    return <ul id="ASINerrors" className="errors">
+    return <ul id="ASINerrors"
+               className="errors">
       {this.state.errors.map(err => <li key={err}>{err}</li>)}
     </ul>
   }
@@ -47,24 +48,33 @@ export default class OrderBuild extends React.Component {
   render() {
     if (this.state.loading) {
       return <div>Loading...</div>
+    } else if (!this.state.order) {
+      return <p className="error">
+        {/*TODO make into Links*/}
+        No current order, <a href="/lemur/inmate/search">find an inmate</a> and add a new order for them
+        or <a href="/lemur/order/list">choose an open order</a>.
+      </p>
+    } else {
+      return <Grid>
+        <Grid.Row>
+          <If condition={this.state.order}>
+            <Grid.Column width={9}>
+              <OrderBuildISBNForm setError={err => this.setState({errors: [err]})}/>
+              <OrderBuildCustomForm setError={err => this.setState({errors: [err]})}/>
+              <OrderBuildSearchForm updateResults={res => this.setState({searchResults: res})}/>
+            </Grid.Column>
+          </If>
+          <Grid.Column width={6}>
+            <OrderBuildSummary order={this.state.order}/>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column>
+            {this.orderWarnings()}
+            {this.bookSearchErrors()}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     }
-    return <div>
-      <div id="searchContainer">
-        {this.orderWarnings()}
-        {this.bookSearchErrors()}
-        <div id="currentOrder">
-          <OrderBuildSummary/>
-        </div>
-
-        <strong>Search By:</strong>
-        <OrderBuildISBNForm setError={err => this.setState({errors: [err]})}/>
-        <OrderBuildCustomForm setError={err => this.setState({errors: [err]})}/>
-        <OrderBuildSearchForm updateResults={res => this.setState({searchResults: res})}/>
-      </div>
-
-      <div id="searchResults">
-        <OrderBuildSearchResults results={this.state.searchResults}/>
-      </div>
-    </div>
   }
 }

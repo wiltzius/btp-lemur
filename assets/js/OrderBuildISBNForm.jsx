@@ -1,5 +1,6 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
+import {Form, Button, Input} from 'semantic-ui-react';
 
 export default class OrderBuildISBNForm extends React.Component {
 
@@ -15,7 +16,6 @@ export default class OrderBuildISBNForm extends React.Component {
   componentDidMount() {
     this.orderUnsub = orderCache.sub(order => {
       this.setState({order: order, loading: false});
-      // this.setState({loading: false});
     });
   }
 
@@ -40,19 +40,16 @@ export default class OrderBuildISBNForm extends React.Component {
     if (this.state.loading) {
       return <div>Loading...</div>
     }
-    return <form id="ISBNForm" onSubmit={this.submit.bind(this)}>
-      <div className="bookSearchBox">
-        <div className="bookSearchLeft">
-          <div>Add book by ISBN</div>
-        </div>
-        <div className="bookSearchRight">
-          <div>
-            <label htmlFor="isbn_form_isbn">ISBN: </label>
-            <input id="isbn_form_isbn" type="text" name="ISBN" onChange={this.setISBN.bind(this)}/>
-          </div>
-          <input type="submit" value="Add to Order"/>
-        </div>
-      </div>
-    </form>
+    return <Form onSubmit={this.submit.bind(this)}>
+      <Form.Group>
+        <Form.Field width={10}>
+          <label>Add book by ISBN:</label>
+          <Input type="text"
+                 name="ISNB"
+                 onChange={this.setISBN.bind(this)}/>
+        </Form.Field>
+        <Button type="submit">Add to Order</Button>
+      </Form.Group>
+    </Form>
   }
 }

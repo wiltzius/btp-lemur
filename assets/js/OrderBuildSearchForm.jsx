@@ -1,72 +1,68 @@
 import React from 'react';
+import * as $ from 'jquery';
+import {Button, Form, Input, Search} from 'semantic-ui-react';
 import orderCache from "./lib/orderCache";
-import bookSearchService from "./lib/bookSearchService";
 
 export default class OrderBuildSearchForm extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
-      order: null,
-      title: null,
-      author: null,
+      searching: false,
+      searchResults: null,
     };
   }
 
   componentDidMount() {
-    this.orderUnsub = orderCache.sub(order => {
-      this.setState({order: order});
-      this.setState({loading: false});
-    });
     if (window.location.hash) {
+      // todo this does not still work
       this.setState({title: window.location.hash.slice(1)}, () => {
         this.search();
       });
     }
   }
 
-  componentWillUnmount() {
-    this.orderUnsub();
-  }
-
-  updateInput(event) {
+  searchCallback(resp) {
     this.setState({
-      [event.target.name]: event.target.value
+      searching: false,
+      searchResults: resp.books.map(book => {
+        return {title: book.title, description: book.author, id: book.isbn}
+      })
     });
   }
 
-  search() {
-    bookSearchService.search(this.state.title, this.state.author);
+  onSearchChange(_event, searchBox) {
+    if (!searchBox.value) {
+      this.setState({
+        searching: false,
+        searchResults: []
+      })
+    } else {
+      this.setState({
+        searching: true,
+        searchValue: searchBox.value
+      }, () => {
+        $.get('/lemur/order/booksearch/', {
+          title: this.state.searchValue
+        }).then(this.searchCallback.bind(this))
+        // todo error handling
+      });
+    }
   }
 
-  submit(event) {
-    event.preventDefault();
-    this.search();
+  onResultSelect(_event, data) {
+    orderCache.addBookISBN(data.result.id);
   }
 
   render() {
-    if (this.state.loading) {
-      return <div>Loading...</div>
-    }
-    return <form onSubmit={this.submit.bind(this)}>
-      <div className="bookSearchBox">
-        <input type="hidden" name="whichForm" value="search"/>
-        <div className="bookSearchLeft">
-          Search for books to add
-        </div>
-        <div className="bookSearchRight">
-          <div>
-            <label htmlFor="bookSearchTitle">Title: </label>
-            <input type="text" id="bookSearchTitle" name="title" onChange={this.updateInput.bind(this)}/>
-          </div>
-          <div>
-            <label htmlFor="bookSearchAuthor">Author: </label>
-            <input type="text" id="bookSearchAuthor" name="author" onChange={this.updateInput.bind(this)}/>
-          </div>
-          <input type="submit" value="Search"/>
-        </div>
-      </div>
-    </form>
+    return <Form>
+      <Form.Field>
+        <label>Search for a book:</label>
+        <Search onSearchChange={this.onSearchChange.bind(this)}
+                onResultSelect={this.onResultSelect.bind(this)}
+                results={this.state.searchResults}
+                loading={this.state.searching}/>
+      </Form.Field>
+    </Form>
   }
 }

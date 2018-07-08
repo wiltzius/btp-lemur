@@ -1,5 +1,6 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
+import {Form, Button, Input} from 'semantic-ui-react';
 
 export default class OrderBuildCustomForm extends React.Component {
 
@@ -37,20 +38,14 @@ export default class OrderBuildCustomForm extends React.Component {
     if (this.state.loading) {
       return <div>Loading...</div>
     }
-    return <form id="TitleForm" onSubmit={this.submit.bind(this)}>
-      <div className="bookSearchBox">
-        <input type="hidden" name="whichForm" value="title" />
-        <div className="bookSearchLeft">
-          <div>Add by Title</div>
-        </div>
-        <div className="bookSearchRight">
-          <div>
-            <label htmlFor="customFormTitle">Title: </label>
-            <input id="customFormTitle" type="text" name="ISBN" onChange={this.setTitle.bind(this)}/>
-          </div>
-          <input type="submit" value="Add to Order" />
-        </div>
-      </div>
-    </form>;
+    return <Form onSubmit={this.submit.bind(this)}>
+      <Form.Group>
+        <Form.Field width={10}>
+          <label>Add by title:</label>
+          <Input type="text" name="title" onChange={this.setTitle.bind(this)}/>
+        </Form.Field>
+        <Button type="submit">Add to Order</Button>
+      </Form.Group>
+    </Form>;
   }
 }

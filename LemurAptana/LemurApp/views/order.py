@@ -40,6 +40,7 @@ def order_book_search(request):
   returnDict = {}
 
   # construct Google power search
+  # TODO this needs to be updated to not use power search terms anymore
   power = []
   if request.GET.get('author', False):
     power += ['inauthor:' + request.GET['author']]
