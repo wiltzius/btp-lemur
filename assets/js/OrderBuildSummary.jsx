@@ -8,9 +8,13 @@ export default class OrderBuild extends React.PureComponent {
 
   render() {
     const order = this.props.order;
-    return <Card>
+    return <Card fluid>
       <Card.Content>
-        <Card.Header>Order #{order.id} <em>for</em> {order.inmate.last_name}, {order.inmate.first_name}</Card.Header>
+        <Card.Header>
+          Order #{order.id} <em>for</em> {order.inmate.last_name}, {order.inmate.first_name}
+        </Card.Header>
+      </Card.Content>
+      <Card.Content>
         <Card.Meta>Inmate #{order.inmate.inmate_id}</Card.Meta>
         <Card.Meta>{bookCount(order.books.length, true)}</Card.Meta>
 
@@ -26,17 +30,23 @@ export default class OrderBuild extends React.PureComponent {
               }
             </List>
           </If>
-          <Button color="blue"
-                  size="tiny"
-                  icon="send"
-                  content="Send order"
-                  as={Link}
-                  to="/order/complete"/>
+        </Card.Description>
+      </Card.Content>
+      <Card.Content>
+        <Button.Group>
           <Button size="tiny"
                   content="Save for later"
                   icon="save"
                   onClick={orderCache.unsetOrder.bind(orderCache)}/>
-        </Card.Description>
+          <Button.Or/>
+          <Button size="tiny"
+                  positive
+                  icon="send"
+                  content="Send order"
+                  as={Link}
+                  to="/order/complete"/>
+        </Button.Group>
+
       </Card.Content>
     </Card>
   }

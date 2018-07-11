@@ -1,6 +1,6 @@
 import React from 'react';
 import orderCache from "./lib/orderCache";
-import {Form, Button, Input} from 'semantic-ui-react';
+import {Form, Button, Input, Label} from 'semantic-ui-react';
 
 export default class OrderBuildISBNForm extends React.Component {
 
@@ -45,10 +45,11 @@ export default class OrderBuildISBNForm extends React.Component {
         <Form.Field width={10}>
           <label>Add book by ISBN:</label>
           <Input type="text"
-                 name="ISNB"
-                 onChange={this.setISBN.bind(this)}/>
+                 label={<Button>Add</Button>}
+                 labelPosition="right"
+                 onChange={this.setISBN.bind(this)}>
+          </Input>
         </Form.Field>
-        <Button type="submit">Add to Order</Button>
       </Form.Group>
     </Form>
   }

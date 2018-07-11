@@ -38,13 +38,6 @@ export default class OrderBuild extends React.Component {
     </Message>
   }
 
-  bookSearchErrors() {
-    return <ul id="ASINerrors"
-               className="errors">
-      {this.state.errors.map(err => <li key={err}>{err}</li>)}
-    </ul>
-  }
-
   render() {
     if (this.state.loading) {
       return <div>Loading...</div>
@@ -55,23 +48,23 @@ export default class OrderBuild extends React.Component {
         or <a href="/lemur/order/list">choose an open order</a>.
       </p>
     } else {
-      return <Grid>
+      return <Grid centered>
         <Grid.Row>
-          <If condition={this.state.order}>
-            <Grid.Column width={9}>
-              <OrderBuildISBNForm setError={err => this.setState({errors: [err]})}/>
-              <OrderBuildCustomForm setError={err => this.setState({errors: [err]})}/>
-              <OrderBuildSearchForm updateResults={res => this.setState({searchResults: res})}/>
-            </Grid.Column>
-          </If>
-          <Grid.Column width={6}>
+          <Grid.Column width={7}>
+            <OrderBuildISBNForm setError={err => this.setState({errors: [err]})}/>
+            <OrderBuildCustomForm setError={err => this.setState({errors: [err]})}/>
+            <OrderBuildSearchForm updateResults={res => this.setState({searchResults: res})}/>
+          </Grid.Column>
+          <Grid.Column width={2}/>
+          <Grid.Column width={5}>
             <OrderBuildSummary order={this.state.order}/>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={14}>
             {this.orderWarnings()}
-            {this.bookSearchErrors()}
           </Grid.Column>
         </Grid.Row>
       </Grid>

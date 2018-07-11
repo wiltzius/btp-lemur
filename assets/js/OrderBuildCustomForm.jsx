@@ -42,9 +42,12 @@ export default class OrderBuildCustomForm extends React.Component {
       <Form.Group>
         <Form.Field width={10}>
           <label>Add by title:</label>
-          <Input type="text" name="title" onChange={this.setTitle.bind(this)}/>
+          <Input type="text"
+                 name="title"
+                 label={<Button>Add</Button>}
+                 labelPosition="right"
+                 onChange={this.setTitle.bind(this)}/>
         </Form.Field>
-        <Button type="submit">Add to Order</Button>
       </Form.Group>
     </Form>;
   }
