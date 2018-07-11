@@ -4,6 +4,7 @@ import orderCache from "./lib/orderCache";
 import {withRouter, Link} from "react-router-dom";
 import {dateFormat} from "./lib/util";
 import $ from 'jquery';
+import {Table, Button} from 'semantic-ui-react';
 
 export default withRouter(class OrderList extends React.Component {
 
@@ -102,24 +103,48 @@ export default withRouter(class OrderList extends React.Component {
         (if nobody else is currently working on an order and this list is super long, it's probably time to click this
         link).</em></p>
       <p>Pick an order below</p>
-      <ul>
-        {this.state.orders.map(o => this.openOrder(o))}
-      </ul>
+      <Table celled compact>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell width={1}>Order</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Inmate</Table.HeaderCell>
+            <Table.HeaderCell width={1}>Opened Date</Table.HeaderCell>
+            <Table.HeaderCell>Books</Table.HeaderCell>
+            <Table.HeaderCell width={2}/>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {this.state.orders.map(o => <Table.Row key={o.id}>
+            <Table.Cell>#{o.id}</Table.Cell>
+            <Table.Cell>{o.inmate.first_name} {o.inmate.last_name}</Table.Cell>
+            <Table.Cell>{dateFormat(o.date_opened)}</Table.Cell>
+            {/*use book tags like in the order build form for these, make a utility*/}
+            <Table.Cell>{o.books.map(b => `${b.title}, by ${b.author}`).join('; ')}</Table.Cell>
+            <Table.Cell><Button>Re-Open</Button></Table.Cell>
+          </Table.Row>)}
+        </Table.Body>
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell colSpan={5}>
+              <Button negative>Clean up open orders</Button>
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      </Table>
     </div>
   }
 
   render() {
+    // TODO remove all these dumb loading states and pass the current order down as a top-level property loaded in the App component
     if (this.state.loading) {
       return <div>Loading...</div>
     }
-    return <div id="searchContainer">
-      <div>
-        <h3>Open Orders</h3>
-        {this.cleaned()}
-        {this.orderMsg()}
-        <p>To begin a new order, first <Link to="/inmate/search">find the order's inmate</Link>.</p>
-        {this.state.orders.length === 0 ? this.noOpenOrders() : this.openOrderList()}
-      </div>
+    return <div>
+      <h3>Open Orders</h3>
+      {this.cleaned()}
+      {this.orderMsg()}
+      <p>To begin a new order, first <Link to="/inmate/search">find the order's inmate</Link>.</p>
+      {this.state.orders.length === 0 ? this.noOpenOrders() : this.openOrderList()}
     </div>
   }
 })
