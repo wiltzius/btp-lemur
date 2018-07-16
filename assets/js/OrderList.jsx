@@ -98,13 +98,6 @@ export default withRouter(class OrderList extends React.Component {
 
   openOrderList() {
     return <div>
-      <p>
-        <a id="cleanupLink"
-           onClick={this.onCleanupClick.bind(this)}>
-          Cleanup Open Orders
-        </a>
-        <br/><em></em></p>
-      <p>Pick an order below</p>
       <Table celled compact>
         <Table.Header>
           <Table.Row>
@@ -128,7 +121,11 @@ export default withRouter(class OrderList extends React.Component {
           <Table.Row>
             <Table.HeaderCell colSpan={5}>
               <Button negative onClick={this.onCleanupClick.bind(this)}>Clean up open orders</Button>
-              <Popup trigger={<Button icon='help' />} content={CLEANUP_ORDER_HELP_TEXT} />
+              <Popup trigger={<Button icon='help' />}
+                     inverted
+                     on='click'
+                     hideOnScroll
+                     content={CLEANUP_ORDER_HELP_TEXT} />
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
