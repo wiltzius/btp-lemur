@@ -7,8 +7,8 @@ import $ from 'jquery';
 import {Button, Popup, Table, Label} from 'semantic-ui-react';
 
 const CLEANUP_ORDER_HELP_TEXT = `Automatically cancels any empty orders and marks all orders currently in process as 
-'sent'. If nobody else is currently working on an order and this list is super long, it's probably time to click this 
-link.`;
+'sent'. If nobody else is currently working on an order and this list is super long, it's probably time to clean up the
+orders.`;
 
 export default withRouter(class OrderList extends React.Component {
 
