@@ -4,6 +4,7 @@ import OrderCompleteSummarySnippet from "./OrderCompleteSummarySnippet";
 import OrderNotes from "./OrderNotes";
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
+import {Button} from 'semantic-ui-react';
 
 export default withRouter(class OrderDetail extends React.Component {
 
@@ -27,18 +28,27 @@ export default withRouter(class OrderDetail extends React.Component {
         console.log(err)
       });
     }
-
-
   }
 
   orderSentSnippet() {
     if (this.state.order.status === 'SENT') {
-      return <div>
-        <p><strong><span className="orderHeader">Order #{this.state.order.id}</span> marked as sent, please ensure it is
-          delivered to the packing station.</strong></p>
-        <p><a href={"/lemur/order/invoice/" + this.state.order.id}
-              target="_blank">Print Invoice</a></p>
-      </div>
+      return <p>
+        <span className="orderHeader">Order #{this.state.order.id}</span> marked as sent, please ensure it is
+        delivered to the packing station.
+      </p>
+    }
+  }
+
+  printInvoiceButton() {
+    if (this.state.order.status === 'SENT') {
+      return <Button icon="print"
+                     content="Print Invoice"
+                     size="tiny"
+                     as={'a'}
+                     href={"/lemur/order/invoice/" + this.state.order.id}
+                     target="_blank"
+                     style={{float: 'right'}}/>
+
     }
   }
 
@@ -47,15 +57,18 @@ export default withRouter(class OrderDetail extends React.Component {
       return <div>Loading...</div>
     }
     else if (this.state.order === null) {
-      return <div id="searchContainer">
-        <p>
-          This page shows a historical order's details (not the current order). To see an old order's details,&nbsp;
-          <Link to="/inmate/search">find the inmate</Link> and then click on the order in their history.</p>
-      </div>
+      return <p>
+        This page shows a historical order's details (not the current order). To see an old order's details,&nbsp;
+        <Link to="/inmate/search">find the inmate</Link> and then click on the order in their history.
+      </p>
     }
     else {
-      return <div id="searchContainer">
-        <h3>Order details</h3>
+      return <div>
+        <h3>
+          Order details
+          {/* todo why does this have to be inside the h3 to look right */}
+          {this.printInvoiceButton()}
+        </h3>
         {this.orderSentSnippet()}
         <OrderCompleteSummarySnippet order={this.state.order}/>
         <OrderNotes order={this.state.order}/>

@@ -1,5 +1,6 @@
 import React from 'react';
 import coreapi from './lib/coreapi';
+import {Button, Icon, Form, Input, TextArea} from 'semantic-ui-react';
 
 export default class OrderNotes extends React.Component {
 
@@ -29,21 +30,26 @@ export default class OrderNotes extends React.Component {
 
   inputChanged(event) {
     this.setState({
-      'notes': event.target.value
+      'notes': event.target.value,
+      'sent': false
     });
   }
 
   render() {
-    return <div>
-      <form onSubmit={this.formSubmit.bind(this)}>
+    return <Form onSubmit={this.formSubmit.bind(this)}>
+      <Form.Field>
         <label>
-          Order notes:<br />
-          <textarea value={this.state.notes} onChange={this.inputChanged.bind(this)}/>
-        </label><br />
-        <input type="submit" value="save"/>
-        <span>{this.state.sending ? 'saving...' : ''}</span>
-        <span>{this.state.sent ? 'saved!' : ''}</span>
-      </form>
-    </div>
+          Order notes:
+        </label>
+        <TextArea value={this.state.notes}
+                  onChange={this.inputChanged.bind(this)}/>
+      </Form.Field>
+      <Button type="submit"
+              primary
+              loading={this.state.sending}>
+        Save &nbsp;{this.state.sent ? <Icon name='checkmark' /> : null}
+      </Button>
+      {/*{this.state.sent ? <Icon name='checkmark' /> : null}*/}
+    </Form>
   }
 }

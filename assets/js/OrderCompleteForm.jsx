@@ -49,7 +49,6 @@ export default withRouter(class OrderCompleteForm extends React.Component {
 
   sendOrder(event) {
     event.preventDefault();
-    console.log('sending...');
     return coreapi.client.action(coreapi.schema, ['orders', 'partial_update'], {
       id: this.state.order.id,
       sender: this.state.order.sender,

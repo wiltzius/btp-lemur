@@ -13,7 +13,7 @@ export default class OrderCompleteSummarySnippet extends React.PureComponent {
       return <Item.Group>
         <Item>
           <Item.Content>
-            <Item.Header>Order #{order.id}, <em>for</em> {order.inmate.first_name} {order.inmate.last_name}
+            <Item.Header>Order #{order.id} <em>for</em> {order.inmate.first_name} {order.inmate.last_name}
             </Item.Header>
             <Item.Meta>Current Order Status: {order.status}</Item.Meta>
             <Item.Meta>Sender: {order.sender}</Item.Meta>
