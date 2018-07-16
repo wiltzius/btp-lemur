@@ -1,4 +1,5 @@
 import React from "react";
+import {Label} from 'semantic-ui-react';
 
 export function unorderedList(items) {
   return <ul>
@@ -12,11 +13,16 @@ export function unorderedList(items) {
 
 export function stringBook(book) {
   if(book.author) {
-    return `${book.author} - ${book.title}`
+    return `${book.title}, by ${book.author}`
   }
   else {
     return book.title;
   }
+}
+
+
+export function bookTags(books) {
+  return books.map(b => <Label color="teal" key={b.id}>{stringBook(b)}</Label>);
 }
 
 

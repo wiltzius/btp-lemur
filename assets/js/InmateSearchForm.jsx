@@ -37,11 +37,6 @@ export default withRouter(class InmateSearchForm extends React.Component {
     this.handleProps();
   }
 
-  // componentWillReceiveProps() {
-  //   console.log('got props')
-  //   this.handleProps();
-  // }
-
   handleInputChange(event) {
     const newModel = {...this.state.model, [event.target.name]: event.target.value};
     this.setState({
@@ -56,6 +51,7 @@ export default withRouter(class InmateSearchForm extends React.Component {
   }
 
   searchApi() {
+    // todo make this search better, like using actual fields at least for ID searching (links to inmate IDs are goofy)
     coreapi.boundAction(['inmates', 'list'], {'search': _.values(this.state.model).join(' ')}).then(res => {
       this.props.onResultsChange(res.results);
     });
