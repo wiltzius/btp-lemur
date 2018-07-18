@@ -56,7 +56,7 @@ export default class OrderTopNavSummary extends React.Component {
         <If condition={this.state.order}>
           <Link to="/order/build">Order #{order.id}</Link>
           &nbsp;for&nbsp;<Link
-            to={"/inmate/search/" + order.inmate.id}>{this.inmateNameTruncated(order)}</Link>,
+            to={"/inmate/search/" + order.inmate.inmate_id}>{this.inmateNameTruncated(order)}</Link>,
           &nbsp;{bookCount(order.books.length)}
           {this.warnings()}
         </If>

@@ -1,6 +1,7 @@
+import django_filters
 from drf_queryfields import QueryFieldsMixin
 from rest_framework import serializers, viewsets
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import DjangoFilterBackend
 
 from LemurAptana.LemurApp.api.facility import FacilitySerializer
 from LemurAptana.LemurApp.models import Inmate, Facility
@@ -9,7 +10,6 @@ from LemurAptana.LemurApp.models import Inmate, Facility
 class InmateSerializer(serializers.ModelSerializer, QueryFieldsMixin):
   facility = FacilitySerializer(read_only=True)
   facility_id = serializers.PrimaryKeyRelatedField(queryset=Facility.objects.all(), source='facility')
-  # orders = OrderSerializer(many=True)
 
   class Meta:
     model = Inmate
@@ -29,8 +29,18 @@ class InmateSerializer(serializers.ModelSerializer, QueryFieldsMixin):
               'warnings']
 
 
+class InmateSearchFilter(django_filters.FilterSet):
+  class Meta:
+    model = Inmate
+    fields = {
+      'first_name': ['icontains'],
+      'last_name': ['icontains'],
+      'inmate_id': ['iexact']
+    }
+
+
 class InmateViewSet(viewsets.ModelViewSet):
   queryset = Inmate.objects.all()
   serializer_class = InmateSerializer
-  filter_backends = (SearchFilter,)
-  search_fields = ['first_name', 'last_name', 'inmate_id']
+  filter_backends = (DjangoFilterBackend,)
+  filter_class = InmateSearchFilter

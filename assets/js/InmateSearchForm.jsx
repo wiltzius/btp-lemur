@@ -51,8 +51,12 @@ export default withRouter(class InmateSearchForm extends React.Component {
   }
 
   searchApi() {
-    // todo make this search better, like using actual fields at least for ID searching (links to inmate IDs are goofy)
-    coreapi.boundAction(['inmates', 'list'], {'search': _.values(this.state.model).join(' ')}).then(res => {
+    const params = {
+      first_name__icontains: this.state.model.first_name,
+      last_name__icontains: this.state.model.last_name,
+      inmate_id__iexact: this.state.model.inmate_id
+    };
+    coreapi.boundAction(['inmates', 'list'], params).then(res => {
       this.props.onResultsChange(res.results);
     });
   }

@@ -111,7 +111,7 @@ export default withRouter(class OrderList extends React.Component {
         <Table.Body>
           {this.state.orders.map(o => <Table.Row key={o.id}>
             <Table.Cell>#{o.id}</Table.Cell>
-            <Table.Cell><Link to={"/inmate/search/" + o.inmate.id}>{o.inmate.first_name} {o.inmate.last_name}</Link></Table.Cell>
+            <Table.Cell><Link to={"/inmate/search/" + o.inmate.inmate_id}>{o.inmate.first_name} {o.inmate.last_name}</Link></Table.Cell>
             <Table.Cell>{dateFormat(o.date_opened)}</Table.Cell>
             <Table.Cell>{bookTags(o.books)}</Table.Cell>
             <Table.Cell><Button onClick={this.setOrder.bind(this, o.id)}>Re-Open</Button></Table.Cell>
