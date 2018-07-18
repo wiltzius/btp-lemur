@@ -1,11 +1,18 @@
 from collections import namedtuple
 
-from apiclient import discovery
+import apiclient
+import httplib2
 from django.conf import settings
+
 
 # just build this at import time I guess
 # TODO make this lazy, otherwise connecting blocks server startup
-# service = discovery.build('books', 'v1', developerKey=settings.GBOOKS_KEY)
+def build_request(http, *args, **kwargs):
+  new_http = httplib2.Http()
+  return apiclient.http.HttpRequest(new_http, *args, **kwargs)
+
+
+service = apiclient.discovery.build('books', 'v1', developerKey=settings.GBOOKS_KEY, requestBuilder=build_request)
 
 RESULTS_PER_PAGE = 10
 
@@ -28,7 +35,7 @@ def _tuple_result(result):
     if not isbn:
       return None
     return booktuple(title=volumeInfo['title'],
-                     author=', '.join(volumeInfo.get('authors', [])),     # authors is a list, if it exists
+                     author=', '.join(volumeInfo.get('authors', [])),  # authors is a list, if it exists
                      isbn=isbn)
   except (KeyError, ValueError):
     # import ipdb; ipdb.set_trace()
@@ -37,12 +44,9 @@ def _tuple_result(result):
 
 
 def search(q, page=0):
-  return searchresult(pages=1,
-                      lastResultIndex=1,
-                      books=[booktuple(title="Foo", author="bar", isbn="123456679")])
   request = service.volumes().list(q=q,
                                    startIndex=page * RESULTS_PER_PAGE,
-                                   maxResults=40,     # overfetch because many of the results will be irrelevant
+                                   maxResults=40,  # overfetch because many of the results will be irrelevant
                                    printType='books',
                                    fields="totalItems,items(volumeInfo(title,authors,industryIdentifiers))")
   response = request.execute()

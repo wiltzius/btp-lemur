@@ -26,7 +26,7 @@ export default class OrderBuildSearchForm extends React.Component {
     this.setState({
       searching: false,
       searchResults: resp.books.map(book => {
-        return {title: book.title, description: book.author, id: book.isbn}
+        return {title: book.title, description: book.author, id: book.isbn, key: book.isbn}
       })
     });
   }

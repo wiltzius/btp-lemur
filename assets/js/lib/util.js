@@ -16,7 +16,7 @@ export function stringBook(book) {
     return <span>{book.title} <em>by</em> {book.author}</span>
   }
   else {
-    return <span>book.title</span>;
+    return <span>{book.title}</span>;
   }
 }
 
