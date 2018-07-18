@@ -42,9 +42,7 @@ class Book(models.Model):
     Raises InvalidParameterValue (from the item_lookup call) if the ISBN isn't found
     """
     try:
-      # TODO undo this
-      # booktuple = google_books.search_isbn(isnb_)
-      booktuple = booktuple_(title='foo', author='bar', isbn='123456789')
+      booktuple = google_books.search_isbn(isnb_)
 
       if not booktuple:
         return

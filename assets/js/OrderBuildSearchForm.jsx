@@ -26,7 +26,12 @@ export default class OrderBuildSearchForm extends React.Component {
     this.setState({
       searching: false,
       searchResults: resp.books.map(book => {
-        return {title: book.title, description: book.author, id: book.isbn, key: book.isbn}
+        return {
+          title: book.title,
+          description: book.author,
+          id: book.isbn,
+          key: [book.isbn, book.author, book.title].join('-')
+        }
       })
     });
   }
@@ -43,7 +48,7 @@ export default class OrderBuildSearchForm extends React.Component {
         searchValue: searchBox.value
       }, () => {
         $.get('/lemur/order/booksearch/', {
-          title: this.state.searchValue
+          query: this.state.searchValue
         }).then(this.searchCallback.bind(this))
         // todo error handling
       });

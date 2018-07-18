@@ -54,8 +54,8 @@ export default class OrderBuild extends React.Component {
             <OrderBuildCustomForm setError={err => this.setState({errors: [err]})}/>
             <OrderBuildSearchForm updateResults={res => this.setState({searchResults: res})}/>
           </Grid.Column>
-          <Grid.Column width={2}/>
-          <Grid.Column width={5}>
+          <Grid.Column width={1}/>
+          <Grid.Column width={6}>
             <OrderBuildSummary order={this.state.order}/>
           </Grid.Column>
         </Grid.Row>

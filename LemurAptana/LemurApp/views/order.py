@@ -39,25 +39,13 @@ from LemurAptana.LemurApp.models import Order, Book
 def order_book_search(request):
   returnDict = {}
 
-  # construct Google power search
-  # TODO this needs to be updated to not use power search terms anymore
-  power = []
-  if request.GET.get('author', False):
-    power += ['inauthor:' + request.GET['author']]
-  if request.GET.get('title', False):
-    power += ['intitle:' + request.GET['title']]
-  if not power:
-    # If we wanted to do something special for searching with all fields empty we could here,
-    # but for now just let Google return whatever
-    pass
-
-  # Do the power search
+  # construct Google API search
   try:
     page = int(request.GET.get('page', '1'))
   except ValueError:
     # if for some reason 'page' is a GET parameter but not a valid number, just default to 1
     page = 1
-  search_result = google_books.search(q=power, page=page)
+  search_result = google_books.search(q=request.GET.get('query'), page=page)
 
   if search_result.pages:
     returnDict['books'] = []
