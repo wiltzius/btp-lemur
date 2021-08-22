@@ -76,7 +76,7 @@ class Inmate(models.Model):
   first_name = models.CharField(max_length=250, verbose_name="First name")
   last_name = models.CharField(max_length=250, verbose_name="Last name")
   address = models.CharField(max_length=250, verbose_name="Address", blank=True, null=True)
-  facility = models.ForeignKey(Facility)
+  facility = models.ForeignKey(Facility, on_delete=models.CASCADE)
   creation_date = models.DateTimeField(default=datetime.datetime.now, editable=False)
 
   # end fields
@@ -94,9 +94,10 @@ class Inmate(models.Model):
     self.full_clean()  # validate the model
     super(Inmate, self).save(*args, **kwargs)  # Call the "real" save() method.
 
-  @models.permalink
+    #   @models.permalink
   def get_absolute_url(self):
-    return 'inmate-detail', [str(self.pk)]
+    return reverse('inmate-detail', args=(str(self.pk)))
+    #     return 'inmate-detail', [str(self.pk)]
 
   class InmateType(object):
     FEDERAL = 1
