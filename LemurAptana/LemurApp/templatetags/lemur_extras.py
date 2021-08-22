@@ -28,7 +28,7 @@ def inmate_doc_link(inmate_pk, link_text):
         return 'No DOC link for Federal inmates; manually search <a target="_blank" href="https://www.bop.gov/inmateloc/">here</a>'
     elif inmate.inmate_type() == Inmate.InmateType.ILLINOIS:
         return '''
-                <form action="http://www.idoc.state.il.us/subsections/search/ISinms2.asp" style="display:none;" method="post" target="blank" id="inmateform%(inmate_pk)s">
+                <form action="https://www.idoc.state.il.us/subsections/search/ISinms2.asp" style="display:none;" method="post" target="blank" id="inmateform%(inmate_pk)s">
                     <select name="selectlist1" size="4" onchange="setfocus()">
                         <option value="IDOC" selected="selected">&nbsp;</option>
                     </select>

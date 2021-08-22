@@ -78,7 +78,7 @@ def parse_result_list(html):
 
 
 def _search_list(first_name, last_name):
-  url = "http://www.idoc.state.il.us/subsections/search/ISListInmates2.asp"
+  url = "https://www.idoc.state.il.us/subsections/search/ISListInmates2.asp"
   q = last_name
   if first_name:
     q += ', ' + first_name
@@ -90,7 +90,7 @@ def _search_list(first_name, last_name):
 
 
 def _search_inmate_id(inmate_id):
-  url = "http://www.idoc.state.il.us/subsections/search/ISinms2.asp"
+  url = "https://www.idoc.state.il.us/subsections/search/ISinms2.asp"
   r = requests.post(url, {
     "selectlist1": "IDOC",
     "idoc": inmate_id
