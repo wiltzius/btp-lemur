@@ -64,6 +64,8 @@ FIXTURE_DIRS = (
 TEMPLATES = [
   {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    # 'NAME': 'flippity',
+    'APP_DIRS': True,
     'OPTIONS': {
       'string_if_invalid': 'TEMPLATE ERROR',
       'loaders': [
