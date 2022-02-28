@@ -61,7 +61,7 @@ def inmate_search(request, pk=None):
     context_dict['has_results'] = True
   else:
     context_dict['form'] = forms.InmateForm()  # An unbound form
-  return render('LemurApp/inmate_search.html', context_dict, context=RequestContext(request))
+  return render(request, 'LemurApp/inmate_search.html', context_dict)
 
 
 def inmate_add_searched(request):
