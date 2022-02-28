@@ -1,6 +1,6 @@
 djangorestframework-csv==2.0.0
 uwsgi==2.0.15
-pydash==4.1.0
+pydash==5.1.0
 raven==6.1
 ipdb==0.13.9
 Django==3.2.12
@@ -14,7 +14,7 @@ pyOpenSSL==16.2.0
 google-api-python-client==1.6.2
 fuzzywuzzy==0.15.0
 coreapi==2.3.1
-djangorestframework==3.6.3
+djangorestframework==3.13.1
 usaddress==0.5.10
 python-Levenshtein==0.12.0
 django-debug-toolbar==3.2

@@ -61,30 +61,46 @@ FIXTURE_DIRS = (
 )
 
 # List of callables that know how to import templates from various sources.
+# TEMPLATES = [
+#   {
+#     'BACKEND': 'django.template.backends.django.DjangoTemplates',
+#     # 'NAME': 'flippity',
+#     'DIRS': [],
+#     'APP_DIRS': True,
+#     'OPTIONS': {
+#       'string_if_invalid': 'TEMPLATE ERROR',
+#       'loaders': [
+#         'django.template.loaders.filesystem.Loader',
+#         'django.template.loaders.app_directories.Loader',
+#       ],
+#       'context_processors': (
+#         "django.core.context_processors.debug",
+#         "django.core.context_processors.i18n",
+#         "django.core.context_processors.media",
+#         "django.contrib.messages.context_processors.messages",
+#         "django.contrib.auth.context_processors.auth",
+#         "django.core.context_processors.request",
+#         "LemurAptana.LemurApp.context_processors.restricted_facilities",
+#         "LemurAptana.LemurApp.context_processors.banner_message"
+#       ),
+#     }
+#   },
+# ]
+
 TEMPLATES = [
   {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    # 'NAME': 'flippity',
+    'DIRS': [],
     'APP_DIRS': True,
     'OPTIONS': {
-      'string_if_invalid': 'TEMPLATE ERROR',
-      'loaders': [
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
+      'context_processors': [
+        'django.template.context_processors.debug',
+        'django.template.context_processors.request',
+        'django.contrib.auth.context_processors.auth',
+        'django.contrib.messages.context_processors.messages',
       ],
-      'context_processors': (
-        "django.core.context_processors.debug",
-        "django.core.context_processors.i18n",
-        "django.core.context_processors.media",
-        "django.contrib.messages.context_processors.messages",
-        "django.contrib.auth.context_processors.auth",
-        "django.core.context_processors.request",
-        "LemurAptana.LemurApp.context_processors.restricted_facilities",
-        "LemurAptana.LemurApp.context_processors.banner_message"
-      ),
-    }
+    },
   },
-
 ]
 
 

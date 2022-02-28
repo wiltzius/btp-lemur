@@ -1,4 +1,4 @@
-LemurAptana/settings_secret.py
+settings_secret.py
 *.pyc
 venv
 BTPENV
@@ -11,3 +11,4 @@ assets/bundles/
 webpack-stats.json
 LemurAptana/static/
 sqlite.db
+db.sqlite3
