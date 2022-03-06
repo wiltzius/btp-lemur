@@ -39,7 +39,7 @@ def search(q, page=0):
   request = service.volumes().list(q=q,
                                    startIndex=page * RESULTS_PER_PAGE,
                                    maxResults=40,     # overfetch because many of the results will be irrelevant
-                                   printType='books',
+                                   printType='BOOKS',
                                    fields="totalItems,items(volumeInfo(title,authors,industryIdentifiers))")
   response = request.execute()
   total_items = response['totalItems']
