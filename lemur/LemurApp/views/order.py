@@ -102,17 +102,17 @@ def order_render_as_response(request):
 
 def order_get_snippet_html(request):
   """Renders the current order as a snippet of HTML"""
-  return render_to_string('LemurApp/order_snippet.html', context_instance=RequestContext(request))
+  return render_to_string('LemurApp/order_snippet.html', request=request)
 
 
 def order_get_summary_html(request):
   """Renders the current order summary as a snippet of HTML"""
-  return render_to_string('LemurApp/order_summary.html', context_instance=RequestContext(request))
+  return render_to_string('LemurApp/order_summary.html', request=request)
 
 
 def order_get_warnings_html(request):
   """Renders the current order's warnings in a list as a snippet of HMTL"""
-  return render_to_string('LemurApp/order_warnings.html', context_instance=RequestContext(request))
+  return render_to_string('LemurApp/order_warnings.html', request=request)
 
 
 def order_build(request):
@@ -182,7 +182,7 @@ def order_build(request):
 
   context_dict['currentOrderHTML'] = order_get_snippet_html(request)
   context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
-  return render('LemurApp/order_build.html', context_dict, context=RequestContext(request))
+  return render(request, 'LemurApp/order_build.html', context_dict)
 
 
 def order_send_out(request):
@@ -205,7 +205,7 @@ def order_send_out(request):
   #   else:
   #     form = None
   # return render_to_response('LemurApp/order_sendout.html', {'form': form}, context_instance=RequestContext(request))
-  return render('LemurApp/order_sendout.html', context=RequestContext(request))
+  return render(request, 'LemurApp/order_sendout.html')
 
 
 def order_unset(request):

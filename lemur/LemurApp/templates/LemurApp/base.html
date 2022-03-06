@@ -13,8 +13,8 @@
   <script type="text/javascript" src="/static/js-vendor/csrf-jquery-hack.js"></script>
 
   {% load static %}
-  <script src="{% static 'rest_framework/js/coreapi-0.1.0.js' %}"></script>
-  <script src="{% url 'api-docs:schema-js' %}"></script>
+<!--  <script src="{% static 'rest_framework/js/coreapi-0.1.0.js' %}"></script>-->
+<!--  <script src="{% url 'api-docs:schema-js' %}"></script>-->
 
   {% block extra_head %}{% endblock %}
 </head>
@@ -71,6 +71,6 @@
   </div>
 </div>
 
-{% render_bundle 'main' %}
+{# render_bundle 'main' #}
 </body>
 </html>

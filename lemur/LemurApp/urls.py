@@ -1,4 +1,4 @@
-from django.urls import re_path, include
+from django.urls import re_path, include, path
 from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 
@@ -42,7 +42,10 @@ urlpatterns += [
 urlpatterns += [
   # re_path(r'^api/', include(router.urls, namespace="lemurapi")),    # believed defunct
   re_path(r'^api/', include(router.urls)),
-  re_path(r'^schema/$', get_schema_view(title='BTP API')),
+  # re_path(r'^schema/$', get_schema_view(title='BTP API')),
+  path('openapi', get_schema_view(
+    title="BTP API",
+  ), name='openapi-schema'),
   re_path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
   re_path(r'^docs/', include_docs_urls(title='My API service'))
 ]
