@@ -93,9 +93,9 @@ def order_render_as_response(request):
   """Wraps the current order snippet in an HTTP Response for return by view
      functions (the AJAX ones; its a reponse for the client-side AJAX call)"""
   return HttpResponse(json.dumps(
-    {'summary': order_get_summary_html(request),
-     'snippet': order_get_snippet_html(request),
-     'warnings': order_get_warnings_html(request), }))
+    {'snippet': order_get_snippet_html(request),
+     'warnings': order_get_warnings_html(request)}
+  ))
 
 
 def order_get_snippet_html(request):
@@ -104,11 +104,6 @@ def order_get_snippet_html(request):
     'order': get_object_or_404(Order, pk=request.session['order_id']) if request.session.get('order_id') else None
   }
   return render_to_string('LemurApp/order_snippet.html', request=request, context=context)
-
-
-# def order_get_summary_html(request):
-#   """Renders the current order summary as a snippet of HTML"""
-#   return render_to_string('LemurApp/order_summary.html', request=request)
 
 
 def order_get_warnings_html(request):

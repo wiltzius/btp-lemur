@@ -6,7 +6,6 @@ from django.utils import timezone
 
 from .book import Book
 from .inmate import Inmate
-# relative import since this hasn't been declared in models/__init__.py yet
 from .settings_store import LemurSettingsStore
 
 
@@ -82,8 +81,8 @@ class Order(models.Model):
           .filter(title__icontains=book.title) \
           .exclude(order__pk=self.pk)
         if similar_books.count():
-          warnings += ["Patron already received %s on %s" %
-                       (similar_books[0].title, similar_books[0].order.date_closed.strftime("%b %d, %Y"))]
+          warnings += ["Patron already received %s on %s; \"%s\" is similar" %
+                       (similar_books[0].title, similar_books[0].order.date_closed.strftime("%b %d, %Y"), book.title)]
       # if the inmate's facility restricts hardbacks, add a warning
       if self.inmate.facility.restrictsHardbacks:
         warnings += ["Shipping to %s, which does not allow hardbacks!" % self.inmate.facility]

@@ -12,7 +12,6 @@ export default class OrderSummary extends React.Component {
 
   componentDidMount() {
     orderCache.sub(order => {
-      console.log('setting state');
       this.setState({order, loading: false});
     });
   }
