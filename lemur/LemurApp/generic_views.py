@@ -1,7 +1,6 @@
-from datetime import datetime
-
+from django.utils import timezone
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
 from . import forms
@@ -41,7 +40,7 @@ class OrderCleanupList(OrderList):
       # Mark orders with books as sent
       if order.books.count():
         order.status = 'SENT'
-        order.date_closed = datetime.now()
+        order.date_closed = timezone.now()
         order.save()
       # Delete orders without books
       else:

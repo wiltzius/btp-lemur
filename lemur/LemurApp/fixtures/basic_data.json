@@ -372,7 +372,7 @@
       "inmate": 1,
       "date_closed": null,
       "sender": null,
-      "date_opened": "2010-11-15 17:20:49"
+      "date_opened": "2010-11-15T17:20:49+00:00"
     }
   },
   {
@@ -381,9 +381,9 @@
     "fields": {
       "status": "OPEN",
       "inmate": 1,
-      "date_closed": "2017-06-15 19:20:49",
+      "date_closed": "2017-06-15T19:20:49+00:00",
       "sender": null,
-      "date_opened": "2017-06-15 17:20:49"
+      "date_opened": "2017-06-15T17:20:49+00:00"
     }
   },
   {

@@ -28,6 +28,6 @@ class OrderViewSet(viewsets.ModelViewSet):
     # hax
     instance = self.get_object()
     if instance.status == 'SENT':
-      request.session['order'] = None
+      request.session['order_id'] = None
 
     return sup

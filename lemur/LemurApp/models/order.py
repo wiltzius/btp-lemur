@@ -2,6 +2,7 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 from .book import Book
 from .inmate import Inmate
@@ -21,7 +22,7 @@ class Order(models.Model):
   # actual fields
   status = models.CharField(max_length=20, choices=ORDER_STATUS, default='OPEN', verbose_name="Order status")
   inmate = models.ForeignKey(Inmate, verbose_name="Inmate", related_name="orders", on_delete=models.CASCADE)
-  date_opened = models.DateTimeField(default=datetime.datetime.now, editable=False, verbose_name="Date opened")
+  date_opened = models.DateTimeField(auto_now_add=True, editable=False, verbose_name="Date opened")
   date_closed = models.DateTimeField(blank=True, null=True, verbose_name="Date closed")
   sender = models.CharField(max_length=250, null=True, blank=True, verbose_name="Sender")
   notes = models.CharField(max_length=2048, blank=True, default='', null=False, verbose_name='Notes')
@@ -66,7 +67,7 @@ class Order(models.Model):
       # if the inmate associated with this order has had an order within the order warning age, add a warning
       recent_orders = (self.inmate.orders
                        .filter(status__exact='SENT')
-                       .filter(date_closed__gte=(datetime.date.today() -
+                       .filter(date_closed__gte=(timezone.now() -
                                                  datetime.timedelta(LemurSettingsStore.order_age_warning() * 30)))
                        .exclude(pk=self.pk)
                        .order_by('-date_closed'))

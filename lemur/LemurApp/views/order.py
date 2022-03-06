@@ -24,7 +24,7 @@ def order_create(request, inmate_pk):
     order.status = 'OPEN'
     order.save()
     # save this order in the session
-    request.session['order'] = order
+    request.session['order_id'] = order.pk
     # redirect to the order_build view via named URLs to start adding books
     return redirect(reverse('order-build'))
   except Inmate.DoesNotExist:
@@ -51,7 +51,7 @@ def order_add_book(request, book):
      Saves the book to do so"""
   try:
     # now add this book to the current order and save it
-    book.order = request.session['order']
+    book.order_id = request.session['order_id']
     book.save()
   except KeyError:
     # there is no current order
@@ -63,7 +63,7 @@ def order_remove_book(request, book_pk):
   """Remove the given book from the current order and delete it"""
   try:
     book = get_object_or_404(Book, pk=book_pk)
-    if book.order == request.session['order']:
+    if book.order_id == request.session['order_id']:
       book.delete()
     else:
       raise Exception("Tried to remove a book from the current order that wasn't in the current order")
@@ -101,7 +101,10 @@ def order_render_as_response(request):
 
 def order_get_snippet_html(request):
   """Renders the current order as a snippet of HTML"""
-  return render_to_string('LemurApp/order_snippet.html', request=request)
+  context = {
+    'order': get_object_or_404(Order, pk=request.session['order_id']) if 'order_id' in request.session else None
+  }
+  return render_to_string('LemurApp/order_snippet.html', request=request, context=context)
 
 
 def order_get_summary_html(request):
@@ -124,8 +127,6 @@ def order_build(request):
 
      So for the true Amazon search, this view does an Amazon API search
      and returns the results."""
-  print("HELLO")
-
   context_dict = {
     'errors': [],
     'formISBN': forms.BookForm(auto_id='isbn_id_%s'),
@@ -182,44 +183,26 @@ def order_build(request):
 
   context_dict['currentOrderHTML'] = order_get_snippet_html(request)
   context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
-  print("NO")
   return render(request, 'LemurApp/order_build.html', context_dict)
 
 
 def order_send_out(request):
   """Display a page allowing the user to mark an order as sent out. Mark the
      current order as sent if the form is submitted."""
-  # if request.method == 'POST':  # If the form has been submitted...
-  #   form = forms.SendOutForm(request.POST)  # A form bound to the POST data
-  #   if form.is_valid():  # All validation rules pass
-  #     currentOrder = request.session['order']
-  #     currentOrder.sender = form.cleaned_data['sender']
-  #     currentOrder.date_closed = datetime.now()
-  #     currentOrder.status = 'SENT'
-  #     currentOrder.save()
-  #     # now that we're sent, we can unset the current order
-  #     del request.session['order']
-  #     return redirect(currentOrder)
-  # else:
-  #   if 'order' in request.session:
-  #     form = forms.SendOutForm(instance=request.session['order'])  # An unbound form
-  #   else:
-  #     form = None
-  # return render_to_response('LemurApp/order_sendout.html', {'form': form}, context_instance=RequestContext(request))
   return render(request, 'LemurApp/order_sendout.html')
 
 
 def order_unset(request):
   """Unset the current order in session and redirect to the list of open
      orders where another can be selected."""
-  request.session['order'] = None
+  request.session['order_id'] = None
   return redirect(reverse('order-oldlist'))
 
 
 def order_set(request, order_pk):
   """Select the given order and set it as the current order in session, then
      redirect to the order_build page."""
-  request.session['order'] = get_object_or_404(Order, pk=order_pk)
+  request.session['order_id'] = get_object_or_404(Order, pk=order_pk).pk
   return redirect(reverse('order-build'))
 
 
@@ -233,7 +216,7 @@ def order_reopen(request, order_pk):
 
 
 def order_current(request):
-  if request.session.get('order'):
-    return JsonResponse({'current_order_id': request.session['order'].pk})
+  if request.session.get('order_id'):
+    return JsonResponse({'current_order_id': request.session['order_id']})
   else:
     return JsonResponse({})
