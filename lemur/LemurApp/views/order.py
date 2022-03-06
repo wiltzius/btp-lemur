@@ -101,19 +101,22 @@ def order_render_as_response(request):
 def order_get_snippet_html(request):
   """Renders the current order as a snippet of HTML"""
   context = {
-    'order': get_object_or_404(Order, pk=request.session['order_id']) if 'order_id' in request.session else None
+    'order': get_object_or_404(Order, pk=request.session['order_id']) if request.session.get('order_id') else None
   }
   return render_to_string('LemurApp/order_snippet.html', request=request, context=context)
 
 
-def order_get_summary_html(request):
-  """Renders the current order summary as a snippet of HTML"""
-  return render_to_string('LemurApp/order_summary.html', request=request)
+# def order_get_summary_html(request):
+#   """Renders the current order summary as a snippet of HTML"""
+#   return render_to_string('LemurApp/order_summary.html', request=request)
 
 
 def order_get_warnings_html(request):
   """Renders the current order's warnings in a list as a snippet of HMTL"""
-  return render_to_string('LemurApp/order_warnings.html', request=request)
+  context = {
+    'order': get_object_or_404(Order, pk=request.session['order_id']) if request.session.get('order_id') else None
+  }
+  return render_to_string('LemurApp/order_warnings.html', request=request, context=context)
 
 
 def order_build(request):

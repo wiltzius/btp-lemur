@@ -1,6 +1,4 @@
 
-{% with request.session.order as order %}
   <ul class="errors">
-        {{ order.warnings|unordered_list }}
+        {{ order.warnings | unordered_list }}
   </ul>
-{% endwith %}
