@@ -5,7 +5,6 @@ import logging
 from django.urls import reverse
 from django.http import HttpResponseBadRequest, HttpResponse, Http404, JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
-from django.template import RequestContext
 from django.template.loader import render_to_string
 
 from .. import forms
@@ -125,6 +124,7 @@ def order_build(request):
 
      So for the true Amazon search, this view does an Amazon API search
      and returns the results."""
+  print("HELLO")
 
   context_dict = {
     'errors': [],
@@ -182,6 +182,7 @@ def order_build(request):
 
   context_dict['currentOrderHTML'] = order_get_snippet_html(request)
   context_dict['currentOrderWarningsHTML'] = order_get_warnings_html(request)
+  print("NO")
   return render(request, 'LemurApp/order_build.html', context_dict)
 
 
