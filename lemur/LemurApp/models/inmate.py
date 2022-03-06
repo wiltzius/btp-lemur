@@ -4,6 +4,7 @@ import string
 import usaddress
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 from .book import Book
 from .facility import Facility
@@ -77,7 +78,7 @@ class Inmate(models.Model):
   last_name = models.CharField(max_length=250, verbose_name="Last name")
   address = models.CharField(max_length=250, verbose_name="Address", blank=True, null=True)
   facility = models.ForeignKey(Facility, on_delete=models.CASCADE)
-  creation_date = models.DateTimeField(default=datetime.datetime.now, editable=False)
+  creation_date = models.DateTimeField(auto_now_add=True, editable=False)
 
   # end fields
 
@@ -189,7 +190,7 @@ class Inmate(models.Model):
       warnings += ["Patron's facility restricts hardbacks!"]
     # if the inmate associated with this order has had an order within the order warning age, add a warning
     recent_orders = self.orders.filter(status__exact='SENT').filter(date_closed__gte=(
-    datetime.date.today() - datetime.timedelta(LemurSettingsStore.order_age_warning() * 30))).order_by('-date_closed')
+    timezone.now() - datetime.timedelta(LemurSettingsStore.order_age_warning() * 30))).order_by('-date_closed')
     if recent_orders.count():
       warnings += ["Patron received an order less than %s months ago (on %s)" %
                    (LemurSettingsStore.order_age_warning(), recent_orders[0].date_closed.strftime('%b %d, %Y'))]
@@ -199,7 +200,7 @@ class Inmate(models.Model):
   def dictionaries(self):
     """Returns a list of the dictionaries the inmate has already received within the last 5 years"""
     # if the inmate has previously received a dictionary, note it
-    five_years_ago = datetime.date.today() - datetime.timedelta(days=365 * 5)
+    five_years_ago = timezone.now() - datetime.timedelta(days=365 * 5)
     dictionaries = (Book.objects.filter(order__inmate=self)
                     .filter(order__status='SENT')
                     .filter(title__icontains='dictionary')
