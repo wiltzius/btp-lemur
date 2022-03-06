@@ -12,3 +12,5 @@ webpack-stats.json
 LemurAptana/static/
 sqlite.db
 db.sqlite3
+static/
+yarn-error.log

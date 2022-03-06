@@ -128,8 +128,10 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     # We do this so that django's collectstatic copies our bundles and other files to the STATIC_ROOT
-    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR.parent, 'assets'),
 )
+
+STATIC_ROOT = os.path.join(BASE_DIR.parent, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -156,9 +158,19 @@ WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
         'STATS_FILE': os.path.join(BASE_DIR.parent, 'webpack-stats.json'),
+        'BUNDLE_DIR_NAME': 'bundles/',
         'POLL_INTERVAL': 0.1,
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
     }
+}
+
+## Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': [],
 }
 
 from .settings_secret import *

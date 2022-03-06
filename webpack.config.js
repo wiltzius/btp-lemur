@@ -13,7 +13,7 @@ module.exports = {
   },
 
   plugins: [
-    new BundleTracker({filename: './webpack-stats.json'})
+    new BundleTracker({path: __dirname, filename: './webpack-stats.json'})
   ],
 
   module: {
@@ -28,7 +28,7 @@ module.exports = {
   },
 
   resolve: {
-    modules: ['node_modules', 'bower_components'],
+    modules: ['node_modules'],
     extensions: ['.js', '.jsx']
   }
 };
